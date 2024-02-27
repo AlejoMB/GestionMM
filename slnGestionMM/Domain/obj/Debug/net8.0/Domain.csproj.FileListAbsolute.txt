@@ -1,0 +1,14 @@
+C:\amb\GestionMM\slnGestionMM\Domain\bin\Debug\net8.0\Domain.deps.json
+C:\amb\GestionMM\slnGestionMM\Domain\bin\Debug\net8.0\Domain.runtimeconfig.json
+C:\amb\GestionMM\slnGestionMM\Domain\bin\Debug\net8.0\Domain.dll
+C:\amb\GestionMM\slnGestionMM\Domain\bin\Debug\net8.0\Domain.pdb
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.csproj.AssemblyReference.cache
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.dll
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\refint\Domain.dll
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.pdb
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\Domain.genruntimeconfig.cache
+C:\amb\GestionMM\slnGestionMM\Domain\obj\Debug\net8.0\ref\Domain.dll
