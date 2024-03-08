@@ -28,3 +28,4 @@ C:\amb\GestionMM\slnGestionMM\Web\obj\Debug\net8.0\refint\Web.dll
 C:\amb\GestionMM\slnGestionMM\Web\obj\Debug\net8.0\Web.pdb
 C:\amb\GestionMM\slnGestionMM\Web\obj\Debug\net8.0\Web.genruntimeconfig.cache
 C:\amb\GestionMM\slnGestionMM\Web\obj\Debug\net8.0\ref\Web.dll
+C:\amb\GestionMM\slnGestionMM\Web\obj\Debug\net8.0\Web.sourcelink.json

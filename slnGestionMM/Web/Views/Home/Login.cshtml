@@ -13,18 +13,18 @@
                 <h1 class="h3 mb-3 fw-normal">Inicio de Sesión</h1>
 
                 <div class="form-floating">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="nombre@ejemplo.com">
+                    <input type="email" class="form-control" id="user" placeholder="nombre@ejemplo.com">
                     <label for="floatingInput">Correo Electrónico</label>
                 </div>
                 <div class="form-floating">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Clave">
+                    <input type="password" class="form-control" id="pass" placeholder="Clave">
                     <label for="floatingPassword">Clave</label>
                 </div>
 
                 <div class="form-check text-start my-3">
                     
                 </div>
-                <button class="btn btn-primary w-100 py-2" type="submit">Ingresar</button>
+                <button class="btn btn-primary w-100 py-2" type="submit" id="bntIngresar">Ingresar</button>
                 <p class="mt-5 mb-3 text-body-secondary">© 2017–2024</p>
             </form>
         </div>
@@ -33,3 +33,40 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log("JQuery is ready");
+
+        $("#bntIngresar").on("click", function (e) { 
+            e.preventDefault()
+            
+            const user = $("#user").val()
+            const pass = $("#pass").val()
+
+            const data = {
+                "username": user,//"System",
+                "password": pass,//"System"
+            }
+
+            const response = $.ajax({
+                "url": "https://localhost:7196/api/Users/authenticate",
+                "method": "POST",
+                "data": JSON.stringify(data),
+                "contentType": "application/json"
+            })
+                .done(function (data) {
+                    console.log(data)
+                    localStorage.setItem("token", data.Token)
+                    localStorage.setItem("userId", data.Id)
+
+                    //window.location = "/Collector/Index?collectorName=" + query;
+                    window.location = "/Inventario/Index";
+
+                }).fail(function () {
+                    console.log("FAILURE")
+                })
+
+        })
+    });
+</script>

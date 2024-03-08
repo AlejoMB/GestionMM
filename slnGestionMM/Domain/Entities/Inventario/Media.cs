@@ -17,7 +17,15 @@ namespace Domain.Entities.Inventario
         public int IdTamano { get; set; }
         public Tamano Tamano { get; set; }
         public int IdTipoTela { get; set; }
-        public TipoTela TipoTela { get; set; }
+        public TipoMedia TipoMedia { get; set; }
+        public int IdMarca { get; set; }
+        public Marca Marca { get; set; }
+        public int IdColor { get; set; }
+        public Color Color { get; set; }
+        public int IdDiseno { get; set; }
+        public Diseno Diseno { get; set; }
+        public int IdSegmento { get; set; }
+        public Segmento Segmento { get; set; }
 
     }
 }
