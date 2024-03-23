@@ -5,8 +5,32 @@
       "PackagePath": "staticwebassets\\Web.bundle.scp.css"
     },
     {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\BlancoNegro1.png",
+      "PackagePath": "staticwebassets\\Imagenes\\BlancoNegro1.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Imagen1.png",
+      "PackagePath": "staticwebassets\\Imagenes\\Imagen1.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Llamas.png",
+      "PackagePath": "staticwebassets\\Imagenes\\Llamas.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Rosada1.png",
+      "PackagePath": "staticwebassets\\Imagenes\\Rosada1.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\prueba.png",
+      "PackagePath": "staticwebassets\\Imagenes\\prueba.png"
+    },
+    {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\Login.jpg",
       "PackagePath": "staticwebassets\\Img\\Login.jpg"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\css\\Inventario.css",
+      "PackagePath": "staticwebassets\\css\\Inventario.css"
     },
     {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\css\\site.css",

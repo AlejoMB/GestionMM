@@ -1,5 +1,226 @@
-﻿@*
+﻿@using Web.Models.Inventario
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
+@model AddProductoModel
+
+<link rel="stylesheet" href="~/css/Inventario.css" />
+
+<div class="text-center">
+    <h2>Adicionar Media</h2>
+    <div class="row form-group border ">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Tipo Media
+            </div>
+            <div class="col-2">
+                <select asp-for="TipoMediaId" class="form-select" id="tipoMedia"
+                        asp-items="@ViewBag.TiposMedias">
+                    <option>-Tipo Media-</option>
+                </select>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Tamaño
+            </div>
+            <div class="col-2">
+                <select asp-for="TamanoId" class="form-select" id="tamano"
+                        asp-items="@ViewBag.Tamanos">
+                    <option>--Tamaño--</option>
+                </select>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Marca
+            </div>
+            <div class="col-2">
+                <select asp-for="MarcaId" class="form-select" id="marca"
+                        asp-items="@ViewBag.Marcas">
+                    <option>--Marca--</option>
+                </select>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        @* <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Color
+            </div>
+            <div class="col-2">
+                <select asp-for="ColorId" class="form-select" id="color"
+                        asp-items="@ViewBag.Colores">
+                    <option>--Color--</option>
+                </select>
+            </div>
+            <div class="col-4"></div>
+        </div> *@
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Colores
+            </div>
+            <div class="col-2">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Color</th>
+                            <th>Checkbox</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="color-square" style="background-color: #ff0000;">&ensp;&ensp;</span>Red</td>
+                            <td><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-square" style="background-color: #00ff00;">&ensp;&ensp;</span>Green</td>
+                            <td><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-square" style="background-color: #0000ff;">&ensp;&ensp;</span>Blue</td>
+                            <td><input type="checkbox"></td>
+                        </tr>
+                        <!-- Add more rows for additional colors -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Diseño
+            </div>
+            <div class="col-2">
+                <select asp-for="DisenoId" class="form-select" id="diseno"
+                        asp-items="@ViewBag.Disenos">
+                    <option>--Diseño--</option>
+                </select>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Segmento
+            </div>
+            <div class="col-2">
+                <select asp-for="SegmentoId" class="form-select" id="segmento"
+                        asp-items="@ViewBag.Segmentos">
+                    <option>--Segmento--</option>
+                </select>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Nombre
+            </div>
+            <div class="col-2">
+                <input type="text" id="name"/>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2 text-start">
+                Imagen
+            </div>
+            <div class="col-2">
+                <label class="btn btn-primary">
+                    Adjuntar <input type="file" id="fileInput" hidden>
+                </label>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 text-center">
+                <input type="button" class="btn btn-success" value="Guardar" onclick="uploadImage()" />
+                <input type="button" class="btn btn-outline-warning" value="Limpiar" onclick="limpiar()" />
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row" id="divError" style="display:none">
+            <div class="col-4"></div>
+            <div class="col-4 text-center product">
+                <label class="btn-danger" id="lblError"></label>
+                <img id="imgError" src="@ViewBag.UlrHost" alt="" />
+            </div>
+            <div class="col-4"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function uploadImage() {
+        $("#divError").hide();
+        var fileInput = document.getElementById('fileInput');
+        var imageFile = fileInput.files[0];
+        
+        var TipoMediaId = $("#tipoMedia").find(":selected").val();;
+        var TamanoId = $("#tamano").find(":selected").val();
+        var MarcaId = $("#marca").find(":selected").val();
+        var ColorId = $("#color").find(":selected").val();
+        var DisenoId = $("#diseno").find(":selected").val();
+        var SegmentoId = $("#segmento").find(":selected").val();
+        var Name = $("#name").val();
+
+        var formData = new FormData();
+        formData.append('Imagen', imageFile);
+        
+        formData.append('TipoMediaId', TipoMediaId);
+        formData.append('TamanoId', TamanoId);
+        formData.append('MarcaId', MarcaId);
+        formData.append('ColorId', ColorId);
+        formData.append('DisenoId', DisenoId);
+        formData.append('SegmentoId', SegmentoId);
+        formData.append('Name', Name);
+
+        $.ajax({
+            url: '/Inventario/UploadImage',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (error) {
+                console.log(error.responseJSON.detail);
+                $("#divError").show();
+
+                var resultError = error.responseJSON.detail.split("_");
+
+                $("#lblError").text(resultError[0]);
+                var urlHost = $('#imgError').attr('src');
+                $("#imgError").attr("src", urlHost + resultError[1]);
+                
+
+            }
+        });
+    }
+
+    function limpiar() { 
+        $("#tipoMedia").prop("selectedIndex", 0).val();
+        $("#tamano").prop("selectedIndex", 0).val();
+        $("#marca").prop("selectedIndex", 0).val();
+        $("#color").prop("selectedIndex", 0).val();
+        $("#diseno").prop("selectedIndex", 0).val();
+        $("#segmento").prop("selectedIndex", 0).val();
+        $("#name").prop("selectedIndex", 0).val();
+
+        $("#divError").hide();
+        $("#lblError").text("");
+    }
+</script>

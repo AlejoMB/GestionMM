@@ -142,4 +142,3 @@ C:\amb\GestionMM\slnGestionMM\WebAPI\obj\Debug\net8.0\ref\WebAPI.dll
 C:\amb\GestionMM\slnGestionMM\WebAPI\bin\Debug\net8.0\Scrutor.dll
 C:\amb\GestionMM\slnGestionMM\WebAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.dll
 C:\amb\GestionMM\slnGestionMM\WebAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
-C:\amb\GestionMM\slnGestionMM\WebAPI\obj\Debug\net8.0\WebAPI.sourcelink.json

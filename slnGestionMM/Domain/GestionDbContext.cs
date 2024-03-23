@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.Authorization;
+using Domain.Entities.Inventario;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,15 @@ namespace Domain
         public DbSet<User> Users { get; set; }
         public DbSet<Rol> Roles { get; set; }
         public DbSet<RolesUser> RolesUser { get; set; }
+        public DbSet<Media> Medias { get; set; }
+        public DbSet<Bodega> Bodegas { get; set; }
+        public DbSet<Proveedor> Proveedores { get; set; }
+        public DbSet<Tamano> Tamanos { get; set; }
+        public DbSet<TipoMedia> TipoMedias { get; set; }
+        public DbSet<Marca> Marcas { get; set; }
+        public DbSet<Color> Colores { get; set; }
+        public DbSet<Diseno> Disenos { get; set; }
+        public DbSet<Segmento> Segmentos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

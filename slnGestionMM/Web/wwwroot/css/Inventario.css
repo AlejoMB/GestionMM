@@ -1,0 +1,41 @@
+﻿#productGallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Distribute space between items */
+}
+
+.product {
+    width: calc(25% - 20px); /* 25% width for each product with some spacing */
+    margin-bottom: 20px;
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    padding: 10px;
+}
+
+.product img {
+    width: 100%; /* Image width to fit its container */
+    height: auto;
+    border-radius: 5px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.color-square {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 5px;
+    border: 1px solid #000;
+}
