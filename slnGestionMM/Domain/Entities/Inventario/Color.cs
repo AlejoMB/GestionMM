@@ -11,6 +11,6 @@ namespace Domain.Entities.Inventario
         public int Id { get; set; }
         public string Name { get; set; }
         public string RgbColor { get; set; }
-        public ICollection<Media> Medias { get; } = new List<Media>();
+        public List<MediaColores> MediaColores { get; set; }
     }
 }

@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\Imagenes\\BlancoNegro1.png"
     },
     {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Colores.png",
+      "PackagePath": "staticwebassets\\Imagenes\\Colores.png"
+    },
+    {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Imagen1.png",
       "PackagePath": "staticwebassets\\Imagenes\\Imagen1.png"
     },
@@ -19,6 +23,18 @@
     {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Rosada1.png",
       "PackagePath": "staticwebassets\\Imagenes\\Rosada1.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Rosadas.png",
+      "PackagePath": "staticwebassets\\Imagenes\\Rosadas.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\asd.png",
+      "PackagePath": "staticwebassets\\Imagenes\\asd.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\asdfasdf.png",
+      "PackagePath": "staticwebassets\\Imagenes\\asdfasdf.png"
     },
     {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\prueba.png",

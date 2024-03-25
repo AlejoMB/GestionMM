@@ -69,27 +69,38 @@
                 Colores
             </div>
             <div class="col-2">
-                <table>
+                <table class="color-table">
                     <thead>
-                        <tr>
+                        @* <tr>
                             <th>Color</th>
                             <th>Checkbox</th>
-                        </tr>
+                        </tr> *@
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><span class="color-square" style="background-color: #ff0000;">&ensp;&ensp;</span>Red</td>
-                            <td><input type="checkbox"></td>
-                        </tr>
-                        <tr>
+                        @foreach (var colorRow in @ViewBag.RowsColores)
+                        {
+                            <tr>
+                                @foreach(var color in colorRow.Colores)
+                                {
+                                <td>
+                                    <span class="color-square" style="background-color: @color.RgbColor;">&ensp;&ensp;</span>
+                                    <br /> @color.Name
+                                        <br /> <input id="@color.Id" type="checkbox">
+                                </td>
+                                }
+                            </tr>
+                        }
+                            @* <td><input type="checkbox"></td> *@
+                        
+                        @* <tr>
                             <td><span class="color-square" style="background-color: #00ff00;">&ensp;&ensp;</span>Green</td>
                             <td><input type="checkbox"></td>
                         </tr>
                         <tr>
                             <td><span class="color-square" style="background-color: #0000ff;">&ensp;&ensp;</span>Blue</td>
                             <td><input type="checkbox"></td>
-                        </tr>
-                        <!-- Add more rows for additional colors -->
+                        </tr> *@
+                        
                     </tbody>
                 </table>
             </div>
@@ -186,6 +197,17 @@
         formData.append('DisenoId', DisenoId);
         formData.append('SegmentoId', SegmentoId);
         formData.append('Name', Name);
+
+        var coloresList = [];
+        $('table.color-table tbody tr').each(function () {
+            $(this).find('input[type="checkbox"]:checked').each(function () {
+                coloresList.push($(this).attr('id'));
+            });
+        });
+
+        coloresList.forEach(function (color) {
+            formData.append('colores', color);
+        });
 
         $.ajax({
             url: '/Inventario/UploadImage',

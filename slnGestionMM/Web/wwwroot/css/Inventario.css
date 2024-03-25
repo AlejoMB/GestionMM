@@ -17,18 +17,17 @@
     border-radius: 5px;
 }
 
-table {
+.color-table {
     border-collapse: collapse;
     width: 100%;
 }
 
-th, td {
-    border: 1px solid #ddd;
+.color-table th, .color-table td {
     padding: 8px;
-    text-align: left;
+    text-align: center;
 }
 
-th {
+.color-table th {
     background-color: #f2f2f2;
 }
 

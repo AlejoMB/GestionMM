@@ -151,9 +151,39 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RgbColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Colores");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Blanco",
+                            RgbColor = "#ffffff"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Negro",
+                            RgbColor = "#ffffff"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Rojo",
+                            RgbColor = "#ffffff"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Beige/Negro",
+                            RgbColor = "#ffffff"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Diseno", b =>
@@ -171,6 +201,58 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Disenos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Estampado"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Jaspeado - Chispas"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Jaspeado - Cuadros"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Anti Resvalante"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Patas Pollo"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Importadas"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Gala - Económicas"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Gala - Importadas"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Edu. Física - Económicas"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Edu. Física - Importadas"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Marca", b =>
@@ -188,6 +270,43 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Marcas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Nike"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Adiddas"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Puma"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "XPN"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Jogo"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Jordan"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "alo"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Media", b =>
@@ -199,9 +318,6 @@ namespace Domain.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("BodegaId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ColorId")
                         .HasColumnType("int");
 
                     b.Property<int?>("DisenoId")
@@ -234,8 +350,6 @@ namespace Domain.Migrations
 
                     b.HasIndex("BodegaId");
 
-                    b.HasIndex("ColorId");
-
                     b.HasIndex("DisenoId");
 
                     b.HasIndex("MarcaId");
@@ -249,6 +363,29 @@ namespace Domain.Migrations
                     b.HasIndex("TipoMediaId");
 
                     b.ToTable("Medias");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Inventario.MediaColores", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MediaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColorId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("MediaColores");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Proveedor", b =>
@@ -307,6 +444,18 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Segmentos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Adultos"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Niños"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Tamano", b =>
@@ -324,6 +473,68 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tamanos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Larga"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Tobillera"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Canilleras"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Tobilleras largas (2/4)"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Talonera"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "3/4"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Pantalon"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Pernera"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "6-8"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "4-6"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "8-10"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "9-11"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.TipoMedia", b =>
@@ -341,6 +552,53 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TipoMedias");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Deportivas"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Calcetines"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Mallas"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bucaneras"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Calentadora"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Compresoras"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Dercoradas"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Colegialas"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Antideslizante"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Authorization.RolesUser", b =>
@@ -368,10 +626,6 @@ namespace Domain.Migrations
                         .WithMany("Medias")
                         .HasForeignKey("BodegaId");
 
-                    b.HasOne("Domain.Entities.Inventario.Color", "Color")
-                        .WithMany("Medias")
-                        .HasForeignKey("ColorId");
-
                     b.HasOne("Domain.Entities.Inventario.Diseno", "Diseno")
                         .WithMany("Medias")
                         .HasForeignKey("DisenoId");
@@ -398,8 +652,6 @@ namespace Domain.Migrations
 
                     b.Navigation("Bodega");
 
-                    b.Navigation("Color");
-
                     b.Navigation("Diseno");
 
                     b.Navigation("Marca");
@@ -411,6 +663,21 @@ namespace Domain.Migrations
                     b.Navigation("Tamano");
 
                     b.Navigation("TipoMedia");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Inventario.MediaColores", b =>
+                {
+                    b.HasOne("Domain.Entities.Inventario.Color", "Color")
+                        .WithMany("MediaColores")
+                        .HasForeignKey("ColorId");
+
+                    b.HasOne("Domain.Entities.Inventario.Media", "Media")
+                        .WithMany("MediaColores")
+                        .HasForeignKey("MediaId");
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("Domain.Entities.Authorization.Rol", b =>
@@ -430,7 +697,7 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Entities.Inventario.Color", b =>
                 {
-                    b.Navigation("Medias");
+                    b.Navigation("MediaColores");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Diseno", b =>
@@ -441,6 +708,11 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.Inventario.Marca", b =>
                 {
                     b.Navigation("Medias");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Inventario.Media", b =>
+                {
+                    b.Navigation("MediaColores");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Proveedor", b =>

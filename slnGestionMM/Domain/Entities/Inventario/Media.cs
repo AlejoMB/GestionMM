@@ -22,12 +22,11 @@ namespace Domain.Entities.Inventario
         //public int IdMarca { get; set; }
         public Marca? Marca { get; set; }
         //public int IdColor { get; set; }
-        public Color? Color { get; set; }
         //public int IdDiseno { get; set; }
         public Diseno? Diseno { get; set; }
         //public int IdSegmento { get; set; }
         public Segmento? Segmento { get; set; }
-        public List<MediaColores> Colores { get; set; }
+        public List<MediaColores> MediaColores { get; set; }
 
     }
 }

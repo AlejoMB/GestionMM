@@ -14,7 +14,12 @@
     @foreach (var product in Model)
     {
         <div class="product">
-            <h7>@product.TipoMedia.Name / @product.Tamano.Name / @product.Marca.Name / @product.Color.Name / @product.Diseno.Name / @product.Segmento.Name </h7>
+            <h7>@product.TipoMedia.Name / @product.Tamano.Name / @product.Marca.Name / @* @product.Color.Name / *@ @product.Diseno.Name / @product.Segmento.Name </h7>
+            <br />
+            @foreach(var color in product.MediaColores)
+            {
+                <span class="color-square" style="background-color: @color.Color.RgbColor" title="@color.Color.Name">&ensp;&ensp;</span>
+            }
             <img src="@ViewBag.UlrHost@product.Imagen" alt="@product.Name" />
             <p>Cantidad: 10 Unidades</p>
         </div>
