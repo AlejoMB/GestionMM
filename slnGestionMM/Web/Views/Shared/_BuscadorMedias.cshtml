@@ -1,0 +1,94 @@
+﻿@using Domain.Models.Compras
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model ComprasEncModel
+
+<div class="row">
+    @* <div class="col-2 text-start">
+        Tipo Media
+    </div> *@
+    
+    <div class="col-4">
+        <select asp-for="Categorias.TipoMediaId" class="form-select" id="tipoMedia"
+                asp-items="@ViewBag.TiposMedias">
+            <option>-Tipo Media-</option>
+        </select>
+    </div>
+    <div class="col-4">
+        <select asp-for="Categorias.TamanoId" class="form-select" id="tamano"
+                asp-items="@ViewBag.Tamanos">
+            <option>--Tamaño--</option>
+        </select>
+    </div>
+    <div class="col-4">
+        <select asp-for="Categorias.MarcaId" class="form-select" id="marca"
+                asp-items="@ViewBag.Marcas">
+            <option>--Marca--</option>
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3" >
+    </div>
+    <div class="col-6 text-center">
+        <table class="color-table">
+            <thead>
+            </thead>
+            <tbody>
+                @foreach (var colorRow in @ViewBag.RowsColores)
+                {
+                    <tr>
+                        @foreach (var color in colorRow.Colores)
+                        {
+                            <td>
+                                <span class="color-square" style="background-color: @color.RgbColor;">&ensp;&ensp;</span>
+                                <br /> @color.Name
+                                <br /> <input id="@color.Id" type="checkbox">
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-3">
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
+        <select asp-for="Categorias.DisenoId" class="form-select" id="diseno"
+                asp-items="@ViewBag.Disenos">
+            <option>--Diseño--</option>
+        </select>
+    </div>
+    <div class="col-4">
+        <select asp-for="Categorias.SegmentoId" class="form-select" id="segmento"
+                asp-items="@ViewBag.Segmentos">
+            <option>--Segmento--</option>
+        </select>
+    </div>
+    <div class="col-4">
+        <input type="text" id="name" class="form-control" placeholder="Nombre" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
+        
+    </div>
+    <div class="col-4 text-center">
+        <br />
+        <button type="button" class="btn btn-primary" onclick="BuscarMedias()">Buscar</button>
+    </div>
+    <div class="col-4">
+        
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div id="productGallery">
+        </div>
+    </div>
+</div>

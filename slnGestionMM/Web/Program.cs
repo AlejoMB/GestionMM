@@ -1,5 +1,7 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Extensions.Msal;
+using Services.Inventario;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,9 @@ builder.Services.AddCors(options =>
                           .AllowAnyOrigin();
                       });
 });
+
+//builder.Services.AddScoped<IMediaService, MediaService>();
+builder.Services.AddSingleton<IMediaService>(new MediaService(new GestionDbContext()));
 
 var app = builder.Build();
 

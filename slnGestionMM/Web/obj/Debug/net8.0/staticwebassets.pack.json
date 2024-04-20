@@ -45,8 +45,16 @@
       "PackagePath": "staticwebassets\\Img\\Login.jpg"
     },
     {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\css\\Compras.css",
+      "PackagePath": "staticwebassets\\css\\Compras.css"
+    },
+    {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\css\\Inventario.css",
       "PackagePath": "staticwebassets\\css\\Inventario.css"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\css\\ModalPopUp.css",
+      "PackagePath": "staticwebassets\\css\\ModalPopUp.css"
     },
     {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\css\\site.css",

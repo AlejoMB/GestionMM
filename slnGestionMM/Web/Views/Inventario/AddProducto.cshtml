@@ -1,4 +1,4 @@
-﻿@using Web.Models.Inventario
+﻿@using Domain.Models.Inventario
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -12,63 +12,43 @@
     <h2>Adicionar Media</h2>
     <div class="row form-group border ">
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2 text-start">
-                Tipo Media
-            </div>
-            <div class="col-2">
+            
+            
+            <div class="col-12 text-center">
                 <select asp-for="TipoMediaId" class="form-select" id="tipoMedia"
                         asp-items="@ViewBag.TiposMedias">
                     <option>-Tipo Media-</option>
                 </select>
             </div>
-            <div class="col-4"></div>
+            
         </div>
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2 text-start">
-                Tamaño
-            </div>
-            <div class="col-2">
+            
+            
+            <div class="col-12">
                 <select asp-for="TamanoId" class="form-select" id="tamano"
                         asp-items="@ViewBag.Tamanos">
                     <option>--Tamaño--</option>
                 </select>
             </div>
-            <div class="col-4"></div>
+            
         </div>
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2 text-start">
-                Marca
-            </div>
-            <div class="col-2">
+            
+            
+            <div class="col-12 text-center">
                 <select asp-for="MarcaId" class="form-select" id="marca"
                         asp-items="@ViewBag.Marcas">
                     <option>--Marca--</option>
                 </select>
             </div>
-            <div class="col-4"></div>
+            
         </div>
-        @* <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2 text-start">
-                Color
-            </div>
-            <div class="col-2">
-                <select asp-for="ColorId" class="form-select" id="color"
-                        asp-items="@ViewBag.Colores">
-                    <option>--Color--</option>
-                </select>
-            </div>
-            <div class="col-4"></div>
-        </div> *@
+        
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2 text-start">
-                Colores
-            </div>
-            <div class="col-2">
+            
+            
+            <div class="col-12 text-center">
                 <table class="color-table">
                     <thead>
                         @* <tr>
@@ -104,55 +84,53 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-4"></div>
+            
         </div>
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2 text-start">
-                Diseño
-            </div>
-            <div class="col-2">
+            
+            <div class="col-12 text-center">
                 <select asp-for="DisenoId" class="form-select" id="diseno"
                         asp-items="@ViewBag.Disenos">
                     <option>--Diseño--</option>
                 </select>
             </div>
-            <div class="col-4"></div>
+            
         </div>
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2 text-start">
-                Segmento
-            </div>
-            <div class="col-2">
+            
+            <div class="col-12 text-center">
                 <select asp-for="SegmentoId" class="form-select" id="segmento"
                         asp-items="@ViewBag.Segmentos">
                     <option>--Segmento--</option>
                 </select>
             </div>
-            <div class="col-4"></div>
+            
         </div>
         <div class="row">
-            <div class="col-4"></div>
+            
             <div class="col-2 text-start">
                 Nombre
             </div>
-            <div class="col-2">
-                <input type="text" id="name"/>
+            <div class="col-10">
+                <input type="text" class="form-control" id="name" />
             </div>
-            <div class="col-4"></div>
+            
         </div>
         <div class="row">
-            <div class="col-4"></div>
+            
             <div class="col-2 text-start">
                 Imagen
             </div>
-            <div class="col-2">
-                <label class="btn btn-primary">
+            <div class="col-10">
+                @* <label class="btn btn-primary">
                     Adjuntar <input type="file" id="fileInput" hidden>
-                </label>
+                </label> *@
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupFile01">Adjuntar</label>
+                    <input type="file" class="form-control" id="fileInput">
+                </div>
             </div>
-            <div class="col-4"></div>
+            
         </div>
         <div class="row">
             <div class="col-4"></div>

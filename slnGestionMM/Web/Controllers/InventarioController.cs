@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Web.Models;
-using Web.Models.Inventario;
+using Web.Helpers;
+using Domain.Models;
+using Domain.Models.Inventario;
+using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -48,7 +50,7 @@ namespace Web.Controllers
             ViewBag.TiposMedias = new SelectList(tiposMedias, "Id", "Name");
             ViewBag.Tamanos = new SelectList(tamanos, "Id", "Name");
             ViewBag.Marcas = new SelectList(marcas, "Id", "Name");
-            ViewBag.RowsColores = CrearTablaColores(colores);
+            ViewBag.RowsColores = ViewHelpers.CrearTablaColores(colores);
             ViewBag.Disenos = new SelectList(disenos, "Id", "Name");
             ViewBag.Segmentos = new SelectList(segmentos, "Id", "Name");
 
@@ -57,39 +59,8 @@ namespace Web.Controllers
             return View();
         }
 
-        public List<ColoresModel> CrearTablaColores(List<Color> colores)
-        {
-            var rowsColoresModel = new List<ColoresModel>();
-            var contColores = 1;
-            var rowColorModel = new ColoresModel();
-            rowColorModel.Colores = new List<Color>();
-            foreach (var color in colores) 
-            {
-                if (contColores % 3 == 0)
-                {
-                    rowColorModel.Colores.Add(color);
-                    rowsColoresModel.Add(rowColorModel);
-                    rowColorModel = new ColoresModel();
-                    rowColorModel.Colores = new List<Color>();
-                }
-                else
-                {
-                    rowColorModel.Colores.Add(color);
-                }
-
-                if (contColores == colores.Count() && contColores % 3 != 0)
-                {
-                    rowsColoresModel.Add(rowColorModel);
-                }
-
-                contColores++;
-            }
-
-            return rowsColoresModel;
-        }
-
         [HttpPost]
-        public IActionResult UploadImage([FromForm] AddProductoModel model)
+        public IActionResult UploadImage([FromForm] WebAddProductoModel model)
         {
             var result = ProductExists(model);
             if(result != null)

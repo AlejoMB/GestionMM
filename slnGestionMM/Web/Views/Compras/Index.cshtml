@@ -1,0 +1,358 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> *@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+<link rel="stylesheet" href="~/css/ModalPopUp.css" />
+<link rel="stylesheet" href="~/css/Compras.css" />
+<link rel="stylesheet" href="~/css/Inventario.css" />
+
+<div class="container">
+    <div class="row justify-content-center">        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Encabezado de Compra</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>ID:</strong>    
+                        </div>
+                        <div class="col-md-1">
+                            <input class="form-control" type="text" placeholder="Id" aria-label=".form-control-sm example">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Proveedor:</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="hidden" id="hdnProveedor"/>
+                            <input class="form-control" id="txtProveedor" type="text" placeholder="Proveedor" aria-label=".form-control-sm example">
+                            
+                        </div>
+                        <div class="col-md-1">
+                            <span id="open-modal"><i class="fa fa-search" data-bs-toggle="modal" data-bs-target="#proveedorModal"></i></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Medio de Pago:</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-control" aria-label=".form-control-sm example">
+                                <option>Efectivo</option>
+                                <option>Transferencia</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Fecha de Pago:</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <input class="form-control datepicker" type="text" placeholder="Fecha Pago" aria-label=".form-control-sm example">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Pagado:</strong>
+                        </div>
+                        <div class="col-md-1">
+                            <select class="form-control" aria-label=".form-control-sm example">
+                                <option>Si</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Total:</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="TotalEnc" class="form-control currencyInput" disabled type="text" placeholder="$" aria-label=".form-control-sm example">
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Detalle de Compra</div>
+                <div class="card-body card-body-centered">
+                    <div class="table-container">
+                        <table id="DetalleCompraTb" class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Media</th>
+                                    <th>Costo Unitario</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyCompras">
+                                <tr class="row-to-clone">
+                                    <td class="col-md-1">
+                                        <a href="#" id="search_1" data-bs-toggle="modal" data-bs-target="#mediasModal" onclick="setId(this);">
+                                            <i class="fa fa-search"></i>
+                                        </a>
+                                    </td>
+                                    <td class="col-md-1">
+                                        <input id="txtCodigo_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2">
+                                        <input id="txtCosto_1" class="form-control currencyInput  costo" type="text" aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-1">
+                                        <input id="txtCant_1" class="form-control cantidad" type="text" aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2">
+                                        <input id="txtTotal_1" class="form-control total" type="text" disabled aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2 plusCol">
+                                        <a href="#" class="add-row">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="RowId" data-value="" />
+<input type="hidden" id="UlrHost" data-value="@ViewBag.UlrHost" />
+
+<!-- Modal Proveedores-->
+<div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <div class="modal-body">
+                <!-- Modal Content -->
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">Proveedores</div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nombre</th>
+                                            <th>Celular</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var proveedor in @ViewBag.Proveedores)
+                                        { 
+                                        <tr>
+                                            <td>
+                                                <span>
+                                                        <i id="@proveedor.Id" class="fa fa-arrow-circle-right" onclick="@string.Format("setProveedor('{0}_{1}')", @proveedor.Id, @proveedor.Name)"></i>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @proveedor.Name
+                                            </td>
+                                            <td>
+                                                @proveedor.Phone
+                                            </td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- Modal Buscador Medias-->
+<div class="modal fade" id="mediasModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content" style="margin : 0% !important; width:100% !important">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Buscador Medias</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <partial name="~/Views/Shared/_BuscadorMedias.cshtml" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $(".datepicker").datepicker().datepicker("setDate", "today");
+
+        function calculateTotal() {
+            var costo = $(this).closest("tr").find(".costo").val().replace("$", "").replace(".", "");
+            var cantidad = $(this).val();
+            var total = costo * cantidad;
+            $(this).closest("tr").find(".total").val(formatCurrency(total));
+        }
+
+        // Event listener for txtCant fields
+        //$(".cantidad").on("blur", calculateTotal);
+        $(document).on("blur", ".cantidad", calculateTotal);
+
+        $(document).on("click", ".add-row", function () {
+            // Clone the row
+            var newRow = $(".row-to-clone").clone();
+            // Reset the values of input fields in the cloned row
+            newRow.find('input[type="text"]').val('');
+            // Generate a new suffix for IDs
+            //var idSuffix = $(".row-to-clone").length + 1;
+            var idSuffix = $('#DetalleCompraTb tr').length;
+            // Update IDs of the cloned row elements
+            newRow.find("[id]").each(function () {
+                var oldId = $(this).attr("id");
+                var newId = oldId.replace(/_\d+$/, "") + "_" + idSuffix;
+                $(this).attr("id", newId);
+            });
+            // Remove class that makes it hidden
+            newRow.removeClass("row-to-clone");
+            // Append the new row to the table body
+            $("#bodyCompras").append(newRow);
+            // Attach event listener for txtCant field in the new row
+            newRow.find(".cantidad").on("blur", calculateTotal);
+        });
+
+        $(document).on("blur", ".cantidad, .total", function () {
+            var totalSum = 0;
+            $('.total').each(function () {
+                var val = parseFloat($(this).val().replace("$", "").replace(".", ""));
+                if (!isNaN(val)) {
+                    totalSum += val;
+                }
+            });
+            
+            $("#TotalEnc").val(formatCurrency(totalSum));
+        });
+        
+    });
+
+    function setProveedor(proveedor)
+    {
+        var result = proveedor.split("_");
+
+        $("#hdnProveedor").val(result[0]);
+        $("#txtProveedor").val(result[1]);
+
+        var myModalEl = document.getElementById('proveedorModal')
+        var modal = bootstrap.Modal.getInstance(myModalEl)
+
+        modal.hide();
+    }
+
+    function OpenBuscadorMedias() { 
+        //var myModalEl = document.getElementById('mediasModal')
+        //var modal = bootstrap.Modal.getInstance(myModalEl)
+
+        var modal = new bootstrap.Modal(document.getElementById('mediasModal'), { })
+
+        modal.show();
+    }
+
+    function BuscarMedias() {
+        var TipoMediaId = $("#tipoMedia").find(":selected").val();;
+        var TamanoId = $("#tamano").find(":selected").val();
+        var MarcaId = $("#marca").find(":selected").val();
+        var ColorId = $("#color").find(":selected").val();
+        var DisenoId = $("#diseno").find(":selected").val();
+        var SegmentoId = $("#segmento").find(":selected").val();
+        var Name = $("#name").val();
+
+        var formData = new FormData();
+        formData.append('TipoMediaId', TipoMediaId);
+        formData.append('TamanoId', TamanoId);
+        formData.append('MarcaId', MarcaId);
+        formData.append('ColorId', ColorId);
+        formData.append('DisenoId', DisenoId);
+        formData.append('SegmentoId', SegmentoId);
+        formData.append('Name', Name);
+
+        var coloresList = [];
+        $('table.color-table tbody tr').each(function () {
+            $(this).find('input[type="checkbox"]:checked').each(function () {
+                coloresList.push($(this).attr('id'));
+            });
+        });
+
+        coloresList.forEach(function (color) {
+            formData.append('colores', color);
+        });
+
+        $.ajax({
+            url: '/Compras/BuscarMedias',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                //console.log(data);
+                var jsonResult = JSON.parse(data);
+                var htmlString = "";
+                $.each(jsonResult, function(index, media)
+                { 
+                    htmlString = htmlString + "<div class='product'>" +
+                        "<h7>" + media.TipoMediaText + " / " + media.TamanoText + " / " + media.MarcaText + " / " + media.DisenoText + " / " + media.SegmentoText + " </h7>" +
+                        "<br />";
+                    $.each(media.ColoresText, function (indexColor, color) {
+                        var colorValues = color.split("_");
+                        var rgbColor = colorValues[0].toString();
+                        var nameColor = colorValues[1].toString();
+                        htmlString = htmlString + "<span class='color-square' style='background-color: " + rgbColor + "' title='" + nameColor + "'>&ensp;&ensp;</span>";
+                    });
+                    var urlHost = $("#UlrHost").data("value");
+                    htmlString = htmlString + "<img src='" + urlHost + media.Imagen + "' title='" + media.Name + "' />" +
+                        "<p>Cantidad: 10 Unidades</p>" +
+                        "</div>";
+                });
+
+                $("#productGallery").empty();
+                $("#productGallery").append(htmlString);
+            },
+            error: function (error) {
+                console.log(error.responseJSON.detail);
+                $("#divError").show();
+
+                var resultError = error.responseJSON.detail.split("_");
+
+                $("#lblError").text(resultError[0]);
+                var urlHost = $('#imgError').attr('src');
+                $("#imgError").attr("src", urlHost + resultError[1]);
+
+
+            }
+        });
+    }
+
+    function setId(row) { 
+        
+        $("#hdnProveedor").val(row.id);
+        console.log("Id: " + $("#hdnProveedor").val());
+        
+    }
+
+</script>
+
+
+
+
+
