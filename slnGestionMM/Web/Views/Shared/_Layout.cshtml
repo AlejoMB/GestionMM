@@ -90,6 +90,12 @@
             value = value.toString().replace(/\D/g, '');
             return '$' + value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
         }
+
+        function removeformatCurrency(value) 
+        {
+            value = value.toString().replace('$', '').replace('.', '');
+            return value;
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

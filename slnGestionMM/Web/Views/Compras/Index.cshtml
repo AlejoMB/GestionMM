@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-md-3">
                             <input type="hidden" id="hdnProveedor"/>
-                            <input class="form-control" id="txtProveedor" type="text" placeholder="Proveedor" aria-label=".form-control-sm example">
+                            <input class="form-control" id="txtProveedor" disabled type="text" placeholder="Proveedor" aria-label=".form-control-sm example">
                             
                         </div>
                         <div class="col-md-1">
@@ -40,9 +40,9 @@
                             <strong>Medio de Pago:</strong>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-control" aria-label=".form-control-sm example">
-                                <option>Efectivo</option>
-                                <option>Transferencia</option>
+                            <select id="medioPago" class="form-control" aria-label=".form-control-sm example">
+                                <option value="1">Efectivo</option>
+                                <option value="2">Transferencia</option>
                             </select>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             <strong>Fecha de Pago:</strong>
                         </div>
                         <div class="col-md-2">
-                            <input class="form-control datepicker" type="text" placeholder="Fecha Pago" aria-label=".form-control-sm example">
+                            <input id="fechaPago" class="form-control datepicker" type="text" placeholder="Fecha Pago" aria-label=".form-control-sm example">
                         </div>
                     </div>
                     <div class="row">
@@ -59,9 +59,9 @@
                             <strong>Pagado:</strong>
                         </div>
                         <div class="col-md-1">
-                            <select class="form-control" aria-label=".form-control-sm example">
-                                <option>Si</option>
-                                <option>No</option>
+                            <select id="Estado" class="form-control" aria-label=".form-control-sm example">
+                                <option value="0">Si</option>
+                                <option value="1">No</option>
                             </select>
                         </div>
                     </div>
@@ -88,6 +88,7 @@
                                 <tr>
                                     <th></th>
                                     <th>Media</th>
+                                    <th>Nombre</th>
                                     <th>Costo Unitario</th>
                                     <th>Cantidad</th>
                                     <th>Total</th>
@@ -105,6 +106,9 @@
                                         <input id="txtCodigo_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-2">
+                                        <input id="txtName_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2">
                                         <input id="txtCosto_1" class="form-control currencyInput  costo" type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
@@ -117,15 +121,20 @@
                                         <a href="#" class="add-row">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </a>
+                                        <a href="#">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
                                     </td>
                                     </tr>
                             </tbody>
                         </table>
+                        <input type="button" class="btn btn-success" value="Guardar" onclick="CrearCompra()">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 </div>
 
 <input type="hidden" id="RowId" data-value="" />
@@ -164,7 +173,7 @@
                                                 @proveedor.Name
                                             </td>
                                             <td>
-                                                @proveedor.Phone
+                                                @proveedor.Celular
                                             </td>
                                         </tr>
                                         }
@@ -261,9 +270,6 @@
     }
 
     function OpenBuscadorMedias() { 
-        //var myModalEl = document.getElementById('mediasModal')
-        //var modal = bootstrap.Modal.getInstance(myModalEl)
-
         var modal = new bootstrap.Modal(document.getElementById('mediasModal'), { })
 
         modal.show();
@@ -320,7 +326,7 @@
                         htmlString = htmlString + "<span class='color-square' style='background-color: " + rgbColor + "' title='" + nameColor + "'>&ensp;&ensp;</span>";
                     });
                     var urlHost = $("#UlrHost").data("value");
-                    htmlString = htmlString + "<img src='" + urlHost + media.Imagen + "' title='" + media.Name + "' />" +
+                    htmlString = htmlString + "<a id='" + media.Id + "_" + media.Name + "' href='#' onclick='SetImageId(this.id);'><img src='" + urlHost + media.Imagen + "' title='" + media.Name + "' /></a>" +
                         "<p>Cantidad: 10 Unidades</p>" +
                         "</div>";
                 });
@@ -344,10 +350,104 @@
     }
 
     function setId(row) { 
-        
-        $("#hdnProveedor").val(row.id);
-        console.log("Id: " + $("#hdnProveedor").val());
-        
+        $("#RowId").val(row.id);
+        console.log("Id: " + $("#RowId").val());
+    }
+
+    function SetImageId(linkId) { 
+        var rowId = $("#RowId").val();
+        var result = rowId.split("_");
+        var lknResult = linkId.split("_");
+
+        $("#txtCodigo_" + result[1]).val(lknResult[0]);
+        $("#txtName_" + result[1]).val(lknResult[1]);
+
+        var myModalEl = document.getElementById('mediasModal')
+        var modal = bootstrap.Modal.getInstance(myModalEl)
+
+        modal.hide();
+    }
+
+    function CrearCompra(){
+        if (ValidarCompra())
+        {
+            var userId = localStorage.getItem('userId');
+
+            // Encabezado
+            var formData = new FormData();
+            formData.append('Proveedor', $("#hdnProveedor").val());
+            formData.append('MedioPago', $("#medioPago").val());
+            formData.append('FechaPago', $("#fechaPago").datepicker({ dateFormat: 'dd-mm-yy' }).val());
+            formData.append('Pagado', $("#Estado").val());
+            formData.append('Total', removeformatCurrency($("#TotalEnc").val()));
+            formData.append('UserId', userId);
+            
+            //Detalle
+            var detalleData = [];
+            var rows = $('#DetalleCompraTb tr').length;
+            for (var i = 1; i <= rows - 1; i++) {
+
+                var detalleItem = {
+                    Media: $("#txtCodigo_" + i).val(),
+                    CostoUnitario: removeformatCurrency($("#txtCosto_" + i).val()),
+                    Cantidad: $("#txtCant_" + i).val(),
+                    Total: removeformatCurrency($("#txtTotal_" + i).val())
+                };
+
+                detalleData.push(detalleItem);
+            }
+
+            var detalleDataJson = JSON.stringify(detalleData);
+            formData.append('DetalleString', detalleDataJson);
+
+            /*detalleData.forEach(function (detail) {
+                formData.append('Detalle', detail);
+            });*/
+
+
+            $.ajax({
+                url: '/Compras/CrearCompra',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    console.log('Success');
+                },
+                error: function (error) {
+                    console.log(error.responseJSON.detail);
+                }
+            });
+        }
+    }
+
+    function ValidarCompra()
+    {
+        var isValid = true;
+        isValid = validateInput("#txtProveedor");
+
+        var rows = $('#DetalleCompraTb tr').length;
+        for (var i = 1; i <= rows - 1; i++) {
+            // Your code here
+            isValid = validateInput("#txtCodigo_" + i);
+            isValid = validateInput("#txtName_" + i);
+            isValid = validateInput("#txtCosto_" + i);
+            isValid = validateInput("#txtCant_" + i);
+        }
+
+        return isValid;
+    }
+
+    function validateInput(inputName)
+    {
+        if ($(inputName).val() === '') {
+            $(inputName).addClass("error");
+            return false;
+        }
+        else {
+            $(inputName).removeClass("error");
+            return true;
+        }
     }
 
 </script>

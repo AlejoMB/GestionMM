@@ -7,6 +7,9 @@ using Domain.Models.Inventario;
 using Services.Inventario;
 using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Web.ViewModels;
+using Domain.Models.Compras;
+using Domain.Entities.Compras;
 
 namespace Web.Controllers
 {
@@ -51,6 +54,7 @@ namespace Web.Controllers
         {
             var result = _mediaService.SearchMedia(model)
                                       .Select(p => new AddProductoModel { 
+                                          Id = p.Id,
                                           ColoresText = p.MediaColores.Select(mc => mc.Color.RgbColor + "_" + mc.Color.Name).ToList(),
                                           DisenoText = p.Diseno.Name,
                                           MarcaText = p.Marca.Name,
@@ -64,6 +68,42 @@ namespace Web.Controllers
             var jsonData = JsonConvert.SerializeObject(result);
 
             return Ok(jsonData);
+        }
+
+        [HttpPost]
+        public IActionResult CrearCompra([FromForm] ComprasEncModel model)
+        {
+            model.Detalles = JsonConvert.DeserializeObject<List<ComprasDetalleModel>>(model.DetalleString);
+
+            var compraEncab = new ComprasEnc()
+            {
+                Proveedor = _dbContext.Proveedores.FirstOrDefault(p => p.Id == model.Proveedor),
+                MedioPago = _dbContext.MedioPago.FirstOrDefault(m => m.Id == model.MedioPago),
+                FechaPago = model.FechaPago,
+                Pagado = Convert.ToBoolean(model.Pagado),
+                Total = model.Total,
+                FechaCreado = DateTime.Now,
+                CreadoPorUser = model.UserId
+            };
+
+            foreach (var detalleModel in model.Detalles)
+            {
+                var comprasDetalle = new ComprasDetalle() { 
+                    Media = _dbContext.Medias.FirstOrDefault(m => m.Id == detalleModel.Media),
+                    CostoUnitario = detalleModel.CostoUnitario,
+                    Cantidad = detalleModel.Cantidad,
+                    Total = detalleModel.Total
+
+                };
+
+                compraEncab.ComprasDetalle.Add(comprasDetalle);
+            }
+
+            _dbContext.ComprasEnc.Add(compraEncab);
+            _dbContext.SaveChanges();
+
+
+            return Ok("Compra saved successfully");
         }
     }
 }

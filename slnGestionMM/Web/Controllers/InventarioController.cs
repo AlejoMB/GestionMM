@@ -3,9 +3,7 @@ using Domain.Entities.Inventario;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using Web.Helpers;
-using Domain.Models;
 using Domain.Models.Inventario;
 using Web.ViewModels;
 

@@ -13,6 +13,10 @@ namespace Domain.Entities.Compras
         public string Name { get; set; }
         public string Celular { get; set; }
         public string Direccion { get; set; }
+        public DateTime CreateDate { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public int ModifiedBy { get; set; }
         public ICollection<ComprasEnc> ComprasEnc { get; } = new List<ComprasEnc>();
     }
 }

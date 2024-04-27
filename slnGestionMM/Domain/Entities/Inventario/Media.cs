@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Entities.Compras;
+using Domain.Entities.Facturacion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,8 +16,6 @@ namespace Domain.Entities.Inventario
         //public int IdBodega { get; set; }
         public Bodega? Bodega { get; set; }
         //public int IdProveedor { get; set; }
-        public Proveedor? Proveedor { get; set; }
-        //public int IdTamano { get; set; }
         public Tamano? Tamano { get; set; }
         //public int IdTipoMedia { get; set; }
         public TipoMedia? TipoMedia { get; set; }
@@ -27,6 +27,9 @@ namespace Domain.Entities.Inventario
         //public int IdSegmento { get; set; }
         public Segmento? Segmento { get; set; }
         public List<MediaColores> MediaColores { get; set; }
+        public ICollection<ComprasDetalle> ComprasDetalle { get; } = new List<ComprasDetalle>();
+        public ICollection<Existencias> Existencias { get; } = new List<Existencias>();
+        public ICollection<FacturaDetalle> FacturaDetalle { get; } = new List<FacturaDetalle>(); 
 
     }
 }

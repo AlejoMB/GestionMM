@@ -4,6 +4,7 @@ namespace Domain.Models.Inventario
 {
     public class AddProductoModel
     {
+        public int Id { get; set; }
         public int? TipoMediaId { get; set; }
         public string TipoMediaText { get; set; }
         public int? TamanoId { get; set; }

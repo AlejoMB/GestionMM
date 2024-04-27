@@ -122,6 +122,130 @@ namespace Domain.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.Compras.ComprasDetalle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CostoUnitario")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EncabezadoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MediaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EncabezadoId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("ComprasDetalle");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Compras.ComprasEnc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreadoPorUser")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCreado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MedioPagoId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Pagado")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProveedorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedioPagoId");
+
+                    b.HasIndex("ProveedorId");
+
+                    b.ToTable("ComprasEnc");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Compras.MedioPago", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MedioPago");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Compras.Proveedor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Proveedores");
+                });
+
             modelBuilder.Entity("Domain.Entities.Inventario.Bodega", b =>
                 {
                     b.Property<int>("Id")
@@ -170,19 +294,43 @@ namespace Domain.Migrations
                         {
                             Id = 2,
                             Name = "Negro",
-                            RgbColor = "#ffffff"
+                            RgbColor = "#000000"
                         },
                         new
                         {
                             Id = 3,
                             Name = "Rojo",
-                            RgbColor = "#ffffff"
+                            RgbColor = "#FF0000"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Beige/Negro",
-                            RgbColor = "#ffffff"
+                            Name = "Beige",
+                            RgbColor = "#F3E5AB"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Fucsia",
+                            RgbColor = "#E68FAC"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Azul",
+                            RgbColor = "#0000ff"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Amarillo",
+                            RgbColor = "#FFFF00"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Verde",
+                            RgbColor = "#008000"
                         });
                 });
 
@@ -334,9 +482,6 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProveedorId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("SegmentoId")
                         .HasColumnType("int");
 
@@ -353,8 +498,6 @@ namespace Domain.Migrations
                     b.HasIndex("DisenoId");
 
                     b.HasIndex("MarcaId");
-
-                    b.HasIndex("ProveedorId");
 
                     b.HasIndex("SegmentoId");
 
@@ -386,47 +529,6 @@ namespace Domain.Migrations
                     b.HasIndex("MediaId");
 
                     b.ToTable("MediaColores");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Inventario.Proveedor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Proveedores");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Segmento", b =>
@@ -620,6 +722,44 @@ namespace Domain.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Compras.ComprasDetalle", b =>
+                {
+                    b.HasOne("Domain.Entities.Compras.ComprasEnc", "Encabezado")
+                        .WithMany("ComprasDetalle")
+                        .HasForeignKey("EncabezadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Inventario.Media", "Media")
+                        .WithMany()
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Encabezado");
+
+                    b.Navigation("Media");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Compras.ComprasEnc", b =>
+                {
+                    b.HasOne("Domain.Entities.Compras.MedioPago", "MedioPago")
+                        .WithMany("ComprasEnc")
+                        .HasForeignKey("MedioPagoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Compras.Proveedor", "Proveedor")
+                        .WithMany("ComprasEnc")
+                        .HasForeignKey("ProveedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedioPago");
+
+                    b.Navigation("Proveedor");
+                });
+
             modelBuilder.Entity("Domain.Entities.Inventario.Media", b =>
                 {
                     b.HasOne("Domain.Entities.Inventario.Bodega", "Bodega")
@@ -633,10 +773,6 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Entities.Inventario.Marca", "Marca")
                         .WithMany("Medias")
                         .HasForeignKey("MarcaId");
-
-                    b.HasOne("Domain.Entities.Inventario.Proveedor", "Proveedor")
-                        .WithMany("Medias")
-                        .HasForeignKey("ProveedorId");
 
                     b.HasOne("Domain.Entities.Inventario.Segmento", "Segmento")
                         .WithMany("Medias")
@@ -655,8 +791,6 @@ namespace Domain.Migrations
                     b.Navigation("Diseno");
 
                     b.Navigation("Marca");
-
-                    b.Navigation("Proveedor");
 
                     b.Navigation("Segmento");
 
@@ -690,6 +824,21 @@ namespace Domain.Migrations
                     b.Navigation("RolesUser");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Compras.ComprasEnc", b =>
+                {
+                    b.Navigation("ComprasDetalle");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Compras.MedioPago", b =>
+                {
+                    b.Navigation("ComprasEnc");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Compras.Proveedor", b =>
+                {
+                    b.Navigation("ComprasEnc");
+                });
+
             modelBuilder.Entity("Domain.Entities.Inventario.Bodega", b =>
                 {
                     b.Navigation("Medias");
@@ -713,11 +862,6 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.Inventario.Media", b =>
                 {
                     b.Navigation("MediaColores");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Inventario.Proveedor", b =>
-                {
-                    b.Navigation("Medias");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Segmento", b =>

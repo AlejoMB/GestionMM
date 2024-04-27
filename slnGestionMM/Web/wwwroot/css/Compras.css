@@ -12,3 +12,7 @@
     text-align: right;
     align-content: center;
 }
+
+.error {
+    border: solid 2px #FF0000;
+}

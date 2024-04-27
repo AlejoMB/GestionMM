@@ -1,11 +1,8 @@
 ﻿using Domain.Entities.Authorization;
+using Domain.Entities.Compras;
 using Domain.Entities.Inventario;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Domain
 {
@@ -49,6 +46,10 @@ namespace Domain
         public DbSet<Diseno> Disenos { get; set; }
         public DbSet<Segmento> Segmentos { get; set; }
         public DbSet<MediaColores> MediaColores { get; set; }
+        public DbSet<MedioPago> MedioPago { get; set; }
+
+        public DbSet<ComprasEnc> ComprasEnc { get; set; }
+        public DbSet<ComprasDetalle> ComprasDetalle { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +68,8 @@ namespace Domain
                     Password = "System"
                 }
             );
+            modelBuilder.Entity<RolesUser>().HasData(new RolesUser { RolesUserId = 1, RolId = 1, UserId = 1 });
+
             modelBuilder.Entity<TipoMedia>().HasData(new TipoMedia { Id = 1, Name = "Deportivas" });
             modelBuilder.Entity<TipoMedia>().HasData(new TipoMedia { Id = 2, Name = "Calcetines" });
             modelBuilder.Entity<TipoMedia>().HasData(new TipoMedia { Id = 3, Name = "Mallas" });
@@ -113,12 +116,13 @@ namespace Domain
             modelBuilder.Entity<Segmento>().HasData(new Segmento { Id = 2, Name = "Niños" });
 
             modelBuilder.Entity<Color>().HasData(new Color { Id = 1, Name = "Blanco" , RgbColor = "#ffffff" });
-            modelBuilder.Entity<Color>().HasData(new Color { Id = 2, Name = "Negro", RgbColor = "#ffffff" });
-            modelBuilder.Entity<Color>().HasData(new Color { Id = 3, Name = "Rojo", RgbColor = "#ffffff" });
-            modelBuilder.Entity<Color>().HasData(new Color { Id = 4, Name = "Beige/Negro", RgbColor = "#ffffff" });
-
-
-            modelBuilder.Entity<RolesUser>().HasData(new RolesUser { RolesUserId = 1, RolId = 1, UserId = 1 });
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 2, Name = "Negro", RgbColor = "#000000" });
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 3, Name = "Rojo", RgbColor = "#FF0000" });
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 4, Name = "Beige", RgbColor = "#F3E5AB" });
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 5, Name = "Fucsia", RgbColor = "#E68FAC" });
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 6, Name = "Azul", RgbColor = "#0000ff" }); 
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 7, Name = "Amarillo", RgbColor = "#FFFF00" }); 
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 8, Name = "Verde", RgbColor = "#008000" }); 
         }
     }
 }
