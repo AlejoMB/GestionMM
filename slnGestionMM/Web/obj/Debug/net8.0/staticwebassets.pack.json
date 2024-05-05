@@ -57,6 +57,10 @@
       "PackagePath": "staticwebassets\\Img\\Login.jpg"
     },
     {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\LogoML.jpg",
+      "PackagePath": "staticwebassets\\Img\\LogoML.jpg"
+    },
+    {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\css\\Compras.css",
       "PackagePath": "staticwebassets\\css\\Compras.css"
     },

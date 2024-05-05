@@ -207,6 +207,23 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MedioPago");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Efectivo"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Transferencia"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Transportadora"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Compras.Proveedor", b =>
@@ -244,6 +261,195 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Proveedores");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.Clientes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Cedula")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Correo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cliente");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.EstadosFactu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EstadosFactu");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.FacturaDetalle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EncabezadoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MediaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrecioUnitario")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EncabezadoId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("FacturaDetalle");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.FacturaEnc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreadoPorUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EstadoFactuId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCreado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MedioPagoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NoGuia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TipoEnvioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TransportadoraId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("EstadoFactuId");
+
+                    b.HasIndex("MedioPagoId");
+
+                    b.HasIndex("TipoEnvioId");
+
+                    b.HasIndex("TransportadoraId");
+
+                    b.ToTable("FacturaEnc");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.TipoEnvios", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipoEnvio");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Domicilio"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Contra Entrega"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.Transportadora", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CostoEnvio")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProcentajeVenta")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transportadora");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CostoEnvio = 0,
+                            Name = "Inter Rapidisimo",
+                            ProcentajeVenta = 0
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Bodega", b =>
@@ -401,6 +607,27 @@ namespace Domain.Migrations
                             Id = 10,
                             Name = "Edu. Física - Importadas"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Inventario.Existencias", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CantidadProducto")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MediaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("Existencias");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Marca", b =>
@@ -731,7 +958,7 @@ namespace Domain.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Inventario.Media", "Media")
-                        .WithMany()
+                        .WithMany("ComprasDetalle")
                         .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -758,6 +985,77 @@ namespace Domain.Migrations
                     b.Navigation("MedioPago");
 
                     b.Navigation("Proveedor");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.FacturaDetalle", b =>
+                {
+                    b.HasOne("Domain.Entities.Facturacion.FacturaEnc", "Encabezado")
+                        .WithMany("FacturaDetalle")
+                        .HasForeignKey("EncabezadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Inventario.Media", "Media")
+                        .WithMany("FacturaDetalle")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Encabezado");
+
+                    b.Navigation("Media");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.FacturaEnc", b =>
+                {
+                    b.HasOne("Domain.Entities.Facturacion.Clientes", "Cliente")
+                        .WithMany("FacturaEnc")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Facturacion.EstadosFactu", "EstadoFactu")
+                        .WithMany("FacturaEnc")
+                        .HasForeignKey("EstadoFactuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Compras.MedioPago", "MedioPago")
+                        .WithMany("FacturaEnc")
+                        .HasForeignKey("MedioPagoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Facturacion.TipoEnvios", "TipoEnvio")
+                        .WithMany("FacturaEnc")
+                        .HasForeignKey("TipoEnvioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Facturacion.Transportadora", "Transportadora")
+                        .WithMany("FacturaEnc")
+                        .HasForeignKey("TransportadoraId");
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("EstadoFactu");
+
+                    b.Navigation("MedioPago");
+
+                    b.Navigation("TipoEnvio");
+
+                    b.Navigation("Transportadora");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Inventario.Existencias", b =>
+                {
+                    b.HasOne("Domain.Entities.Inventario.Media", "Media")
+                        .WithMany("Existencias")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Media", b =>
@@ -832,11 +1130,38 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.Compras.MedioPago", b =>
                 {
                     b.Navigation("ComprasEnc");
+
+                    b.Navigation("FacturaEnc");
                 });
 
             modelBuilder.Entity("Domain.Entities.Compras.Proveedor", b =>
                 {
                     b.Navigation("ComprasEnc");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.Clientes", b =>
+                {
+                    b.Navigation("FacturaEnc");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.EstadosFactu", b =>
+                {
+                    b.Navigation("FacturaEnc");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.FacturaEnc", b =>
+                {
+                    b.Navigation("FacturaDetalle");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.TipoEnvios", b =>
+                {
+                    b.Navigation("FacturaEnc");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Facturacion.Transportadora", b =>
+                {
+                    b.Navigation("FacturaEnc");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inventario.Bodega", b =>
@@ -861,6 +1186,12 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Entities.Inventario.Media", b =>
                 {
+                    b.Navigation("ComprasDetalle");
+
+                    b.Navigation("Existencias");
+
+                    b.Navigation("FacturaDetalle");
+
                     b.Navigation("MediaColores");
                 });
 

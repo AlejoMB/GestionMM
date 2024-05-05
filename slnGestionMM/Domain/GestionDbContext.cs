@@ -1,5 +1,6 @@
 ﻿using Domain.Entities.Authorization;
 using Domain.Entities.Compras;
+using Domain.Entities.Facturacion;
 using Domain.Entities.Inventario;
 using Microsoft.EntityFrameworkCore;
 
@@ -50,6 +51,10 @@ namespace Domain
 
         public DbSet<ComprasEnc> ComprasEnc { get; set; }
         public DbSet<ComprasDetalle> ComprasDetalle { get; set; }
+        public DbSet<Clientes> Cliente { get; set; }
+        public DbSet<TipoEnvios> TipoEnvio { get; set; }
+        public DbSet<Transportadora> Transportadora { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -122,7 +127,17 @@ namespace Domain
             modelBuilder.Entity<Color>().HasData(new Color { Id = 5, Name = "Fucsia", RgbColor = "#E68FAC" });
             modelBuilder.Entity<Color>().HasData(new Color { Id = 6, Name = "Azul", RgbColor = "#0000ff" }); 
             modelBuilder.Entity<Color>().HasData(new Color { Id = 7, Name = "Amarillo", RgbColor = "#FFFF00" }); 
-            modelBuilder.Entity<Color>().HasData(new Color { Id = 8, Name = "Verde", RgbColor = "#008000" }); 
+            modelBuilder.Entity<Color>().HasData(new Color { Id = 8, Name = "Verde", RgbColor = "#008000" });
+
+            modelBuilder.Entity<TipoEnvios>().HasData(new TipoEnvios { Id = 1, Name = "Domicilio" });
+            modelBuilder.Entity<TipoEnvios>().HasData(new TipoEnvios { Id = 2, Name = "Contra Entrega" });
+
+            modelBuilder.Entity<Transportadora>().HasData(new Transportadora { Id = 1, Name = "Inter Rapidisimo" });
+
+            modelBuilder.Entity<MedioPago>().HasData(new MedioPago { Id = 1, Name = "Efectivo" });
+            modelBuilder.Entity<MedioPago>().HasData(new MedioPago { Id = 2, Name = "Transferencia" });
+            modelBuilder.Entity<MedioPago>().HasData(new MedioPago { Id = 3, Name = "Transportadora" });
+
         }
     }
 }

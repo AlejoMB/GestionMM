@@ -19,7 +19,7 @@
                             <strong>ID:</strong>    
                         </div>
                         <div class="col-md-1">
-                            <input class="form-control" type="text" placeholder="Id" aria-label=".form-control-sm example">
+                            <input class="form-control" type="text" disabled placeholder="Id" aria-label=".form-control-sm example">
                         </div>
                     </div>
                     <div class="row">
@@ -400,11 +400,6 @@
             var detalleDataJson = JSON.stringify(detalleData);
             formData.append('DetalleString', detalleDataJson);
 
-            /*detalleData.forEach(function (detail) {
-                formData.append('Detalle', detail);
-            });*/
-
-
             $.ajax({
                 url: '/Compras/CrearCompra',
                 type: 'POST',
@@ -438,21 +433,4 @@
         return isValid;
     }
 
-    function validateInput(inputName)
-    {
-        if ($(inputName).val() === '') {
-            $(inputName).addClass("error");
-            return false;
-        }
-        else {
-            $(inputName).removeClass("error");
-            return true;
-        }
-    }
-
 </script>
-
-
-
-
-

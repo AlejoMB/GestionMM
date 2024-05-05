@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "YLL+wEKtLUY2GTt6lwZpQTR0NPIR9VGlCb7L34M4YXI=",
+  "Hash": "zAdCwFSZGBCGOOwpbroHDVQ6C5unSfQ23qgJpMkPm18=",
   "Source": "Web",
   "BasePath": "_content/Web",
   "Mode": "Default",
@@ -395,6 +395,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Img\\Login.jpg"
+    },
+    {
+      "Identity": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\LogoML.jpg",
+      "SourceId": "Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\",
+      "BasePath": "_content/Web",
+      "RelativePath": "Img/LogoML.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Img\\LogoML.jpg"
     },
     {
       "Identity": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\js\\site.js",

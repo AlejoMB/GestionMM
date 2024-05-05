@@ -73,29 +73,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        $(document).ready(function () {
-
-            $(function () {
-                $(".datepicker").datepicker();
-            });
-
-
-            $(document).on("input", ".currencyInput", function (event) {
-                $(this).val(formatCurrency($(this).val()));
-            });
-
-        });
-
-        function formatCurrency(value) {
-            value = value.toString().replace(/\D/g, '');
-            return '$' + value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-        }
-
-        function removeformatCurrency(value) 
-        {
-            value = value.toString().replace('$', '').replace('.', '');
-            return value;
-        }
+        
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

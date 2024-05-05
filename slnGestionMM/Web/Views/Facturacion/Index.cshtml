@@ -1,0 +1,237 @@
+﻿@using Web.ViewModels
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model FacturaEncModel
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Factura</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>ID:</strong>
+                        </div>
+                        <div class="col-md-1">
+                            <input class="form-control" type="text" disabled placeholder="Id" aria-label=".form-control-sm example">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Cliente:</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="hidden" id="hdnCliente" />
+                            <input class="form-control" id="txtCliente" type="text" placeholder="Cedula" aria-label=".form-control-sm example">
+
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control" id="txtCleinteName" disabled type="text" aria-label=".form-control-sm example">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Tipo Envío:</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <select asp-for="TipoEnvioId" class="form-select" id="tipoEnvio"
+                                    asp-items="@ViewBag.TiposEnvios">
+                                <option>-Tipo Envio-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" hidden>
+                        <div class="col-md-3">
+                            <strong>Transportadora:</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <select asp-for="TransportadoraId" class="form-select" id="transportadora"
+                                    asp-items="@ViewBag.Transportadora">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Medio de Pago:</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <select id="medioPago" class="form-control" aria-label=".form-control-sm example">
+                                <option value="1">Efectivo</option>
+                                <option value="2">Transferencia</option>
+                                <option value="3">Transportadora</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Fecha de Pago:</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="fechaPago" class="form-control datepicker" type="text" placeholder="Fecha Pago" aria-label=".form-control-sm example">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Pagado:</strong>
+                        </div>
+                        <div class="col-md-1">
+                            <select id="Estado" class="form-control" aria-label=".form-control-sm example">
+                                <option value="0">Si</option>
+                                <option value="1">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Total:</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="TotalEnc" class="form-control currencyInput" disabled type="text" placeholder="$" aria-label=".form-control-sm example">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Detalle de Compra</div>
+                <div class="card-body card-body-centered">
+                    <div class="table-container">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Cliente-->
+<div class="modal fade" id="ClienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="lblCedula" class="form-label">Cedula</label>
+                    <input class="form-control" id="mdlCedula">
+                    <label for="lblCedula" class="form-label">Nombre</label>
+                    <input class="form-control" id="mdlNombre">
+                    <label for="lblCedula" class="form-label">Correo</label>
+                    <input class="form-control" id="mdlCorreo">
+                    <label for="lblCedula" class="form-label">Celular</label>
+                    <input class="form-control" id="mdlCelular">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="crearCliente()">Guardar Cliente</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(document).on("blur", "#txtCliente", buscarCliente);
+
+        $("#tipoEnvio").on("change", function () {
+            if ($(this).val() === '2') { 
+            
+            }
+            // Check input( $( this ).val() ) for validity here
+        });
+    });
+
+
+    function buscarCliente()
+    {
+        if ($("#txtCliente").val() === '') {
+            return false;
+        }
+        var cedCliente = $("#txtCliente").val();
+        $.ajax({
+            url: '/Facturacion/GetCliente',
+            type: 'GET',
+            data: { cedula: cedCliente },
+            success: function (data) {
+                //console.log('Success');
+                $("#hdnCliente").val(data.id);
+                $("#txtCleinteName").val(data.nombre);
+            },
+            error: function (error) {
+                limpiarCliente();
+                $("#mdlCedula").val($("#txtCliente").val());
+                $("#hdnCliente").val("");
+                $("#txtCleinteName").val("");
+                var modal = new bootstrap.Modal(document.getElementById('ClienteModal'), {})
+                modal.show();
+            }
+        });
+
+    }
+
+    function crearCliente()
+    {
+        if (validarCLiente()) 
+        {
+            if (confirm("Desea Crear Cliente?") == true) {
+                
+                var formData = new FormData();
+                formData.append('Cedula', $("#mdlCedula").val());
+                formData.append('Nombre', $("#mdlNombre").val());
+                formData.append('Correo', $("#mdlCorreo").val());
+                formData.append('Celular', $("#mdlCelular").val());
+
+                $.ajax({
+                    url: '/Facturacion/CrearCliente',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $("#hdnCliente").val(data.id);
+                        $("#txtCleinteName").val(data.nombre);
+                        limpiarCliente();
+                        var myModalEl = document.getElementById('ClienteModal')
+                        var modal = bootstrap.Modal.getInstance(myModalEl)
+                        modal.hide();
+
+                        
+                    },
+                    error: function (error) {
+                        console.log(error.responseJSON.detail);
+                    }
+                });
+
+            } else {
+                text = "You canceled!";
+            }
+        }
+    }
+
+    function limpiarCliente() 
+    { 
+        $("#mdlCedula").val('');
+        $("#mdlNombre").val('');
+        $("#mdlCorreo").val('');
+        $("#mdlCelular").val('');
+    }
+
+    function validarCLiente()
+    {
+        var isValid = true;
+        isValid = validateInput("#mdlCedula");
+        isValid = validateInput("#mdlNombre");
+        isValid = validateInput("#mdlCorreo");
+        isValid = validateInput("#mdlCelular");
+
+        return isValid;
+    }
+</script>

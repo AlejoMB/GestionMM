@@ -1,0 +1,87 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .invoice {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .invoice-header {
+        margin-bottom: 20px;
+    }
+
+        .invoice-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .invoice-header p {
+            margin: 5px 0;
+        }
+
+    .invoice-details th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div class="invoice">
+    <div class="invoice-header">
+        <img src="~/img/LogoML.jpg" alt="Company Logo" style="max-width: 150px; margin-bottom: 10px;">
+        <h1>Factura <span style="color:red">39456</span></h1>
+        <p><strong>Cliente:</strong> John Duque</p>
+        <p><strong>Total:</strong> $16000</p>
+        <p><strong>Estado:</strong> Pendiente</p>
+        <p><strong>Tipo Pago:</strong> Transferencia</p>
+        <p><strong>Tipo Envío:</strong> Contra Entrega</p>
+        <p><strong>Transportadora:</strong> Deprisa</p>
+    </div>
+    <table class="table table-bordered invoice-details">
+        <thead>
+            <tr>
+                <th>Codigo Media</th>
+                <th>Descripción</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0123</td>
+                <td>Jaspeadas Rojas</td>
+                <td>$3500</td>
+                <td>2</td>
+                <td>$7000</td>
+            </tr>
+            <tr>
+                <td>0124</td>
+                <td>Deportivas Nike</td>
+                <td>$3000</td>
+                <td>3</td>
+                <td>$9000</td>
+            </tr>
+            <!-- Add more rows for additional products -->
+        </tbody>
+    </table>
+    <div class="text-end">
+        <p><strong>Total Factura:</strong> $16000</p>
+    </div>
+</div>
