@@ -53,6 +53,18 @@
       "PackagePath": "staticwebassets\\Imagenes\\prueba.png"
     },
     {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\Icons\\delete.png",
+      "PackagePath": "staticwebassets\\Img\\Icons\\delete.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\Icons\\plus.png",
+      "PackagePath": "staticwebassets\\Img\\Icons\\plus.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\Icons\\search.png",
+      "PackagePath": "staticwebassets\\Img\\Icons\\search.png"
+    },
+    {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\Login.jpg",
       "PackagePath": "staticwebassets\\Img\\Login.jpg"
     },

@@ -3,12 +3,14 @@ using Domain.Entities.Facturacion;
 using Domain.Entities.Inventario;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Web.Helpers;
 
 namespace Web.Controllers
 {
     public class FacturacionController : Controller
     {
         private GestionDbContext _dbContext;
+        const string URLImages = "https://localhost:7155/imagenes/";
 
         public FacturacionController(GestionDbContext dbContext)
         {
@@ -24,6 +26,25 @@ namespace Web.Controllers
             ViewBag.TiposEnvios = new SelectList(tiposEnvios, "Id", "Name"); 
             ViewBag.Transportadora = new SelectList(transportadora, "Id", "Name");
             ViewBag.MedioPago = new SelectList(medioPago, "Id", "Name");
+
+
+            //Valores buscador Medias
+            ViewBag.UlrHost = URLImages;
+            var tiposMedias = _dbContext.TipoMedias.ToList();
+            var tamanos = _dbContext.Tamanos.ToList();
+            var marcas = _dbContext.Marcas.ToList();
+            var colores = _dbContext.Colores.ToList();
+            var disenos = _dbContext.Disenos.ToList();
+            var segmentos = _dbContext.Segmentos.ToList();
+
+
+
+            ViewBag.TiposMedias = new SelectList(tiposMedias, "Id", "Name");
+            ViewBag.Tamanos = new SelectList(tamanos, "Id", "Name");
+            ViewBag.Marcas = new SelectList(marcas, "Id", "Name");
+            ViewBag.RowsColores = ViewHelpers.CrearTablaColores(colores);
+            ViewBag.Disenos = new SelectList(disenos, "Id", "Name");
+            ViewBag.Segmentos = new SelectList(segmentos, "Id", "Name");
 
             return View();
         }

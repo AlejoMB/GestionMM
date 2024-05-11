@@ -6,6 +6,10 @@
 }
 @model FacturaEncModel
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+<link rel="stylesheet" href="~/css/ModalPopUp.css" />
+<link rel="stylesheet" href="~/css/Compras.css" />
+<link rel="stylesheet" href="~/css/Inventario.css" />
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -45,7 +49,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row" hidden>
+                    <div class="row" hidden id="divTransport">
                         <div class="col-md-3">
                             <strong>Transportadora:</strong>
                         </div>
@@ -59,11 +63,9 @@
                         <div class="col-md-3">
                             <strong>Medio de Pago:</strong>
                         </div>
-                        <div class="col-md-2">
-                            <select id="medioPago" class="form-control" aria-label=".form-control-sm example">
-                                <option value="1">Efectivo</option>
-                                <option value="2">Transferencia</option>
-                                <option value="3">Transportadora</option>
+                        <div class="col-md-3">
+                            <select asp-for="MedioPagoId" class="form-select" id="medioPago"
+                                    asp-items="@ViewBag.MedioPago">
                             </select>
                         </div>
                     </div>
@@ -101,16 +103,66 @@
     <div class="row justify-content-center mt-4">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Detalle de Compra</div>
+                <div class="card-header">Detalle Factura</div>
                 <div class="card-body card-body-centered">
                     <div class="table-container">
                         
+                        <table id="DetalleFactuTb" class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Media</th>
+                                    <th>Nombre</th>
+                                    <th>Costo Unitario</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyFactura">
+                                <tr class="row-to-clone">
+                                    <td class="col-md-1">
+                                        <a href="#" id="search_1" data-bs-toggle="modal" data-bs-target="#mediasModal" onclick="setId(this);">
+                                            <img src="~/Img/Icons/search.png" width="30px" height="30px" class="add-row" />
+                                        </a>
+                                    </td>
+                                    <td class="col-md-1">
+                                        <input id="txtCodigo_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2">
+                                        <input id="txtName_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2">
+                                        <input id="txtCosto_1" class="form-control currencyInput  costo" type="text" aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-1">
+                                        <input id="txtCant_1" class="form-control cantidad" type="text" aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2">
+                                        <input id="txtTotal_1" class="form-control total" type="text" disabled aria-label=".form-control-sm example">
+                                    </td>
+                                    <td class="col-md-2 plusCol">
+                                        <a href="#" id="add_1">
+                                            <img src="~/Img/Icons/plus.png" width="30px" height="30px" class="add-row" />
+                                        </a>
+                                        <a href="#" id="delete_1">
+                                            <img src="~/Img/Icons/delete.png" width="30px" height="30px" class="delete-row" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <input type="button" class="btn btn-success" value="Guardar" onclick="CrearCompra()">
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<input type="hidden" id="RowId" data-value="" />
+<input type="hidden" id="UlrHost" data-value="@ViewBag.UlrHost" />
+
 <!-- Modal Cliente-->
 <div class="modal fade" id="ClienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -137,15 +189,57 @@
         </div>
     </div>
 </div>
+<!-- Modal Buscador Medias-->
+<div class="modal fade" id="mediasModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content" style="margin : 0% !important; width:100% !important">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Buscador Medias</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <partial name="~/Views/Shared/_BuscadorMedias.cshtml" />
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         $(document).on("blur", "#txtCliente", buscarCliente);
 
         $("#tipoEnvio").on("change", function () {
-            if ($(this).val() === '2') { 
-            
+            if ($(this).val() === '2') {
+                $('#divTransport').attr("hidden", false);
+                $("#medioPago").val('3');
+            }
+            else 
+            {
+                $('#divTransport').attr("hidden", true);
+                $("#medioPago").val('1');
             }
             // Check input( $( this ).val() ) for validity here
+        });
+
+        $(document).on("click", ".add-row", function () {
+            // Clone the row
+            var newRow = $(".row-to-clone").clone();
+            // Reset the values of input fields in the cloned row
+            newRow.find('input[type="text"]').val('');
+            // Generate a new suffix for IDs
+            //var idSuffix = $(".row-to-clone").length + 1;
+            var idSuffix = $('#DetalleFactuTb tr').length;
+            // Update IDs of the cloned row elements
+            newRow.find("[id]").each(function () {
+                var oldId = $(this).attr("id");
+                var newId = oldId.replace(/_\d+$/, "") + "_" + idSuffix;
+                $(this).attr("id", newId);
+            });
+            // Remove class that makes it hidden
+            newRow.removeClass("row-to-clone");
+            // Append the new row to the table body
+            $("#bodyFactura").append(newRow);
+            // Attach event listener for txtCant field in the new row
+            newRow.find(".cantidad").on("blur", calculateTotal);
         });
     });
 

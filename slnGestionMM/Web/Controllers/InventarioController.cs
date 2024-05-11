@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Web.Helpers;
 using Domain.Models.Inventario;
 using Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -20,6 +21,7 @@ namespace Web.Controllers
             _env = env;
         }
 
+        [Authorize(Roles = "Administrador")] 
         public IActionResult Index()
         {
             ViewBag.UlrHost = URLImages;

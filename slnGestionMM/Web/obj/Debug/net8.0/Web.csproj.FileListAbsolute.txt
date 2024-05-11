@@ -265,3 +265,4 @@ C:\amb\GestionMM\slnGestionMM\Web\bin\Debug\net8.0\runtimes\win\lib\net7.0\Syste
 C:\amb\GestionMM\slnGestionMM\Web\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\amb\GestionMM\slnGestionMM\Web\bin\Debug\net8.0\Services.dll
 C:\amb\GestionMM\slnGestionMM\Web\bin\Debug\net8.0\Services.pdb
+C:\amb\GestionMM\slnGestionMM\Web\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

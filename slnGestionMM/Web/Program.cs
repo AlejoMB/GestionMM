@@ -1,7 +1,11 @@
 using Domain;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client.Extensions.Msal;
+using Microsoft.IdentityModel.Tokens;
 using Services.Inventario;
+using System.Text;
+using Web.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +32,34 @@ builder.Services.AddCors(options =>
 //builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddSingleton<IMediaService>(new MediaService(new GestionDbContext()));
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.Authority = "https://localhost:7155";
+    options.Audience = "https://localhost:7155";
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Secret"]!))
+    };
+});
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,7 +75,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add the custom middleware to the pipeline
+app.UseMiddleware<AddAuthorizationHeaderMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

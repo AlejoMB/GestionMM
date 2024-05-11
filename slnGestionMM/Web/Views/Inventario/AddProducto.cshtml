@@ -6,6 +6,38 @@
 }
 @model AddProductoModel
 
+<style>
+
+    .custom-file-button {
+        input [type="file"]
+
+    {
+        margin-left: -2px !important;
+        &::-webkit-file-upload-button
+
+    {
+        display: none;
+    }
+
+    &::file-selector-button {
+        display: none;
+    }
+
+    }
+
+    &:hover {
+        label
+
+    {
+        background-color: #dde0e3;
+        cursor: pointer;
+    }
+
+    }
+    }
+
+</style>
+
 <link rel="stylesheet" href="~/css/Inventario.css" />
 
 <div class="text-center">
@@ -122,11 +154,12 @@
                 Imagen
             </div>
             <div class="col-10">
-                @* <label class="btn btn-primary">
-                    Adjuntar <input type="file" id="fileInput" hidden>
-                </label> *@
-                <div class="input-group mb-3">
+                @* <div class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupFile01">Adjuntar</label>
+                    <input type="file" class="form-control" id="fileInput">
+                </div> *@
+                <div class="input-group custom-file-button">
+                    <label class="input-group-text" for="inputGroupFile">Adjuntar</label>
                     <input type="file" class="form-control" id="fileInput">
                 </div>
             </div>
@@ -195,6 +228,8 @@
             processData: false,
             success: function (data) {
                 console.log(data);
+                alert("Media Creada");
+                limpiar();
             },
             error: function (error) {
                 console.log(error.responseJSON.detail);
@@ -218,7 +253,10 @@
         $("#color").prop("selectedIndex", 0).val();
         $("#diseno").prop("selectedIndex", 0).val();
         $("#segmento").prop("selectedIndex", 0).val();
-        $("#name").prop("selectedIndex", 0).val();
+        $("#name").val("");
+        $("#fileInput").val("");
+
+        $('input[type="checkbox"]').prop('checked', false);
 
         $("#divError").hide();
         $("#lblError").text("");

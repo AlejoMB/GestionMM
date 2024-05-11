@@ -60,8 +60,23 @@
                     localStorage.setItem("token", data.token)
                     localStorage.setItem("userId", data.id)
 
+                    $.ajax({
+                        url: '/Home/AddAuthorization',
+                        method: 'GET',
+                        /*headers: {
+                            'Authorization': 'Bearer ' + jwtToken // Include the token in the Authorization header
+                        },*/
+                        data: { token: data.token },
+                        success: function (data) {
+                            // Handle successful response from MVC controller
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle error
+                        }
+                    });
+
                     //window.location = "/Collector/Index?collectorName=" + query;
-                    window.location = "/Inventario/Index";
+                    //window.location = "/Inventario/Index";
 
                 }).fail(function () {
                     console.log("FAILURE")

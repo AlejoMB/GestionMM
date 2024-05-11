@@ -216,8 +216,6 @@
             $(this).closest("tr").find(".total").val(formatCurrency(total));
         }
 
-        // Event listener for txtCant fields
-        //$(".cantidad").on("blur", calculateTotal);
         $(document).on("blur", ".cantidad", calculateTotal);
 
         $(document).on("click", ".add-row", function () {
