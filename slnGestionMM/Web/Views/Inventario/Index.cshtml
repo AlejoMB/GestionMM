@@ -14,7 +14,7 @@
     @foreach (var product in Model)
     {
         <div class="product">
-            <h7>@product.TipoMedia.Name / @product.Tamano.Name / @product.Marca.Name / @* @product.Color.Name / *@ @product.Diseno.Name / @product.Segmento.Name </h7>
+            <h7>@product.TipoMedia?.Name @product.Tamano?.Name @product.Marca?.Name @product.Diseno?.Name @product.Segmento?.Name </h7>
             <br />
             @foreach(var color in product.MediaColores)
             {

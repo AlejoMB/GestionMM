@@ -68,7 +68,7 @@ namespace Web.Controllers
                 return this.Problem("Media existente con nombre:" + result);
             }
 
-            string filePath = GetFilePath(model.Name) + ".png";
+            string filePath = GetFilePath(model.Name.Replace(" ", "_")) + ".png";
             if(System.IO.File.Exists(filePath))
             {
                 System.IO.File.Delete(filePath);
@@ -81,7 +81,7 @@ namespace Web.Controllers
             var media = new Media()
             {
                 Name = model.Name,
-                Imagen = model.Name + ".png"
+                Imagen = model.Name.Replace(" ","_") + ".png"
 
             };
 

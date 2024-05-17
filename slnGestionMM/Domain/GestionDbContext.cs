@@ -2,12 +2,14 @@
 using Domain.Entities.Compras;
 using Domain.Entities.Facturacion;
 using Domain.Entities.Inventario;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace Domain
 {
-    public class GestionDbContext : DbContext
+    public class GestionDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public GestionDbContext()
         {
@@ -54,7 +56,8 @@ namespace Domain
         public DbSet<Clientes> Cliente { get; set; }
         public DbSet<TipoEnvios> TipoEnvio { get; set; }
         public DbSet<Transportadora> Transportadora { get; set; }
-        
+        public DbSet<Existencias> Existencias { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

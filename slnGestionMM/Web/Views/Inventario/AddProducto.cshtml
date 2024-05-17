@@ -49,7 +49,7 @@
             <div class="col-12 text-center">
                 <select asp-for="TipoMediaId" class="form-select" id="tipoMedia"
                         asp-items="@ViewBag.TiposMedias">
-                    <option>-Tipo Media-</option>
+                    <option value="">-Tipo Media-</option>
                 </select>
             </div>
             
@@ -60,7 +60,7 @@
             <div class="col-12">
                 <select asp-for="TamanoId" class="form-select" id="tamano"
                         asp-items="@ViewBag.Tamanos">
-                    <option>--Tamaño--</option>
+                    <option value="">--Tamaño--</option>
                 </select>
             </div>
             
@@ -71,7 +71,7 @@
             <div class="col-12 text-center">
                 <select asp-for="MarcaId" class="form-select" id="marca"
                         asp-items="@ViewBag.Marcas">
-                    <option>--Marca--</option>
+                    <option value="">--Marca--</option>
                 </select>
             </div>
             
@@ -123,7 +123,7 @@
             <div class="col-12 text-center">
                 <select asp-for="DisenoId" class="form-select" id="diseno"
                         asp-items="@ViewBag.Disenos">
-                    <option>--Diseño--</option>
+                    <option value="">--Diseño--</option>
                 </select>
             </div>
             
@@ -133,7 +133,7 @@
             <div class="col-12 text-center">
                 <select asp-for="SegmentoId" class="form-select" id="segmento"
                         asp-items="@ViewBag.Segmentos">
-                    <option>--Segmento--</option>
+                    <option value="">--Segmento--</option>
                 </select>
             </div>
             
@@ -186,64 +186,66 @@
 
 <script type="text/javascript">
     function uploadImage() {
-        $("#divError").hide();
-        var fileInput = document.getElementById('fileInput');
-        var imageFile = fileInput.files[0];
-        
-        var TipoMediaId = $("#tipoMedia").find(":selected").val();;
-        var TamanoId = $("#tamano").find(":selected").val();
-        var MarcaId = $("#marca").find(":selected").val();
-        var ColorId = $("#color").find(":selected").val();
-        var DisenoId = $("#diseno").find(":selected").val();
-        var SegmentoId = $("#segmento").find(":selected").val();
-        var Name = $("#name").val();
+        if (ValidarMedia()) {
+            $("#divError").hide();
+            var fileInput = document.getElementById('fileInput');
+            var imageFile = fileInput.files[0];
 
-        var formData = new FormData();
-        formData.append('Imagen', imageFile);
-        
-        formData.append('TipoMediaId', TipoMediaId);
-        formData.append('TamanoId', TamanoId);
-        formData.append('MarcaId', MarcaId);
-        formData.append('ColorId', ColorId);
-        formData.append('DisenoId', DisenoId);
-        formData.append('SegmentoId', SegmentoId);
-        formData.append('Name', Name);
+            var TipoMediaId = $("#tipoMedia").find(":selected").val();;
+            var TamanoId = $("#tamano").find(":selected").val();
+            var MarcaId = $("#marca").find(":selected").val();
+            var ColorId = $("#color").find(":selected").val();
+            var DisenoId = $("#diseno").find(":selected").val();
+            var SegmentoId = $("#segmento").find(":selected").val();
+            var Name = $("#name").val();
 
-        var coloresList = [];
-        $('table.color-table tbody tr').each(function () {
-            $(this).find('input[type="checkbox"]:checked').each(function () {
-                coloresList.push($(this).attr('id'));
+            var formData = new FormData();
+            formData.append('Imagen', imageFile);
+
+            formData.append('TipoMediaId', TipoMediaId);
+            formData.append('TamanoId', TamanoId);
+            formData.append('MarcaId', MarcaId);
+            formData.append('ColorId', ColorId);
+            formData.append('DisenoId', DisenoId);
+            formData.append('SegmentoId', SegmentoId);
+            formData.append('Name', Name);
+
+            var coloresList = [];
+            $('table.color-table tbody tr').each(function () {
+                $(this).find('input[type="checkbox"]:checked').each(function () {
+                    coloresList.push($(this).attr('id'));
+                });
             });
-        });
 
-        coloresList.forEach(function (color) {
-            formData.append('colores', color);
-        });
+            coloresList.forEach(function (color) {
+                formData.append('colores', color);
+            });
 
-        $.ajax({
-            url: '/Inventario/UploadImage',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                console.log(data);
-                alert("Media Creada");
-                limpiar();
-            },
-            error: function (error) {
-                console.log(error.responseJSON.detail);
-                $("#divError").show();
+            $.ajax({
+                url: '/Inventario/UploadImage',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    console.log(data);
+                    alert("Media Creada");
+                    limpiar();
+                },
+                error: function (error) {
+                    console.log(error.responseJSON.detail);
+                    $("#divError").show();
 
-                var resultError = error.responseJSON.detail.split("_");
+                    var resultError = error.responseJSON.detail.split("_");
 
-                $("#lblError").text(resultError[0]);
-                var urlHost = $('#imgError').attr('src');
-                $("#imgError").attr("src", urlHost + resultError[1]);
-                
+                    $("#lblError").text(resultError[0]);
+                    var urlHost = $('#imgError').attr('src');
+                    $("#imgError").attr("src", urlHost + resultError[1]);
 
-            }
-        });
+
+                }
+            });
+        }
     }
 
     function limpiar() { 
@@ -260,5 +262,31 @@
 
         $("#divError").hide();
         $("#lblError").text("");
+    }
+
+    function ValidarMedia() {
+        var isValid = true;
+
+        var checkboxes = $('.color-table input[type="checkbox"]');
+        var isChecked = checkboxes.is(':checked');
+        if (isChecked) {
+            isValid = true;
+        }
+        else 
+        {
+            isValid = false;
+            alert('Debe estar seleccionado al menos un color.');
+        }
+
+        //isValid = validateInput("#tipoMedia");
+        //isValid = validateInput("#tamano");
+        //isValid = validateInput("#marca");
+        //isValid = validateInput("#color");
+        //isValid = validateInput("#diseno");
+        //isValid = validateInput("#segmento");
+        isValid = validateInput("#name");
+        isValid = validateInput("#fileInput");
+
+        return isValid;
     }
 </script>
