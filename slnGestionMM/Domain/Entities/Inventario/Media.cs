@@ -28,7 +28,7 @@ namespace Domain.Entities.Inventario
         public Segmento? Segmento { get; set; }
         public List<MediaColores> MediaColores { get; set; }
         public ICollection<ComprasDetalle> ComprasDetalle { get; } = new List<ComprasDetalle>();
-        public ICollection<Existencias> Existencias { get; } = new List<Existencias>();
+        public Existencias? Existencias { get; set; }
         public ICollection<FacturaDetalle> FacturaDetalle { get; } = new List<FacturaDetalle>(); 
 
     }

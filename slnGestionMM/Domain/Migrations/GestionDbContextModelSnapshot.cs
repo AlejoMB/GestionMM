@@ -620,12 +620,19 @@ namespace Domain.Migrations
                     b.Property<int>("CantidadProducto")
                         .HasColumnType("int");
 
-                    b.Property<int>("MediaId")
+                    b.Property<int>("MediaRef")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MediaId");
+                    b.HasIndex("MediaRef")
+                        .IsUnique();
 
                     b.ToTable("Existencias");
                 });
@@ -955,6 +962,15 @@ namespace Domain.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "341743f0 - asd2–42de - afbf - 59kmkkmk72cf6",
+                            ConcurrencyStamp = "341743f0 - asd2–42de - afbf - 59kmkkmk72cf6",
+                            Name = "Administrador",
+                            NormalizedName = "Administrador"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1045,6 +1061,23 @@ namespace Domain.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "02174cf0–9412–4cfe - afbf - 59f706d72cf6",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "186cc4a1-7652-4047-967b-8aa82de3e7ea",
+                            Email = "alejo0921@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "alejo0921@gmail.com",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKwegSpTPem9PGSTfxFZzvvuYg/XWkdkzJ/ajgP7Jg+sno8esdf/u3WxZ5IJvkHFVA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f34f6cc2-4831-496c-9e23-e217c5b25bdc",
+                            TwoFactorEnabled = false,
+                            UserName = "alejo0921@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -1076,11 +1109,11 @@ namespace Domain.Migrations
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -1109,6 +1142,13 @@ namespace Domain.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "02174cf0–9412–4cfe - afbf - 59f706d72cf6",
+                            RoleId = "341743f0 - asd2–42de - afbf - 59kmkkmk72cf6"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -1118,11 +1158,11 @@ namespace Domain.Migrations
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -1252,8 +1292,8 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.Inventario.Existencias", b =>
                 {
                     b.HasOne("Domain.Entities.Inventario.Media", "Media")
-                        .WithMany("Existencias")
-                        .HasForeignKey("MediaId")
+                        .WithOne("Existencias")
+                        .HasForeignKey("Domain.Entities.Inventario.Existencias", "MediaRef")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

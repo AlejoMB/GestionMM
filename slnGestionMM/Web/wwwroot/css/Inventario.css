@@ -9,6 +9,8 @@
     margin-bottom: 20px;
     box-sizing: border-box; /* Include padding and border in width calculation */
     padding: 10px;
+    border: solid;
+    border-color: #e7f1ff;
 }
 
 .product img {

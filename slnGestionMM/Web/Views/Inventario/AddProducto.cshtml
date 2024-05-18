@@ -236,7 +236,7 @@
                     console.log(error.responseJSON.detail);
                     $("#divError").show();
 
-                    var resultError = error.responseJSON.detail.split("_");
+                    var resultError = error.responseJSON.detail.split("|");
 
                     $("#lblError").text(resultError[0]);
                     var urlHost = $('#imgError').attr('src');
@@ -269,14 +269,18 @@
 
         var checkboxes = $('.color-table input[type="checkbox"]');
         var isChecked = checkboxes.is(':checked');
-        if (isChecked) {
-            isValid = true;
-        }
-        else 
-        {
+        if (!isChecked) {
             isValid = false;
             alert('Debe estar seleccionado al menos un color.');
         }
+        // if (isChecked) {
+        //     isValid = true;
+        // }
+        // else 
+        // {
+        //     isValid = false;
+        //     alert('Debe estar seleccionado al menos un color.');
+        // }
 
         //isValid = validateInput("#tipoMedia");
         //isValid = validateInput("#tamano");
@@ -284,9 +288,9 @@
         //isValid = validateInput("#color");
         //isValid = validateInput("#diseno");
         //isValid = validateInput("#segmento");
-        isValid = validateInput("#name");
-        isValid = validateInput("#fileInput");
+        //isValid = validateInput("#name");
+        //isValid = validateInput("#fileInput");
 
-        return isValid;
+        return validateInput("#name") && validateInput("#fileInput") && isValid;
     }
 </script>

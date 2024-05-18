@@ -24,7 +24,10 @@ namespace Web.Controllers
         [Authorize(Roles = "Administrador")] 
         public IActionResult Index()
         {
+            //var catalogo = new List<CatalogoModel>();
+
             ViewBag.UlrHost = URLImages;
+            var catalogo = _dbContext.TipoMedias.Select(c => new CatalogoModel { IdCategoria = c.Id, Name = c.Name }).ToList();
             var medias = _dbContext.Medias
                          .Include(medias => medias.TipoMedia)
                          .Include(medias => medias.Tamano)
@@ -32,8 +35,16 @@ namespace Web.Controllers
                          .Include(medias => medias.MediaColores).ThenInclude(mediacolores => mediacolores.Color)
                          .Include(medias => medias.Diseno)
                          .Include(medias => medias.Segmento)
+                         .Include(medias => medias.Existencias)
                          .ToList();
-            return View(medias);
+
+            foreach (var item in catalogo)
+            {
+                item.Medias.AddRange(medias.Where(m => m.TipoMedia.Id == item.IdCategoria).ToList());
+            }
+
+
+            return View(catalogo);
         }
 
         public IActionResult AddProducto()
@@ -116,7 +127,8 @@ namespace Web.Controllers
                 .Include(m => m.MediaColores)
                 .Include(m => m.Diseno)
                 .Include(m => m.Segmento)
-                .FirstOrDefault(m => m.TipoMedia.Id.Equals(model.TipoMediaId) &&
+                .FirstOrDefault(m => m.Name == model.Name &&
+                                     m.TipoMedia.Id.Equals(model.TipoMediaId) &&
                                      m.Tamano.Id.Equals(model.TamanoId) &&
                                      m.Marca.Id.Equals(model.MarcaId) &&
                                      (m.MediaColores.All(mc => model.Colores.Contains(mc.Color.Id)) && model.Colores.Count == m.MediaColores.Count) &&
@@ -124,7 +136,7 @@ namespace Web.Controllers
                                      m.Segmento.Id.Equals(model.SegmentoId));
             if(media != null)
             {
-                return media.Name + "_" + media.Imagen;
+                return media.Name + "|" + media.Imagen;
             }
             return null;
         }

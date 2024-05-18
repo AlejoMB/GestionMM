@@ -5,6 +5,7 @@ using Domain.Entities.Inventario;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 
 namespace Domain
@@ -61,8 +62,105 @@ namespace Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            string ADMIN_ID = "02174cf0–9412–4cfe - afbf - 59f706d72cf6";
+            string ROLE_ID = "341743f0 - asd2–42de - afbf - 59kmkkmk72cf6";
+
+            //seed admin role
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Name = "Administrador",
+                NormalizedName = "Administrador",
+                Id = ROLE_ID,
+                ConcurrencyStamp = ROLE_ID
+            });
+
+            //create user
+            var appUser = new IdentityUser
+            {
+                Id = ADMIN_ID,
+                Email = "alejo0921@gmail.com",
+                EmailConfirmed = true,
+                UserName = "alejo0921@gmail.com",
+                NormalizedUserName = "alejo0921@gmail.com"
+            };
+
+            //set user password
+            PasswordHasher<IdentityUser> ph = new PasswordHasher<IdentityUser>();
+            appUser.PasswordHash = ph.HashPassword(appUser, "Nacional1.");
+
+            //seed user
+            modelBuilder.Entity<IdentityUser>().HasData(appUser);
+
+            //set user role to admin
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = ROLE_ID,
+                UserId = ADMIN_ID
+            });
+
             base.OnModelCreating(modelBuilder);
 
+            // Configure IdentityUser
+            modelBuilder.Entity<IdentityUser>(entity =>
+            {
+                entity.ToTable("AspNetUsers");
+                entity.HasKey(u => u.Id);
+            });
+
+            // Configure IdentityRole
+            modelBuilder.Entity<IdentityRole>(entity =>
+            {
+                entity.ToTable("AspNetRoles");
+                entity.HasKey(r => r.Id);
+            });
+
+            // Configure IdentityUserRole
+            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.ToTable("AspNetUserRoles");
+                entity.HasKey(ur => new { ur.UserId, ur.RoleId });
+            });
+
+            // Configure IdentityUserClaim
+            modelBuilder.Entity<IdentityUserClaim<string>>(entity =>
+            {
+                entity.ToTable("AspNetUserClaims");
+                entity.HasKey(uc => uc.Id);
+            });
+
+            // Configure IdentityUserLogin
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+            {
+                entity.ToTable("AspNetUserLogins");
+                entity.HasKey(l => new { l.LoginProvider, l.ProviderKey });
+
+                entity.Property(l => l.LoginProvider).HasColumnType("nvarchar(450)");
+                entity.Property(l => l.ProviderKey).HasColumnType("nvarchar(450)");
+            });
+
+            // Configure IdentityRoleClaim
+            modelBuilder.Entity<IdentityRoleClaim<string>>(entity =>
+            {
+                entity.ToTable("AspNetRoleClaims");
+                entity.HasKey(rc => rc.Id);
+            });
+
+            // Configure IdentityUserToken
+            modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+            {
+                entity.ToTable("AspNetUserTokens");
+                entity.HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
+
+                entity.Property(t => t.LoginProvider).HasColumnType("nvarchar(450)");
+                entity.Property(t => t.Name).HasColumnType("nvarchar(450)");
+            });
+
+            modelBuilder.Entity<Media>()
+            .HasOne(a => a.Existencias)
+            .WithOne(b => b.Media)
+            .HasForeignKey<Existencias>(m => m.MediaRef);
+
+            // Other configurations (existing code)
             modelBuilder.Entity<Rol>().HasKey(x => x.Id);
             var rol = new Rol() { Id = 1, Name = "Administrador" };
             modelBuilder.Entity<Rol>().HasData(rol);

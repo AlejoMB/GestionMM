@@ -17,6 +17,22 @@
       "PackagePath": "staticwebassets\\Imagenes\\jaspeadas_negro_rojo.png"
     },
     {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\negras_rojas.png",
+      "PackagePath": "staticwebassets\\Imagenes\\negras_rojas.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\negro_rojo.png",
+      "PackagePath": "staticwebassets\\Imagenes\\negro_rojo.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\rojas_negras.png",
+      "PackagePath": "staticwebassets\\Imagenes\\rojas_negras.png"
+    },
+    {
+      "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\rojo_negro_nike.png",
+      "PackagePath": "staticwebassets\\Imagenes\\rojo_negro_nike.png"
+    },
+    {
       "Id": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\Icons\\delete.png",
       "PackagePath": "staticwebassets\\Img\\Icons\\delete.png"
     },
