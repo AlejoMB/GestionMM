@@ -10,6 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Web.ViewModels;
 using Domain.Models.Compras;
 using Domain.Entities.Compras;
+using Domain.Entities.Inventario;
 
 namespace Web.Controllers
 {
@@ -62,7 +63,8 @@ namespace Web.Controllers
                                           Imagen = p.Imagen,
                                           SegmentoText = p.Segmento.Name,
                                           TamanoText = p.Tamano.Name,
-                                          TipoMediaText = p.TipoMedia.Name
+                                          TipoMediaText = p.TipoMedia.Name,
+                                          Existencia = p.Existencias == null ? 0 : p.Existencias.CantidadProducto
                                       }).ToList();
 
             var jsonData = JsonConvert.SerializeObject(result);
@@ -88,8 +90,9 @@ namespace Web.Controllers
 
             foreach (var detalleModel in model.Detalles)
             {
+                var media = _dbContext.Medias.FirstOrDefault(m => m.Id == detalleModel.Media);
                 var comprasDetalle = new ComprasDetalle() { 
-                    Media = _dbContext.Medias.FirstOrDefault(m => m.Id == detalleModel.Media),
+                    Media = media,
                     CostoUnitario = detalleModel.CostoUnitario,
                     Cantidad = detalleModel.Cantidad,
                     Total = detalleModel.Total
@@ -97,6 +100,8 @@ namespace Web.Controllers
                 };
 
                 compraEncab.ComprasDetalle.Add(comprasDetalle);
+                AddExistencia(media, detalleModel.Cantidad);
+                //_dbContext.Existencias.Update(GetExistencia(media, detalleModel.Cantidad));
             }
 
             _dbContext.ComprasEnc.Add(compraEncab);
@@ -104,6 +109,31 @@ namespace Web.Controllers
 
 
             return Ok("Compra saved successfully");
+        }
+
+        public void AddExistencia(Media media,int cantidad)
+        {
+            var existencia = _dbContext.Existencias.FirstOrDefault(e => e.MediaRef == media.Id);
+            if(existencia == null)
+            {
+                _dbContext.Existencias.Add( new Existencias { 
+                    MediaRef = media.Id,
+                    CantidadProducto = cantidad
+                    
+                });
+            }
+            else
+            {
+                existencia.CantidadProducto += cantidad;
+                _dbContext.Existencias.Update(existencia);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetMediaName(int codigoMedia)
+        {
+            var media = _dbContext.Medias.FirstOrDefault(c => c.Id == codigoMedia);
+            return media == null ? NotFound() : Ok(media.Name);
         }
     }
 }

@@ -56,6 +56,26 @@ namespace Web.Controllers
             return cliente == null ? NotFound() : Ok(cliente);
         }
 
+        [HttpGet]
+        public IActionResult GetCostoProrateo(int idMedia)
+        {
+            var compras = _dbContext.ComprasDetalle.Where(c => c.Media.Id == idMedia);
+            int costoCompra = 0;
+            int costoProrateoCompra = 0;
+            
+            foreach (var compra in compras)
+            {
+                costoCompra += compra.CostoUnitario;
+            }
+                
+            if(costoCompra > 0)
+            {
+                costoProrateoCompra = costoCompra / compras.Count();
+            }
+
+            return Ok(costoProrateoCompra);
+        }
+
         [HttpPost]
         public IActionResult CrearCliente(Clientes clienteModel)
         {

@@ -103,7 +103,7 @@
                                         </a>
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtCodigo_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
+                                        <input id="txtCodigo_1" class="form-control" onblur="SetMediaName(this);" type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-2">
                                         <input id="txtName_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
@@ -406,6 +406,8 @@
                 processData: false,
                 success: function (data) {
                     console.log('Success');
+                    alert("Compra creada con exito");
+                    location.reload();
                 },
                 error: function (error) {
                     console.log(error.responseJSON.detail);
@@ -429,6 +431,33 @@
         }
 
         return isValid;
+    }
+
+    function SetMediaName(inputCodigo) {
+
+        var identificador = inputCodigo.id.toString();
+        var result = identificador.split("_");
+        var rowId = result[1];
+
+        if ($.isNumeric($(inputCodigo).val()) && $("#txtCliente").val() !== '') {
+
+            $.ajax({
+                url: '/Compras/GetMediaName',
+                type: 'GET',
+                data: { codigoMedia: $(inputCodigo).val() },
+                success: function (data) {
+                    //console.log('Success');
+                    $("#txtName_" + rowId).val(data);
+                    // $("#txtCleinteName").val(data.nombre);
+                },
+                error: function (error) {
+                    $("#txtName_" + rowId).val("");
+                }
+            });
+        }
+        else { 
+            $("#txtName_" + rowId).val("");
+        }
     }
 
 </script>

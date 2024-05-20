@@ -19,6 +19,7 @@ namespace Domain.Models.Inventario
         public string SegmentoText { get; set; }
         public string Name { get; set; }
         public string Imagen { get; set; }
+        public int Existencia { get; set; }
         //public IFormFile Imagen { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace Services.Inventario
                 .Include(m => m.Marca)
                 .Include(m => m.MediaColores)
                 .Include(m => m.Diseno)
+                .Include(m => m.Existencias)
                 .Include(m => m.Segmento).AsQueryable();
 
             if (searchModel.TipoMediaId != null)
