@@ -113,9 +113,9 @@
                                     <th></th>
                                     <th>Media</th>
                                     <th>Nombre</th>
-                                    <th>Existencias</th>
+                                    <th>Exist.</th>
                                     <th>Costo Compra</th>
-                                    <th>Cantidad</th>
+                                    <th>Cant.</th>
                                     <th>Costo Venta</th>
                                     <th>Total</th>
                                     <th></th>
@@ -129,25 +129,25 @@
                                         </a>
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtCodigo_1" class="form-control" type="text" aria-label=".form-control-sm example">
+                                        <input id="txtCodigo_1" class="form-control fontSmall" onblur="setId(this); SetMediaName(this);" type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtName_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
+                                        <input id="txtName_1" class="form-control fontSmall" type="text" disabled aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtExist_1" class="form-control" type="text" disabled aria-label=".form-control-sm example">
+                                        <input id="txtExist_1" class="form-control fontSmall" type="text" disabled aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtCosto_1" class="form-control currencyInput  costo" disabled type="text" aria-label=".form-control-sm example">
+                                        <input id="txtCosto_1" class="form-control currencyInput  costo fontSmall" disabled type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtCant_1" class="form-control cantidad" type="text" aria-label=".form-control-sm example">
+                                        <input id="txtCant_1" class="form-control cantidad fontSmall" type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtVenta_1" class="form-control currencyInput  costo" disabled type="text" aria-label=".form-control-sm example">
+                                        <input id="txtVenta_1" class="form-control currencyInput  venta fontSmall" disabled type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtTotal_1" class="form-control total" type="text" disabled aria-label=".form-control-sm example">
+                                        <input id="txtTotal_1" class="form-control total fontSmall text-center" style="padding-right: 0; padding-left: 0;" type="text" disabled aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1 plusCol">
                                         <a href="#" id="add_1">
@@ -170,6 +170,7 @@
 </div>
 <input type="hidden" id="RowId" data-value="" />
 <input type="hidden" id="UlrHost" data-value="@ViewBag.UlrHost" />
+<input type="hidden" id="Descuentos" value="@ViewBag.Descuentos" />
 
 <!-- Modal Cliente-->
 <div class="modal fade" id="ClienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -216,11 +217,21 @@
         $(document).on("blur", "#txtCliente", buscarCliente);
 
         function calculateTotal() {
-            var costo = $(this).closest("tr").find(".costo").val().replace("$", "").replace(".", "");
+            var ganancia = GetDescuento($(this).val());
+            /*var costo = $(this).closest("tr").find(".costo").val().replace("$", "").replace(".", "");
             var cantidad = $(this).val();
             var total = costo * cantidad;
+            $(this).closest("tr").find(".total").val(formatCurrency(total));*/
+            var cantidad = parseInt($(this).val());
+            var costo = parseInt($(this).closest("tr").find(".costo").val());
+            $(this).closest("tr").find(".venta").val(costo + ganancia);
+            $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
+            var total = (costo + ganancia) * cantidad;
             $(this).closest("tr").find(".total").val(formatCurrency(total));
+
         }
+
+        $(document).on("blur", ".cantidad", calculateTotal);
 
         $("#tipoEnvio").on("change", function () {
             if ($(this).val() === '2') {
@@ -257,6 +268,27 @@
             newRow.find(".cantidad").on("blur", calculateTotal);
         });
     });
+
+    function GetDescuento(cantidad) 
+    {
+        var listaDescuentos = $("#Descuentos").val()
+        var rows = listaDescuentos.split("|");
+        var descuento = 0;
+        if (rows.length > 0) {
+            rows.forEach(function (row) {
+                var values = row.split(";");
+                if (values.length > 0) {
+                    var min = parseInt(values[0]);
+                    var max = parseInt(values[1]);
+                    if (cantidad >= min && cantidad <= max) {
+                        descuento = parseInt(values[2]);
+                    }
+                }
+            });
+        }
+
+        return descuento;
+    }
 
     function setId(row) {
         $("#RowId").val(row.id);
@@ -473,19 +505,20 @@
         var result = identificador.split("_");
         var rowId = result[1];
 
-        if ($.isNumeric($(inputCodigo).val()) && $("#txtCliente").val() !== '') {
+        if ($.isNumeric($(inputCodigo).val()) && $(inputCodigo).val() !== '') {
 
             $.ajax({
                 url: '/Facturacion/GetMediaName',
                 type: 'GET',
                 data: { codigoMedia: $(inputCodigo).val() },
                 success: function (data) {
-                    //console.log('Success');
-                    $("#txtName_" + rowId).val(data);
-                    // $("#txtCleinteName").val(data.nombre);
+                    
+                    //$("#txtName_" + rowId).val(data);
+                    SetImageId(data);
                 },
                 error: function (error) {
                     $("#txtName_" + rowId).val("");
+                    alert(error.responseText);
                 }
             });
         }

@@ -3,7 +3,9 @@ using Domain.Entities.Facturacion;
 using Domain.Entities.Inventario;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text;
 using Web.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers
 {
@@ -45,6 +47,8 @@ namespace Web.Controllers
             ViewBag.RowsColores = ViewHelpers.CrearTablaColores(colores);
             ViewBag.Disenos = new SelectList(disenos, "Id", "Name");
             ViewBag.Segmentos = new SelectList(segmentos, "Id", "Name");
+
+            ViewBag.Descuentos = GetDescuentos();
 
             return View();
         }
@@ -88,6 +92,46 @@ namespace Web.Controllers
             _dbContext.SaveChanges();
 
             return Ok(result.Entity);
+        }
+
+        public string GetDescuentos()
+        {
+            var descuentos = _dbContext.RangoDescuentos.ToList();
+            StringBuilder sb = new StringBuilder();
+            foreach (var descuento in descuentos) 
+            {
+                sb.Append("|");
+                sb.Append(descuento.Min);
+                sb.Append(";");
+                sb.Append(descuento.Max);
+                sb.Append(";");
+                sb.Append(descuento.Valor);
+            }
+
+            return sb.ToString();
+        }
+
+        [HttpGet]
+        public IActionResult GetMediaName(int codigoMedia)
+        {
+            var media = _dbContext.Medias.Include(m => m.Existencias).FirstOrDefault(c => c.Id == codigoMedia);
+            if (media != null)
+            {
+                //var compras = _dbContext.ComprasDetalle.Where(c => c.Media.Id == codigoMedia).ToList();
+                //if(compras.Any() && (compras.Sum(c => c.CostoUnitario) / compras.Count) > 0)
+                //{
+                    return Ok(media.Id + "_" + media.Name + "_" + media.Existencias?.CantidadProducto ?? "0");
+                //}
+                //else
+                //{
+                //    return NotFound("No Existen Compras para esta media");
+                //}
+            }
+            else 
+            {
+                return NotFound("Media No Encontrada");
+            }
+            //return media == null ? NotFound() : Ok(media.Name);
         }
     }
 }

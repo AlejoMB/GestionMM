@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using Domain.Entities.Gastos;
 
 
 namespace Domain
@@ -58,9 +59,12 @@ namespace Domain
         public DbSet<TipoEnvios> TipoEnvio { get; set; }
         public DbSet<Transportadora> Transportadora { get; set; }
         public DbSet<Existencias> Existencias { get; set; }
+        public DbSet<RangoDescuentos> RangoDescuentos { get; set; }
+        public DbSet<TipoGastos> TipoGastos { get; set; }
+        public DbSet<Gastos> Gastos { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             string ADMIN_ID = "02174cf0–9412–4cfe - afbf - 59f706d72cf6";
             string ROLE_ID = "341743f0 - asd2–42de - afbf - 59kmkkmk72cf6";

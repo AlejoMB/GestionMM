@@ -439,7 +439,7 @@
         var result = identificador.split("_");
         var rowId = result[1];
 
-        if ($.isNumeric($(inputCodigo).val()) && $("#txtCliente").val() !== '') {
+        if ($.isNumeric($(inputCodigo).val()) && $(inputCodigo).val() !== '') {
 
             $.ajax({
                 url: '/Compras/GetMediaName',
