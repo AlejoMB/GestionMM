@@ -21,7 +21,7 @@
                             <strong>ID:</strong>
                         </div>
                         <div class="col-md-1">
-                            <input class="form-control" type="text" disabled placeholder="Id" aria-label=".form-control-sm example">
+                            <input class="form-control" id="FactuId" type="text" disabled placeholder="Id" aria-label=".form-control-sm example">
                         </div>
                     </div>
                     <div class="row">
@@ -45,7 +45,7 @@
                         <div class="col-md-3">
                             <select asp-for="TipoEnvioId" class="form-select" id="tipoEnvio"
                                     asp-items="@ViewBag.TiposEnvios">
-                                <option>-Tipo Envio-</option>
+                                <option value="">-Tipo Envio-</option>
                             </select>
                         </div>
                     </div>
@@ -83,8 +83,8 @@
                         </div>
                         <div class="col-md-1">
                             <select id="Estado" class="form-control" aria-label=".form-control-sm example">
-                                <option value="0">Si</option>
-                                <option value="1">No</option>
+                                <option value="1">Si</option>
+                                <option value="2">No</option>
                             </select>
                         </div>
                     </div>
@@ -160,7 +160,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <input type="button" class="btn btn-success" value="Guardar" onclick="CrearCompra()">
+                        <input id="btnGuardar" type="button" class="btn btn-success" value="Guardar" onclick="CrearFactura()">
+                        <input id="btnVerFactura" type="button" class="btn btn-info" value="Ver Factura" disabled>
+                        @* <input id="btnVerFactura" type="button" class="btn btn-info" value="Ver Factura" disabled onclick="location.href='@Url.Action("FactuPrint", "Facturacion")?id='" /> *@
 
                     </div>
                 </div>
@@ -217,17 +219,17 @@
         $(document).on("blur", "#txtCliente", buscarCliente);
 
         function calculateTotal() {
-            var ganancia = GetDescuento($(this).val());
-            /*var costo = $(this).closest("tr").find(".costo").val().replace("$", "").replace(".", "");
-            var cantidad = $(this).val();
-            var total = costo * cantidad;
-            $(this).closest("tr").find(".total").val(formatCurrency(total));*/
+
+
             var cantidad = parseInt($(this).val());
             var costo = parseInt($(this).closest("tr").find(".costo").val());
-            $(this).closest("tr").find(".venta").val(costo + ganancia);
-            $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
-            var total = (costo + ganancia) * cantidad;
-            $(this).closest("tr").find(".total").val(formatCurrency(total));
+            if (!isNaN(costo) && !isNaN(cantidad)) {
+                var ganancia = GetDescuento($(this).val());
+                $(this).closest("tr").find(".venta").val(costo + ganancia);
+                $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
+                var total = (costo + ganancia) * cantidad;
+                $(this).closest("tr").find(".total").val(formatCurrency(total));
+            }
 
         }
 
@@ -266,6 +268,25 @@
             $("#bodyFactura").append(newRow);
             // Attach event listener for txtCant field in the new row
             newRow.find(".cantidad").on("blur", calculateTotal);
+        });
+
+        $(document).on("blur", ".cantidad, .total", function () {
+            var totalSum = 0;
+            $('.total').each(function () {
+                var val = parseFloat($(this).val().replace("$", "").replace(".", ""));
+                if (!isNaN(val)) {
+                    totalSum += val;
+                }
+            });
+
+            $("#TotalEnc").val(formatCurrency(totalSum));
+        });
+
+        $('#btnVerFactura').click(function () {
+            var url = '@Url.Action("FactuPrint", "Facturacion")';
+            var textValue = $('#FactuId').val();
+
+            window.location.href = url + '?id=' + textValue;
         });
     });
 
@@ -525,5 +546,82 @@
         else {
             $("#txtName_" + rowId).val("");
         }
+    }
+
+    function CrearFactura() { 
+        if (validarFactura()) {
+
+            var userId = localStorage.getItem('userId');
+
+            // Encabezado
+            var formData = new FormData();
+            formData.append('Cliente', $("#txtCliente").val());
+            formData.append('TipoEnvio', $("#tipoEnvio").val());
+            formData.append('MedioPago', $("#medioPago").val());
+            formData.append('FechaPago', $("#fechaPago").datepicker({ dateFormat: 'dd-mm-yy' }).val());
+            formData.append('EstadoFactu', $("#Estado").val());
+            formData.append('Total', removeformatCurrency($("#TotalEnc").val()));
+            formData.append('UserId', userId);
+
+            //Detalle
+            var detalleData = [];
+            var rows = $('#DetalleFactuTb tr').length;
+            for (var i = 1; i <= rows - 1; i++) {
+                var detalleItem = {
+                    Media: $("#txtCodigo_" + i).val(),
+                    PrecioUnitario: removeformatCurrency($("#txtVenta_" + i).val()),
+                    Cantidad: $("#txtCant_" + i).val(),
+                    Total: removeformatCurrency($("#txtTotal_" + i).val())
+                };
+
+                detalleData.push(detalleItem);
+            }
+
+            var detalleDataJson = JSON.stringify(detalleData);
+            formData.append('DetalleString', detalleDataJson);
+
+            $.ajax({
+                url: '/Facturacion/CrearFactura',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#FactuId").val(data);
+                    $("#btnVerFactura").prop('disabled', false);
+                    $("#btnGuardar").prop('disabled', true);
+                    alert("Factura creada con exito");
+                },
+                error: function (error) {
+                    console.log(error.responseJSON.detail);
+                }
+            });
+        }
+
+    }
+    
+    function validarFactura()
+    {
+        var isValid = true;
+
+        if (isValid) isValid = validateInput("#txtCliente");
+
+        if (isValid) isValid = validateInput("#txtCleinteName");
+
+        if (isValid) isValid = validateInput("#tipoEnvio");
+        
+        if (isValid) isValid = validateInput("#fechaPago");
+
+        var rows = $('#DetalleFactuTb tr').length;
+
+        for (var i = 1; i <= rows - 1; i++) {
+
+            if (isValid) isValid = validateInput("#txtCodigo_" + i);
+            if (isValid) isValid = validateInput("#txtCant_" + i);
+
+        }
+
+        return isValid;
+
     }
 </script>

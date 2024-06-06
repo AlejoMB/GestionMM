@@ -18,6 +18,7 @@ namespace Domain.Entities.Facturacion
         public string? NoGuia { get; set; }
         public MedioPago MedioPago { get; set; }
         public Transportadora? Transportadora { get; set; }
+        public DateTime FechaPago { get; set; }
         public int CreadoPorUser { get; set; }
         public DateTime FechaCreado { get; set; }
         public ICollection<FacturaDetalle> FacturaDetalle { get; set; } = new List<FacturaDetalle>();

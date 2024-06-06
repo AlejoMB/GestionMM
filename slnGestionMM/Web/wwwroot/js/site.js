@@ -26,7 +26,7 @@ function removeformatCurrency(value) {
 }
 
 function validateInput(inputName) {
-    if ($(inputName).val() === '') {
+    if ($(inputName).val() === '' || $(inputName).val() === undefined) {
         $(inputName).addClass("error");
         return false;
     }

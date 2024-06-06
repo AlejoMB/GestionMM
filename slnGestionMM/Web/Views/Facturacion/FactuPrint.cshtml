@@ -1,4 +1,6 @@
-﻿@*
+﻿@model Domain.Entities.Facturacion.FacturaEnc
+
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -45,13 +47,13 @@
 <div class="invoice">
     <div class="invoice-header">
         <img src="~/img/LogoML.jpg" alt="Company Logo" style="max-width: 150px; margin-bottom: 10px;">
-        <h1>Factura <span style="color:red">39456</span></h1>
-        <p><strong>Cliente:</strong> John Duque</p>
-        <p><strong>Total:</strong> $16000</p>
-        <p><strong>Estado:</strong> Pendiente</p>
-        <p><strong>Tipo Pago:</strong> Transferencia</p>
-        <p><strong>Tipo Envío:</strong> Contra Entrega</p>
-        <p><strong>Transportadora:</strong> Deprisa</p>
+        <h1>Factura <span style="color:red">@Model.Id</span></h1>
+        <p><strong>Cliente:</strong> @Model.Cliente.Nombre </p>
+        <p><strong>Total:</strong> $@Model.Total</p>
+        <p><strong>Estado:</strong> @Model.EstadoFactu.Name</p>
+        <p><strong>Tipo Pago:</strong> @Model.MedioPago.Name</p>
+        <p><strong>Tipo Envío:</strong> @Model.TipoEnvio.Name</p>
+        @* <p><strong>Fecha de Pago:</strong> @Model.FechaCreado</p> *@
     </div>
     <table class="table table-bordered invoice-details">
         <thead>
@@ -64,24 +66,18 @@
             </tr>
         </thead>
         <tbody>
+            @foreach (var item in Model.FacturaDetalle) {
             <tr>
-                <td>0123</td>
-                <td>Jaspeadas Rojas</td>
-                <td>$3500</td>
-                <td>2</td>
-                <td>$7000</td>
+                <td>@item.Media.Id</td>
+                <td>@item.Media.Name</td>
+                <td>@item.PrecioUnitario</td>
+                <td>@item.Cantidad</td>
+                <td>$@item.Total</td>
             </tr>
-            <tr>
-                <td>0124</td>
-                <td>Deportivas Nike</td>
-                <td>$3000</td>
-                <td>3</td>
-                <td>$9000</td>
-            </tr>
-            <!-- Add more rows for additional products -->
+            }
         </tbody>
     </table>
     <div class="text-end">
-        <p><strong>Total Factura:</strong> $16000</p>
+        <p><strong>Total Factura:</strong> $@Model.Total</p>
     </div>
 </div>

@@ -212,8 +212,10 @@
         function calculateTotal() {
             var costo = $(this).closest("tr").find(".costo").val().replace("$", "").replace(".", "");
             var cantidad = $(this).val();
-            var total = costo * cantidad;
-            $(this).closest("tr").find(".total").val(formatCurrency(total));
+            if (costo !== '' && cantidad !== '') {
+                var total = costo * cantidad;
+                $(this).closest("tr").find(".total").val(formatCurrency(total));
+            }
         }
 
         $(document).on("blur", ".cantidad", calculateTotal);
@@ -419,15 +421,16 @@
     function ValidarCompra()
     {
         var isValid = true;
-        isValid = validateInput("#txtProveedor");
+        if (isValid) isValid = validateInput("#txtProveedor");
 
         var rows = $('#DetalleCompraTb tr').length;
         for (var i = 1; i <= rows - 1; i++) {
-            // Your code here
-            isValid = validateInput("#txtCodigo_" + i);
-            isValid = validateInput("#txtName_" + i);
-            isValid = validateInput("#txtCosto_" + i);
-            isValid = validateInput("#txtCant_" + i);
+            
+            if (isValid) isValid = validateInput("#txtCodigo_" + i);
+            if (isValid) isValid = validateInput("#txtName_" + i);
+            if (isValid) isValid = validateInput("#txtCosto_" + i);
+            if (isValid) isValid = validateInput("#txtCant_" + i);
+
         }
 
         return isValid;

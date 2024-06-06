@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text;
 using Web.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Domain.Models.Facturas;
+using Domain.Models.Compras;
+using Newtonsoft.Json;
+using Domain.Entities.Compras;
 
 namespace Web.Controllers
 {
@@ -117,21 +121,82 @@ namespace Web.Controllers
             var media = _dbContext.Medias.Include(m => m.Existencias).FirstOrDefault(c => c.Id == codigoMedia);
             if (media != null)
             {
-                //var compras = _dbContext.ComprasDetalle.Where(c => c.Media.Id == codigoMedia).ToList();
-                //if(compras.Any() && (compras.Sum(c => c.CostoUnitario) / compras.Count) > 0)
-                //{
-                    return Ok(media.Id + "_" + media.Name + "_" + media.Existencias?.CantidadProducto ?? "0");
-                //}
-                //else
-                //{
-                //    return NotFound("No Existen Compras para esta media");
-                //}
+                
+                return Ok(media.Id + "_" + media.Name + "_" + media.Existencias?.CantidadProducto ?? "0");
+                
             }
             else 
             {
                 return NotFound("Media No Encontrada");
             }
-            //return media == null ? NotFound() : Ok(media.Name);
+        }
+
+        public IActionResult CrearFactura([FromForm] FacturaEncModel model)
+        {
+            model.Detalles = JsonConvert.DeserializeObject<List<FacturaDetalleModel>>(model.DetalleString);
+
+            
+            var facturaEnc = new FacturaEnc { 
+                Cliente = _dbContext.Cliente.FirstOrDefault(x => x.Cedula == model.Cliente.ToString()),
+                TipoEnvio = _dbContext.TipoEnvio.FirstOrDefault(x => x.Id == model.TipoEnvio),
+                MedioPago = _dbContext.MedioPago.FirstOrDefault(x => x.Id == model.MedioPago),
+                EstadoFactu = _dbContext.EstadosFactu.FirstOrDefault(x => x.Id == model.EstadoFactu),
+                Total = model.Total
+            };
+
+            foreach (var detalleModel in model.Detalles)
+            {
+                var media = _dbContext.Medias.FirstOrDefault(m => m.Id == detalleModel.Media);
+                var comprasDetalle = new FacturaDetalle()
+                {
+                    Media = media,
+                    PrecioUnitario = detalleModel.PrecioUnitario,
+                    Cantidad = detalleModel.Cantidad,
+                    Total = detalleModel.Total
+                };
+
+                facturaEnc.FacturaDetalle.Add(comprasDetalle);
+                DeleteExistencia(media, detalleModel.Cantidad);
+            }
+
+            _dbContext.FacturaEnc.Add(facturaEnc);
+            _dbContext.SaveChanges();
+
+            ViewBag.FactuId = facturaEnc.Id;
+
+            return Ok(facturaEnc.Id);
+        }
+
+        public void DeleteExistencia(Media media, int cantidad)
+        {
+            var existencia = _dbContext.Existencias.FirstOrDefault(e => e.MediaRef == media.Id);
+            if (existencia == null)
+            {
+                _dbContext.Existencias.Add(new Existencias
+                {
+                    MediaRef = media.Id,
+                    CantidadProducto = (cantidad * -1)
+
+                });
+            }
+            else
+            {
+                existencia.CantidadProducto -= cantidad;
+                _dbContext.Existencias.Update(existencia);
+            }
+        }
+
+        public IActionResult FactuPrint(int id)
+        {
+            var factu = _dbContext.FacturaEnc
+                                  .Include(f => f.Cliente)
+                                  .Include(f => f.EstadoFactu)
+                                  .Include(f => f.MedioPago)
+                                  .Include(f => f.TipoEnvio)
+                                  .Include(f => f.FacturaDetalle)
+                                  .ThenInclude(d => d.Media)
+                                  .FirstOrDefault(x => x.Id == id);
+            return View(factu);
         }
     }
 }

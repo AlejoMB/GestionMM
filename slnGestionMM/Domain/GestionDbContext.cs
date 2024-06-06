@@ -55,6 +55,10 @@ namespace Domain
 
         public DbSet<ComprasEnc> ComprasEnc { get; set; }
         public DbSet<ComprasDetalle> ComprasDetalle { get; set; }
+
+        public DbSet<FacturaEnc> FacturaEnc { get; set; }
+        public DbSet<FacturaDetalle> FacturaDetalle { get; set; }
+
         public DbSet<Clientes> Cliente { get; set; }
         public DbSet<TipoEnvios> TipoEnvio { get; set; }
         public DbSet<Transportadora> Transportadora { get; set; }
@@ -62,9 +66,10 @@ namespace Domain
         public DbSet<RangoDescuentos> RangoDescuentos { get; set; }
         public DbSet<TipoGastos> TipoGastos { get; set; }
         public DbSet<Gastos> Gastos { get; set; }
+        public DbSet<EstadosFactu> EstadosFactu { get; set; }
 
 
-protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             string ADMIN_ID = "02174cf0–9412–4cfe - afbf - 59f706d72cf6";
             string ROLE_ID = "341743f0 - asd2–42de - afbf - 59kmkkmk72cf6";

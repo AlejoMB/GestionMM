@@ -26,6 +26,7 @@ namespace Domain.Entities.Inventario
         public Diseno? Diseno { get; set; }
         //public int IdSegmento { get; set; }
         public Segmento? Segmento { get; set; }
+        public bool EstaEnPromocion { get; set; }
         public List<MediaColores> MediaColores { get; set; }
         public ICollection<ComprasDetalle> ComprasDetalle { get; } = new List<ComprasDetalle>();
         public Existencias? Existencias { get; set; }
