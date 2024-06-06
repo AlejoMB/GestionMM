@@ -121,8 +121,8 @@ namespace Web.Controllers
             var media = _dbContext.Medias.Include(m => m.Existencias).FirstOrDefault(c => c.Id == codigoMedia);
             if (media != null)
             {
-                
-                return Ok(media.Id + "_" + media.Name + "_" + media.Existencias?.CantidadProducto ?? "0");
+                string existencia = media.Existencias?.CantidadProducto.ToString() ?? "0";
+                return Ok(media.Id + "_" + media.Name + "_" + existencia + "_" + media.EstaEnPromocion);
                 
             }
             else 
@@ -141,6 +141,7 @@ namespace Web.Controllers
                 TipoEnvio = _dbContext.TipoEnvio.FirstOrDefault(x => x.Id == model.TipoEnvio),
                 MedioPago = _dbContext.MedioPago.FirstOrDefault(x => x.Id == model.MedioPago),
                 EstadoFactu = _dbContext.EstadosFactu.FirstOrDefault(x => x.Id == model.EstadoFactu),
+                FechaPago = model.FechaPago,
                 Total = model.Total
             };
 

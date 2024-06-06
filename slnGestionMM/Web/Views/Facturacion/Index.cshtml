@@ -130,6 +130,7 @@
                                     </td>
                                     <td class="col-md-1">
                                         <input id="txtCodigo_1" class="form-control fontSmall" onblur="setId(this); SetMediaName(this);" type="text" aria-label=".form-control-sm example">
+                                        <input type="hidden" id="txtPromo_1" class="promo" />
                                     </td>
                                     <td class="col-md-1">
                                         <input id="txtName_1" class="form-control fontSmall" type="text" disabled aria-label=".form-control-sm example">
@@ -162,7 +163,6 @@
                         </table>
                         <input id="btnGuardar" type="button" class="btn btn-success" value="Guardar" onclick="CrearFactura()">
                         <input id="btnVerFactura" type="button" class="btn btn-info" value="Ver Factura" disabled>
-                        @* <input id="btnVerFactura" type="button" class="btn btn-info" value="Ver Factura" disabled onclick="location.href='@Url.Action("FactuPrint", "Facturacion")?id='" /> *@
 
                     </div>
                 </div>
@@ -224,7 +224,16 @@
             var cantidad = parseInt($(this).val());
             var costo = parseInt($(this).closest("tr").find(".costo").val());
             if (!isNaN(costo) && !isNaN(cantidad)) {
-                var ganancia = GetDescuento($(this).val());
+                var txtPromo = $(this).closest("tr").find(".promo").val();
+                var esPromo = (txtPromo === 'True')
+                if (esPromo) {
+                    $(this).closest("tr").find(".venta").addClass("promoFactu");
+                }
+                else
+                {
+                    $(this).closest("tr").find(".venta").removeClass("promoFactu");
+                }
+                var ganancia = GetDescuento($(this).val(), esPromo);
                 $(this).closest("tr").find(".venta").val(costo + ganancia);
                 $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
                 var total = (costo + ganancia) * cantidad;
@@ -290,22 +299,30 @@
         });
     });
 
-    function GetDescuento(cantidad) 
+    function GetDescuento(cantidad, esPromo) 
     {
         var listaDescuentos = $("#Descuentos").val()
         var rows = listaDescuentos.split("|");
         var descuento = 0;
-        if (rows.length > 0) {
-            rows.forEach(function (row) {
-                var values = row.split(";");
-                if (values.length > 0) {
-                    var min = parseInt(values[0]);
-                    var max = parseInt(values[1]);
-                    if (cantidad >= min && cantidad <= max) {
-                        descuento = parseInt(values[2]);
+
+        if (esPromo) {
+            row = rows[rows.length - 1];
+            var values = row.split(";");
+            descuento = parseInt(values[2]);
+        }
+        else {
+            if (rows.length > 0) {
+                rows.forEach(function (row) {
+                    var values = row.split(";");
+                    if (values.length > 0) {
+                        var min = parseInt(values[0]);
+                        var max = parseInt(values[1]);
+                        if (cantidad >= min && cantidad <= max) {
+                            descuento = parseInt(values[2]);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         return descuento;
@@ -499,6 +516,7 @@
                     $("#txtName_" + result[1]).val(lknResult[1]);
                     $("#txtName_" + result[1]).prop("title", lknResult[1]);
                     $("#txtExist_" + result[1]).val(lknResult[2]);
+                    $("#txtPromo_" + result[1]).val(lknResult[3]);
                     $("#txtCosto_" + result[1]).val(data);
                 }
                 
@@ -514,8 +532,8 @@
         
         //getcostoProrateo
 
-        var myModalEl = document.getElementById('mediasModal')
-        var modal = bootstrap.Modal.getInstance(myModalEl)
+        var myModalEl = document.getElementById('mediasModal');
+        var modal = bootstrap.Modal.getInstance(myModalEl);
 
         modal.hide();
     }
@@ -533,8 +551,6 @@
                 type: 'GET',
                 data: { codigoMedia: $(inputCodigo).val() },
                 success: function (data) {
-                    
-                    //$("#txtName_" + rowId).val(data);
                     SetImageId(data);
                 },
                 error: function (error) {
@@ -546,6 +562,11 @@
         else {
             $("#txtName_" + rowId).val("");
         }
+
+        $("#txtCant_" + rowId).val("");
+        $("#txtVenta_" + rowId).val("");
+        $("#txtVenta_" + rowId).removeClass("promoFactu");
+        $("#txtTotal_" + rowId).val("");
     }
 
     function CrearFactura() { 
