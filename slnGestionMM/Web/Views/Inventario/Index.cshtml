@@ -35,9 +35,27 @@
                                     <span class="color-square" style="background-color: @color.Color.RgbColor" title="@color.Color.Name">&ensp;&ensp;</span>
                                 }
                                 <img src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
-                                Codigo: @product.Id
+                                <button type="button" class="btn btn-dark" style="margin-top:5px">
+                                    Codigo: <span class="badge bg-secondary">@product.Id</span>
+                                </button>
                                 <br />
-                                Cantidad: @product?.Existencias?.CantidadProducto
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <button type="button" class="btn btn-primary">
+                                        Existencia <span class="badge bg-secondary">@product?.Existencias?.CantidadProducto</span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    if (@product?.Existencias?.CantidadProducto > 0)
+                                    {
+                                        <span class="badge bg-success">Entrega Inmediata</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary">Entrega en 3 días</span>
+                                    }
+                                }
                             </div>
                         }
                     </div>

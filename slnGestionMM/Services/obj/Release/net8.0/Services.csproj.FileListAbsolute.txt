@@ -8,7 +8,6 @@ C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\Services.GeneratedMSBu
 C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\Services.AssemblyInfoInputs.cache
 C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\Services.AssemblyInfo.cs
 C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\Services.csproj.CoreCompileInputs.cache
-C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\Services.sourcelink.json
 C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\Services.csproj.CopyComplete
 C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\Services.dll
 C:\amb\GestionMM\slnGestionMM\Services\obj\Release\net8.0\refint\Services.dll

@@ -7,6 +7,7 @@ using Web.Helpers;
 using Domain.Models.Inventario;
 using Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
@@ -14,14 +15,14 @@ namespace Web.Controllers
     {
         private GestionDbContext _dbContext;
         private readonly IWebHostEnvironment _env;
-        const string URLImages = "https://localhost:7155/imagenes/";
+        const string URLImages = "http://www.mediaslunas.com/imagenes/";
         public InventarioController(GestionDbContext dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
             _env = env;
         }
 
-        [Authorize(Roles = "Administrador")] 
+        //[Authorize(Roles = "Administrador")] 
         public IActionResult Index()
         {
             //var catalogo = new List<CatalogoModel>();
@@ -47,6 +48,7 @@ namespace Web.Controllers
             return View(catalogo);
         }
 
+        [Authorize]
         public IActionResult AddProducto()
         {
             var tiposMedias = _dbContext.TipoMedias.ToList();
@@ -96,12 +98,16 @@ namespace Web.Controllers
 
             };
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             media.TipoMedia = _dbContext.TipoMedias.FirstOrDefault(x => x.Id == model.TipoMediaId);
             media.Tamano = _dbContext.Tamanos.FirstOrDefault(x => x.Id == model.TamanoId);
             media.Marca = _dbContext.Marcas.FirstOrDefault(x => x.Id == model.MarcaId);
             //media.Color = _dbContext.Colores.FirstOrDefault(x => x.Id == Convert.ToInt32(model.ColorId));
             media.Diseno = _dbContext.Disenos.FirstOrDefault(x => x.Id == model.DisenoId);
             media.Segmento = _dbContext.Segmentos.FirstOrDefault(x => x.Id == model.SegmentoId);
+            media.FechaCreado = DateTime.Now;
+            media.CreadoPorUser = userId;
 
             var listaColores = new List<MediaColores>();
             foreach(var color in model.Colores)

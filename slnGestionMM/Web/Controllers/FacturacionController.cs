@@ -10,13 +10,17 @@ using Domain.Models.Facturas;
 using Domain.Models.Compras;
 using Newtonsoft.Json;
 using Domain.Entities.Compras;
+using Microsoft.AspNetCore.Authorization;
+using Domain.Entities.Authorization;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class FacturacionController : Controller
     {
         private GestionDbContext _dbContext;
-        const string URLImages = "https://localhost:7155/imagenes/";
+        const string URLImages = "http://www.mediaslunas.com/imagenes/";
 
         public FacturacionController(GestionDbContext dbContext)
         {
@@ -134,15 +138,17 @@ namespace Web.Controllers
         public IActionResult CrearFactura([FromForm] FacturaEncModel model)
         {
             model.Detalles = JsonConvert.DeserializeObject<List<FacturaDetalleModel>>(model.DetalleString);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            
             var facturaEnc = new FacturaEnc { 
                 Cliente = _dbContext.Cliente.FirstOrDefault(x => x.Cedula == model.Cliente.ToString()),
                 TipoEnvio = _dbContext.TipoEnvio.FirstOrDefault(x => x.Id == model.TipoEnvio),
                 MedioPago = _dbContext.MedioPago.FirstOrDefault(x => x.Id == model.MedioPago),
                 EstadoFactu = _dbContext.EstadosFactu.FirstOrDefault(x => x.Id == model.EstadoFactu),
                 FechaPago = model.FechaPago,
-                Total = model.Total
+                Total = model.Total,
+                FechaCreado = DateTime.Now,
+                CreadoPorUser = userId
             };
 
             foreach (var detalleModel in model.Detalles)

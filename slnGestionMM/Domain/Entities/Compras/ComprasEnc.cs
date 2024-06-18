@@ -14,7 +14,7 @@ namespace Domain.Entities.Compras
         public DateTime FechaPago { get; set; }
         public bool Pagado { get; set; } //Estado
         public int Total { get; set; }
-        public int CreadoPorUser { get; set; }
+        public string CreadoPorUser { get; set; }
         public DateTime FechaCreado { get; set; }
         public ICollection<ComprasDetalle> ComprasDetalle { get; set; } = new List<ComprasDetalle>();
     }

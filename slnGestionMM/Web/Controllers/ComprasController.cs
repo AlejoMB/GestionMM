@@ -11,20 +11,24 @@ using Web.ViewModels;
 using Domain.Models.Compras;
 using Domain.Entities.Compras;
 using Domain.Entities.Inventario;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class ComprasController : Controller
     {
         private GestionDbContext _dbContext;
         private MediaService _mediaService;
-        const string URLImages = "https://localhost:7155/imagenes/";
+        const string URLImages = "http://www.mediaslunas.com/imagenes/";
         public ComprasController(GestionDbContext dbContext)
         {
             _dbContext = dbContext;
             _mediaService = new MediaService(_dbContext);
         }
-
+        
         public IActionResult Index()
         {
             ViewBag.UlrHost = URLImages;
@@ -76,6 +80,9 @@ namespace Web.Controllers
         public IActionResult CrearCompra([FromForm] ComprasEncModel model)
         {
             model.Detalles = JsonConvert.DeserializeObject<List<ComprasDetalleModel>>(model.DetalleString);
+            var claims = this.User.Claims;
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var compraEncab = new ComprasEnc()
             {
@@ -85,7 +92,7 @@ namespace Web.Controllers
                 Pagado = Convert.ToBoolean(model.Pagado),
                 Total = model.Total,
                 FechaCreado = DateTime.Now,
-                CreadoPorUser = model.UserId
+                CreadoPorUser = userId
             };
 
             foreach (var detalleModel in model.Detalles)

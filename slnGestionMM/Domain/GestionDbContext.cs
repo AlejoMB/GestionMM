@@ -240,13 +240,17 @@ namespace Domain
             modelBuilder.Entity<Color>().HasData(new Color { Id = 8, Name = "Verde", RgbColor = "#008000" });
 
             modelBuilder.Entity<TipoEnvios>().HasData(new TipoEnvios { Id = 1, Name = "Domicilio" });
-            modelBuilder.Entity<TipoEnvios>().HasData(new TipoEnvios { Id = 2, Name = "Contra Entrega" });
+            modelBuilder.Entity<TipoEnvios>().HasData(new TipoEnvios { Id = 2, Name = "Transportadora" });
 
             modelBuilder.Entity<Transportadora>().HasData(new Transportadora { Id = 1, Name = "Inter Rapidisimo" });
+            modelBuilder.Entity<Transportadora>().HasData(new Transportadora { Id = 2, Name = "Envía" });
 
             modelBuilder.Entity<MedioPago>().HasData(new MedioPago { Id = 1, Name = "Efectivo" });
             modelBuilder.Entity<MedioPago>().HasData(new MedioPago { Id = 2, Name = "Transferencia" });
-            modelBuilder.Entity<MedioPago>().HasData(new MedioPago { Id = 3, Name = "Transportadora" });
+            modelBuilder.Entity<MedioPago>().HasData(new MedioPago { Id = 3, Name = "Contra Entrega" });
+
+            modelBuilder.Entity<EstadosFactu>().HasData(new EstadosFactu { Id = 1, Name = "Si" });
+            modelBuilder.Entity<EstadosFactu>().HasData(new EstadosFactu { Id = 2, Name = "No" });
 
         }
     }
