@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using Domain.Entities.Gastos;
 using Microsoft.AspNetCore.Authorization;
+using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -94,7 +95,7 @@ namespace Web.Controllers
                 return NotFound();
             }
             PopulateDepartmentsDropDownList(gastos.TipoGasto.Id);
-            return View(gastos);
+            return View(new GastosModel { Id = gastos.Id, Valor = gastos.Valor, Fecha = gastos.Fecha, tipoGasto = gastos.TipoGasto.Id });
         }
 
         // POST: Gastos/Edit/5
@@ -102,26 +103,29 @@ namespace Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Valor,Fecha,TipoGasto")] Gastos gastos, int TipoGasto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Valor,Fecha,tipoGasto")] GastosModel gastoModel)
         {
-            if (id != gastos.Id)
+            if (id != gastoModel.Id)
             {
                 return NotFound();
             }
             
-            ModelState.Remove("TipoGasto");
+            ModelState.Remove("tipoGastos");
             ModelState.Remove("TipoGasto.name");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    gastos.TipoGasto = GetTipoGasto(TipoGasto);
-                    _context.Update(gastos);
+                    var gasto = _context.Gastos.FirstOrDefault(g => g.Id == id);
+                    gasto.Valor = gastoModel.Valor;
+                    gasto.Fecha = gastoModel.Fecha;
+                    gasto.TipoGasto = GetTipoGasto(gastoModel.tipoGasto);
+                    _context.Update(gasto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GastosExists(gastos.Id))
+                    if (!GastosExists(gastoModel.Id))
                     {
                         return NotFound();
                     }
@@ -130,11 +134,11 @@ namespace Web.Controllers
                         throw;
                     }
                 }
-                PopulateDepartmentsDropDownList(TipoGasto);
+                //PopulateDepartmentsDropDownList(TipoGasto);
                 return RedirectToAction(nameof(Index));
             }
-            PopulateDepartmentsDropDownList(TipoGasto);
-            return View(gastos);
+            //PopulateDepartmentsDropDownList(TipoGasto);
+            return View(gastoModel);
         }
 
         // GET: Gastos/Delete/5

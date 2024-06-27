@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "s4+ZkTIEUQMMlF9vuTPwtbFXmsd5lLsNDleJc7Hbu1k=",
+  "Hash": "QwfITxL07nARoYgA1w35UvDc+78wmzq2DkkeLyC7jBA=",
   "Source": "Web",
   "BasePath": "_content/Web",
   "Mode": "Default",
@@ -167,6 +167,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Imagenes\\.png"
+    },
+    {
+      "Identity": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\Alejo_test_89.png",
+      "SourceId": "Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\",
+      "BasePath": "_content/Web",
+      "RelativePath": "Imagenes/Alejo_test_89.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Imagenes\\Alejo_test_89.png"
     },
     {
       "Identity": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\jaspeadas negras blancas.png",

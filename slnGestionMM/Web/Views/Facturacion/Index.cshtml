@@ -222,7 +222,7 @@
 
 
             var cantidad = parseInt($(this).val());
-            var costo = parseInt($(this).closest("tr").find(".costo").val());
+            var costo = parseInt($(this).closest("tr").find(".costo").val().replace("$", "").replace(".", ""));
             if (!isNaN(costo) && !isNaN(cantidad)) {
                 var txtPromo = $(this).closest("tr").find(".promo").val();
                 var esPromo = (txtPromo === 'True')
@@ -234,7 +234,7 @@
                     $(this).closest("tr").find(".venta").removeClass("promoFactu");
                 }
                 var ganancia = GetDescuento($(this).val(), esPromo);
-                $(this).closest("tr").find(".venta").val(costo + ganancia);
+                $(this).closest("tr").find(".venta").val(formatCurrency(costo + ganancia));
                 $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
                 var total = (costo + ganancia) * cantidad;
                 $(this).closest("tr").find(".total").val(formatCurrency(total));
@@ -517,7 +517,7 @@
                     $("#txtName_" + result[1]).prop("title", lknResult[1]);
                     $("#txtExist_" + result[1]).val(lknResult[2]);
                     $("#txtPromo_" + result[1]).val(lknResult[3]);
-                    $("#txtCosto_" + result[1]).val(data);
+                    $("#txtCosto_" + result[1]).val(formatCurrency(data));
                 }
                 
 

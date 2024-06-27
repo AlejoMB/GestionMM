@@ -15,53 +15,69 @@
 <div class="accordion" id="accordionPanelsStayOpenExample">
 @foreach (var categoria in Model)
 {
-    
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.Name">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.Name">
-                    @categoria.Name
-                </button>
-            </h2>
-            <div id="panelsStayOpen-collapse-@categoria.Name" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.Name">
-                <div class="accordion-body">
-                    <div id="productGallery">
-                        @foreach (var product in categoria.Medias)
-                        {
-                            <div class="product">
-                                <h7>@product.TipoMedia?.Name @product.Tamano?.Name @product.Marca?.Name @product.Diseno?.Name @product.Segmento?.Name </h7>
-                                <br />
-                                @foreach (var color in product.MediaColores)
-                                {
-                                    <span class="color-square" style="background-color: @color.Color.RgbColor" title="@color.Color.Name">&ensp;&ensp;</span>
-                                }
-                                <img src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
-                                <button type="button" class="btn btn-dark" style="margin-top:5px">
-                                    Codigo: <span class="badge bg-secondary">@product.Id</span>
-                                </button>
-                                <br />
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <button type="button" class="btn btn-primary">
-                                        Existencia <span class="badge bg-secondary">@product?.Existencias?.CantidadProducto</span>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.Name">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.Name">
+                @categoria.Name
+            </button>
+        </h2>
+        <div id="panelsStayOpen-collapse-@categoria.Name" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.Name">
+            <div class="accordion-body">
+                @foreach(var tamano in categoria.Tamanos)
+                {
+                    @if (tamano.Medias.Count > 0)
+                    {
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/", "-").Replace(" ", "-").Replace("(", "-").Replace(")", "-")" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
+                                        @tamano.Name : @tamano.Medias.Count
                                     </button>
-                                }
-                                else
-                                {
-                                    if (@product?.Existencias?.CantidadProducto > 0)
-                                    {
-                                        <span class="badge bg-success">Entrega Inmediata</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-primary">Entrega en 3 días</span>
-                                    }
-                                }
+                                </h2>
+                                <div id="panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
+                                    <div class="accordion-body-1">
+                                        <div id="productGallery">
+                                            @foreach (var product in tamano.Medias)
+                                            {
+                                                <div class="product">
+                                                    <h7>@product.TipoMedia?.Name @product.Tamano?.Name @product.Marca?.Name @product.Diseno?.Name @product.Segmento?.Name </h7>
+                                                    <br />
+                                                    @foreach (var color in product.MediaColores)
+                                                    {
+                                                        <span class="color-square" style="background-color: @color.Color.RgbColor" title="@color.Color.Name">&ensp;&ensp;</span>
+                                                    }
+                                                    <img src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
+                                                    <button type="button" class="btn btn-dark" style="margin-top:5px">
+                                                        Codigo: <span class="badge bg-secondary">@product.Id</span>
+                                                    </button>
+                                                    <br />
+                                                    @if (User.Identity.IsAuthenticated)
+                                                    {
+                                                        <button type="button" class="btn btn-primary">
+                                                            Existencia <span class="badge bg-secondary">@product?.Existencias?.CantidadProducto</span>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (@product?.Existencias?.CantidadProducto > 0)
+                                                        {
+                                                            <span class="badge bg-success">Entrega Inmediata</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-primary">Entrega en 3 días</span>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
                             </div>
-                        }
-                    </div>
-                </div>
+                        </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
+    </div>
 }
 </div>
 

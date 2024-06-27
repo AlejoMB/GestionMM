@@ -6,6 +6,7 @@ namespace Web.ViewModels
     {
         public int IdCategoria { get; set; }
         public string Name { get; set; }
-        public List<Media> Medias { get; set; } = new List<Media>();
+        public List<TamanoModel> Tamanos { get; set; } = new List<TamanoModel>(); 
+        //public List<Media> Medias { get; set; } = new List<Media>();
     }
 }

@@ -58,6 +58,7 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,RgbColor")] Color color)
         {
+            ModelState.Remove("MediaColores");
             if (ModelState.IsValid)
             {
                 _context.Add(color);

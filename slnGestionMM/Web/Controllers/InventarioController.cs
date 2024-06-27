@@ -28,7 +28,8 @@ namespace Web.Controllers
             //var catalogo = new List<CatalogoModel>();
 
             ViewBag.UlrHost = URLImages;
-            var catalogo = _dbContext.TipoMedias.Select(c => new CatalogoModel { IdCategoria = c.Id, Name = c.Name }).ToList();
+            var tiposMedias = _dbContext.TipoMedias.Select(c => new CatalogoModel { IdCategoria = c.Id, Name = c.Name }).ToList();
+            var tamanos = _dbContext.Tamanos.Select(t => new TamanoModel { Id = t.Id, Name = t.Name } ).ToList();
             var medias = _dbContext.Medias
                          .Include(medias => medias.TipoMedia)
                          .Include(medias => medias.Tamano)
@@ -39,13 +40,21 @@ namespace Web.Controllers
                          .Include(medias => medias.Existencias)
                          .ToList();
 
-            foreach (var item in catalogo)
+            foreach (var item in tiposMedias)
             {
-                item.Medias.AddRange(medias.Where(m => m.TipoMedia.Id == item.IdCategoria).ToList());
+                //item.Tamanos = tamanos;
+                item.Tamanos = tamanos.Select(t => new TamanoModel { Id = t.Id, Name = t.Name }).ToList();
+                foreach (var tamano in item.Tamanos)
+                {
+                    tamano.Medias = new List<Media>();
+                    var mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id).ToList();
+                    tamano.Medias.AddRange(mediasResult);
+                }
+                //item.Medias.AddRange(medias.Where(m => m.TipoMedia.Id == item.IdCategoria).ToList());
             }
 
 
-            return View(catalogo);
+            return View(tiposMedias);
         }
 
         [Authorize]
@@ -81,20 +90,12 @@ namespace Web.Controllers
                 return this.Problem("Media existente con nombre:" + result);
             }
 
-            string filePath = GetFilePath(model.Name.Replace(" ", "_")) + ".png";
-            if(System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Delete(filePath);
-            }
-            using(FileStream stream = System.IO.File.Create(filePath))
-            {
-                model.Imagen.CopyTo(stream);
-            }
+            string mediaName = model.Name.Trim();
 
             var media = new Media()
             {
                 Name = model.Name,
-                Imagen = model.Name.Replace(" ","_") + ".png"
+                Imagen = "Guardado Inicial"//mediaName.Replace(" ","_") + ".png"
 
             };
 
@@ -120,6 +121,21 @@ namespace Web.Controllers
 
             _dbContext.Medias.Add(media);
             _dbContext.SaveChanges();
+
+            media.Imagen = mediaName.Replace(" ", "_")+ "_" + media.Id + ".png";
+
+            _dbContext.Medias.Update(media);
+            _dbContext.SaveChanges();
+
+            string filePath = GetFilePath(mediaName.Replace(" ", "_"))+ "_" + media.Id + ".png";
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+            using (FileStream stream = System.IO.File.Create(filePath))
+            {
+                model.Imagen.CopyTo(stream);
+            }
 
             return Ok("Image uploaded successfully");
         }
