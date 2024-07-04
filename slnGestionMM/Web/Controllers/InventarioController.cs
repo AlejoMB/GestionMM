@@ -50,7 +50,7 @@ namespace Web.Controllers
                     var mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id).ToList();
                     tamano.Medias.AddRange(mediasResult);
                 }
-                //item.Medias.AddRange(medias.Where(m => m.TipoMedia.Id == item.IdCategoria).ToList());
+                
             }
 
 

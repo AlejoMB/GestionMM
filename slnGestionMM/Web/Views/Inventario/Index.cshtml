@@ -25,8 +25,8 @@
             <div class="accordion-body">
                 @foreach(var tamano in categoria.Tamanos)
                 {
-                    @if (tamano.Medias.Count > 0)
-                    {
+                     @if (tamano.Medias.Count > 0)
+                     { 
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/", "-").Replace(" ", "-").Replace("(", "-").Replace(")", "-")" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         </div>
-                    }
+                     } 
                 }
             </div>
         </div>
