@@ -60,8 +60,8 @@
                         </div>
                         <div class="col-md-1">
                             <select id="Estado" class="form-control" aria-label=".form-control-sm example">
-                                <option value="0">Si</option>
-                                <option value="1">No</option>
+                                <option value="True">Si</option>
+                                <option value="False">No</option>
                             </select>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
         $(".datepicker").datepicker().datepicker("setDate", "today");
 
         function calculateTotal() {
-            var costo = $(this).closest("tr").find(".costo").val().replace("$", "").replace(".", "");
+            var costo = $(this).closest("tr").find(".costo").val().replace("$", "").replace(/\./g, '');
             var cantidad = $(this).val();
             if (costo !== '' && cantidad !== '') {
                 var total = costo * cantidad;
@@ -245,7 +245,7 @@
         $(document).on("blur", ".cantidad, .total", function () {
             var totalSum = 0;
             $('.total').each(function () {
-                var val = parseFloat($(this).val().replace("$", "").replace(".", ""));
+                var val = parseFloat($(this).val().replace("$", "").replace(/\./g, ''));
                 if (!isNaN(val)) {
                     totalSum += val;
                 }
@@ -451,6 +451,7 @@
                 success: function (data) {
                     //console.log('Success');
                     $("#txtName_" + rowId).val(data);
+                    $("#txtName_" + rowId).prop("title", data);
                     // $("#txtCleinteName").val(data.nombre);
                 },
                 error: function (error) {

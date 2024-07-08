@@ -15,7 +15,7 @@ namespace Web.Controllers
     {
         private GestionDbContext _dbContext;
         private readonly IWebHostEnvironment _env;
-        const string URLImages = "http://www.mediaslunas.com/imagenes/";
+        const string URLImages = "https://www.mediaslunas.com/imagenes/";
         public InventarioController(GestionDbContext dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
@@ -23,14 +23,20 @@ namespace Web.Controllers
         }
 
         //[Authorize(Roles = "Administrador")] 
-        public IActionResult Index()
+        public IActionResult Index(string selectedTab)
         {
             //var catalogo = new List<CatalogoModel>();
+            int categoria = 0;
+            if(!String.IsNullOrEmpty(selectedTab))
+            {
+                var values = selectedTab.Split('_');
+                categoria = values[1].ToLower() == "false" ? 0 : int.Parse(values[0]);
+            }
 
             ViewBag.UlrHost = URLImages;
             var tiposMedias = _dbContext.TipoMedias.Select(c => new CatalogoModel { IdCategoria = c.Id, Name = c.Name }).ToList();
             var tamanos = _dbContext.Tamanos.Select(t => new TamanoModel { Id = t.Id, Name = t.Name } ).ToList();
-            var medias = _dbContext.Medias
+            var medias = _dbContext.Medias.Where(m => m.TipoMedia.Id == categoria)
                          .Include(medias => medias.TipoMedia)
                          .Include(medias => medias.Tamano)
                          .Include(medias => medias.Marca)
@@ -50,7 +56,7 @@ namespace Web.Controllers
                     var mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id).ToList();
                     tamano.Medias.AddRange(mediasResult);
                 }
-                
+
             }
 
 

@@ -7,6 +7,6 @@ namespace Domain.Models.Compras
         public int Media { get; set; }
         public int CostoUnitario { get; set; }
         public int Cantidad { get; set; }
-        public int Total { get; set; }
+        public string Total { get; set; }
     }
 }

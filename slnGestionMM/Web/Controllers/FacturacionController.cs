@@ -20,7 +20,7 @@ namespace Web.Controllers
     public class FacturacionController : Controller
     {
         private GestionDbContext _dbContext;
-        const string URLImages = "http://www.mediaslunas.com/imagenes/";
+        const string URLImages = "https://www.mediaslunas.com/imagenes/";
 
         public FacturacionController(GestionDbContext dbContext)
         {
@@ -146,23 +146,34 @@ namespace Web.Controllers
                 MedioPago = _dbContext.MedioPago.FirstOrDefault(x => x.Id == model.MedioPago),
                 EstadoFactu = _dbContext.EstadosFactu.FirstOrDefault(x => x.Id == model.EstadoFactu),
                 FechaPago = model.FechaPago,
-                Total = model.Total,
+                //Total = model.Total,
                 FechaCreado = DateTime.Now,
                 CreadoPorUser = userId
             };
 
+            if (!string.IsNullOrEmpty(model.Total))
+            {
+                facturaEnc.Total = int.Parse(model.Total.Replace(".", "").Replace(",", ""));
+            }
+
             foreach (var detalleModel in model.Detalles)
             {
                 var media = _dbContext.Medias.FirstOrDefault(m => m.Id == detalleModel.Media);
-                var comprasDetalle = new FacturaDetalle()
+                var factuDetalle = new FacturaDetalle()
                 {
                     Media = media,
                     PrecioUnitario = detalleModel.PrecioUnitario,
                     Cantidad = detalleModel.Cantidad,
-                    Total = detalleModel.Total
+                    //Total = detalleModel.Total
                 };
 
-                facturaEnc.FacturaDetalle.Add(comprasDetalle);
+                if (!string.IsNullOrEmpty(detalleModel.Total))
+                {
+                    factuDetalle.Total = int.Parse(detalleModel.Total.Replace(".", "").Replace(",", ""));
+                }
+
+
+                facturaEnc.FacturaDetalle.Add(factuDetalle);
                 DeleteExistencia(media, detalleModel.Cantidad);
             }
 

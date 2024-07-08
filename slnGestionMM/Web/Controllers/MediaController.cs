@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Domain.Entities.Inventario;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Web.Helpers;
 
 namespace Web.Controllers
 {
@@ -14,7 +16,7 @@ namespace Web.Controllers
     {
         private readonly GestionDbContext _context;
         private readonly IWebHostEnvironment _env;
-        const string URLImages = "http://www.mediaslunas.com/imagenes/";
+        const string URLImages = "https://www.mediaslunas.com/imagenes/";
         public MediaController(GestionDbContext context, IWebHostEnvironment env)
         {
             _context = context;
@@ -22,9 +24,14 @@ namespace Web.Controllers
         }
 
         // GET: Media
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            return View(await _context.Medias.ToListAsync());
+            int pageSize = 30;
+            var medias = from m in _context.Medias
+                         select m;
+
+            //return View(await _context.Medias.ToListAsync());
+            return View(await PaginatedList<Media>.CreateAsync(medias.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Media/Details/5
@@ -95,27 +102,29 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            
+            try
             {
-                try
-                {
-                    _context.Update(media);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MediaExists(media.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var mediaSave = _context.Medias.Find(media.Id);
+                mediaSave.Name = media.Name;
+                mediaSave.EstaEnPromocion = media.EstaEnPromocion;
+                _context.Update(mediaSave);
+                await _context.SaveChangesAsync();
             }
-            return View(media);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MediaExists(media.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+            
+            
         }
 
         // GET: Media/Delete/5

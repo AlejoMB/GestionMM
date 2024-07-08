@@ -16,17 +16,17 @@
 @foreach (var categoria in Model)
 {
     <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.Name">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.Name">
+            <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.IdCategoria">
+                <button id="@categoria.IdCategoria" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.IdCategoria" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.IdCategoria" onclick="loadTab(this)">
                 @categoria.Name
             </button>
         </h2>
-        <div id="panelsStayOpen-collapse-@categoria.Name" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.Name">
+            <div id="panelsStayOpen-collapse-@categoria.IdCategoria" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.IdCategoria" data-bs-parent="#accordionPanelsStayOpenExample">
             <div class="accordion-body">
                 @foreach(var tamano in categoria.Tamanos)
                 {
-                     @if (tamano.Medias.Count > 0)
-                     { 
+                     @* @if (tamano.Medias.Count > 0)
+                     { *@  
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/", "-").Replace(" ", "-").Replace("(", "-").Replace(")", "-")" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
@@ -45,7 +45,7 @@
                                                     {
                                                         <span class="color-square" style="background-color: @color.Color.RgbColor" title="@color.Color.Name">&ensp;&ensp;</span>
                                                     }
-                                                    <img src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
+                                                    <img class="lazyload" src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
                                                     <button type="button" class="btn btn-dark" style="margin-top:5px">
                                                         Codigo: <span class="badge bg-secondary">@product.Id</span>
                                                     </button>
@@ -73,13 +73,85 @@
                             </div>
                         </div>
                         </div>
-                     } 
+                      @* }   *@
                 }
             </div>
         </div>
     </div>
 }
-</div>
+</div> 
 
-@*  *@
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedTab = urlParams.get('selectedTab');
+            //alert(selectedTab);
+            if (selectedTab !== null) {
+                var params = selectedTab.split('_');
+                const h2Element = document.querySelector('#panelsStayOpen-heading-' + params[0]);
+                const divElement = document.querySelector('#panelsStayOpen-collapse-' + params[0]);
 
+                const buttonElement = h2Element.querySelector('button');
+
+                if (params[1] === "false") {
+                    buttonElement.classList.add('collapsed');
+                    buttonElement.setAttribute('aria-expanded', 'false');
+
+                    divElement.classList.remove('show');
+                }
+                else {
+                    buttonElement.classList.remove('collapsed');
+                    buttonElement.setAttribute('aria-expanded', 'true');
+
+                    divElement.classList.add('show');
+                }
+
+                
+
+                
+            }
+        });
+
+
+        function loadTab(tabElement) {
+            
+            const ariaExpandedValue = tabElement.getAttribute('aria-expanded');
+
+            window.location.href = '@Url.Action("Index", "Inventario")?selectedTab=' + tabElement.id + '_' + ariaExpandedValue;
+
+            // if (ariaExpandedValue === 'true') {
+            //     console.log('Aria-expanded is true');
+            // } else {
+            //     console.log('Aria-expanded is not true');
+            // }
+        }
+
+
+    </script>
+}
+
+@* @{
+    bool isFirst = true;
+}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+@foreach (var categoria in Model)
+{
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(isFirst ? "active" : "")" id="@categoria.Name-tab" data-bs-toggle="tab" data-bs-target="#@categoria.Name" type="button" role="tab" aria-controls="@categoria.Name" aria-selected="@(isFirst ? "true" : "false")">@categoria.Name</button>
+        </li>
+        isFirst = false;
+}
+</ul>
+@{
+    isFirst = true;
+}
+<div class="tab-content" id="TabCatalogo">
+    @foreach (var categoria in Model)
+    {
+        <div class="tab-pane fade @(isFirst ? "show active" : "")" id="@categoria.Name" role="tabpanel" aria-labelledby="@categoria.Name-tab">
+
+        </div>
+        isFirst = false;
+    }
+</div> *@

@@ -13,7 +13,7 @@ namespace Domain.Models.Facturas
     {
         public int Id { get; set; }
         public int Cliente { get; set; }
-        public int Total { get; set; }
+        public string Total { get; set; }
         public int EstadoFactu { get; set; }
         public int TipoEnvio { get; set; }
         public string? NoGuia { get; set; }

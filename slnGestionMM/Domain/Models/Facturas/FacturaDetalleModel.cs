@@ -14,6 +14,6 @@ namespace Domain.Models.Facturas
         public int Media { get; set; }
         public int PrecioUnitario { get; set; }
         public int Cantidad { get; set; }        
-        public int Total { get; set; }
+        public string Total { get; set; }
     }
 }

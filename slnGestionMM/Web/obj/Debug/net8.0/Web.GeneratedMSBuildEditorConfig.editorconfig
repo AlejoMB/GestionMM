@@ -106,26 +106,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcHJhc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/amb/GestionMM/slnGestionMM/Web/Views/FactuEnc/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjdHVFbmNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/amb/GestionMM/slnGestionMM/Web/Views/FactuEnc/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjdHVFbmNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/amb/GestionMM/slnGestionMM/Web/Views/FactuEnc/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjdHVFbmNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/amb/GestionMM/slnGestionMM/Web/Views/FactuEnc/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjdHVFbmNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/amb/GestionMM/slnGestionMM/Web/Views/FactuEnc/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjdHVFbmNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/amb/GestionMM/slnGestionMM/Web/Views/Facturacion/FactuPrint.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjdHVyYWNpb25cRmFjdHVQcmludC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

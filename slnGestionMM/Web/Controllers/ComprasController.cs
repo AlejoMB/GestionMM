@@ -22,7 +22,7 @@ namespace Web.Controllers
     {
         private GestionDbContext _dbContext;
         private MediaService _mediaService;
-        const string URLImages = "http://www.mediaslunas.com/imagenes/";
+        const string URLImages = "https://www.mediaslunas.com/imagenes/";
         public ComprasController(GestionDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -90,10 +90,14 @@ namespace Web.Controllers
                 MedioPago = _dbContext.MedioPago.FirstOrDefault(m => m.Id == model.MedioPago),
                 FechaPago = model.FechaPago,
                 Pagado = Convert.ToBoolean(model.Pagado),
-                Total = model.Total,
+                //Total = model.Total,
                 FechaCreado = DateTime.Now,
                 CreadoPorUser = userId
             };
+            if (!string.IsNullOrEmpty(model.Total))
+            {
+                compraEncab.Total = int.Parse(model.Total.Replace(".","").Replace(",", ""));
+            }
 
             foreach (var detalleModel in model.Detalles)
             {
@@ -102,9 +106,14 @@ namespace Web.Controllers
                     Media = media,
                     CostoUnitario = detalleModel.CostoUnitario,
                     Cantidad = detalleModel.Cantidad,
-                    Total = detalleModel.Total
+                    //Total = detalleModel.Total
 
                 };
+
+                if (!string.IsNullOrEmpty(detalleModel.Total))
+                {
+                    comprasDetalle.Total = int.Parse(detalleModel.Total.Replace(".", "").Replace(",", ""));
+                }
 
                 compraEncab.ComprasDetalle.Add(comprasDetalle);
                 AddExistencia(media, detalleModel.Cantidad);
