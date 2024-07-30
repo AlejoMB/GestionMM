@@ -1,0 +1,110 @@
+﻿@using Domain.Models.Informes
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model InformesModel
+
+<form asp-action="Index" method="post">
+    <div class="text-center">
+        <h2>Informes</h2>
+        <div class="row form-group border ">
+            <div class="row">
+                <div class="col-6">
+                    <label for="lblMes">Mes</label>
+                    <select id="ddlMes" name="txtMesValue" asp-for="txtMesValue">
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label for="dropDown">Drop Down</label>
+                    <select id="dropDown" name="txtAnoValue" asp-for="txtAnoValue">
+                        @foreach (var item in ViewBag.DropDownOptions as List<SelectListItem>)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                </div>
+                <div class="col-2">
+                <br /><br />
+                <button type="submit">Buscar</button>
+                <br /><br />
+                </div>
+                <div class="col-5">
+                </div>
+            </div>
+            <div class="row">
+            </div>
+            <div class="row">
+                
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col"># Factura</th>
+                            <th scope="col">Total Venta</th>
+                            <th scope="col">Total Costo</th>
+                            <th scope="col">Total Ganancia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var factura in Model.Facturas) {
+                            <tr>
+                                <th scope="row">
+                                    @factura.IdFactu
+                                </th>
+                                <td>
+                                    @factura.TotalVenta.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                                </td>
+                                <td>
+                                    @factura.TotalACosto.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                                </td>
+                                <td>
+                                    @factura.TotalGanancia.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                                </td>
+                            </tr>
+                        }
+                        <tr style="border: solid">
+                            <td><b>TOTALES</b></td>
+                            <td>
+                                <b>@Model.TotalVentaMes.ToString("C0", new System.Globalization.CultureInfo("es-CO"))</b>
+                            </td>
+                            <td>
+                                <b>@Model.TotalACostoMes.ToString("C0", new System.Globalization.CultureInfo("es-CO"))</b>
+                            </td>
+                            <td>
+                                <b>@Model.TotalGananciaMes.ToString("C0", new System.Globalization.CultureInfo("es-CO"))</b>
+                            </td>
+                        </tr>
+                        <tr style="border: solid">
+                            <td>
+                                <b>Gastos</b>
+                            </td>
+                            <td colspan="3">
+                                <b>@Model.TotalGastos.ToString("C0", new System.Globalization.CultureInfo("es-CO"))</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+</form>

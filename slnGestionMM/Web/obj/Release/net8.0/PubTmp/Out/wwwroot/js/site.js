@@ -21,7 +21,7 @@ function formatCurrency(value) {
 }
 
 function removeformatCurrency(value) {
-    value = value.toString().replace('$', '').replace('.', '');
+    value = value.toString().replace('$', '').replace(/\./g, '');
     return value;
 }
 

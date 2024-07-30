@@ -62,9 +62,9 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCliente(string cedula)
+        public IActionResult GetCliente(string celular)
         {
-            var cliente = _dbContext.Cliente.FirstOrDefault(c => c.Cedula == cedula);
+            var cliente = _dbContext.Cliente.FirstOrDefault(c => c.Celular == celular);
             return cliente == null ? NotFound() : Ok(cliente);
         }
 
@@ -141,7 +141,7 @@ namespace Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var facturaEnc = new FacturaEnc { 
-                Cliente = _dbContext.Cliente.FirstOrDefault(x => x.Cedula == model.Cliente.ToString()),
+                Cliente = _dbContext.Cliente.FirstOrDefault(x => x.Celular == model.Cliente.ToString()),
                 TipoEnvio = _dbContext.TipoEnvio.FirstOrDefault(x => x.Id == model.TipoEnvio),
                 MedioPago = _dbContext.MedioPago.FirstOrDefault(x => x.Id == model.MedioPago),
                 EstadoFactu = _dbContext.EstadosFactu.FirstOrDefault(x => x.Id == model.EstadoFactu),

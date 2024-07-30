@@ -12,7 +12,7 @@ namespace Domain.Models.Facturas
     public class FacturaEncModel
     {
         public int Id { get; set; }
-        public int Cliente { get; set; }
+        public string Cliente { get; set; }
         public string Total { get; set; }
         public int EstadoFactu { get; set; }
         public int TipoEnvio { get; set; }

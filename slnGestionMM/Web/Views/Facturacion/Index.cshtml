@@ -30,11 +30,15 @@
                         </div>
                         <div class="col-md-3">
                             <input type="hidden" id="hdnCliente" />
-                            <input class="form-control" id="txtCliente" type="text" placeholder="Cedula" aria-label=".form-control-sm example">
+                            <input class="form-control" id="txtCliente" type="text" placeholder="Celular" aria-label=".form-control-sm example">
 
                         </div>
                         <div class="col-md-3">
-                            <input class="form-control" id="txtCleinteName" disabled type="text" aria-label=".form-control-sm example">
+                            <input class="form-control" id="txtCleinteName" disabled type="text" placeholder="Nombre" aria-label=".form-control-sm example">
+
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control" id="txtCleinteDir" type="text" placeholder="Direccion" aria-label=".form-control-sm example">
 
                         </div>
                     </div>
@@ -129,7 +133,7 @@
                                         </a>
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtCodigo_1" class="form-control fontSmall" onblur="setId(this); SetMediaName(this);" type="text" aria-label=".form-control-sm example">
+                                        <input id="txtCodigo_1" class="form-control fontSmall codigoMedia" onblur="setId(this); SetMediaName(this);" type="text" aria-label=".form-control-sm example">
                                         <input type="hidden" id="txtPromo_1" class="promo" />
                                     </td>
                                     <td class="col-md-1">
@@ -145,7 +149,7 @@
                                         <input id="txtCant_1" class="form-control cantidad fontSmall" type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtVenta_1" class="form-control currencyInput  venta fontSmall" disabled type="text" aria-label=".form-control-sm example">
+                                        <input id="txtVenta_1" class="form-control currencyInput  venta fontSmall" type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
                                         <input id="txtTotal_1" class="form-control total fontSmall text-center" style="padding-right: 0; padding-left: 0;" type="text" disabled aria-label=".form-control-sm example">
@@ -192,6 +196,8 @@
                     <input class="form-control" id="mdlCorreo">
                     <label for="lblCedula" class="form-label">Celular</label>
                     <input class="form-control" id="mdlCelular">
+                    <label for="lblDireccion" class="form-label">Direccion</label>
+                    <input class="form-control" id="mdlDireccion">
                 </div>
             </div>
             <div class="modal-footer">
@@ -228,7 +234,25 @@
                 }
             });
 
-            $('#DetalleFactuTb tbody tr').each(function () {
+            var costo = parseInt($(this).closest("tr").find(".costo").val().replace("$", "").replace(".", ""));
+            if (!isNaN(costo) && !isNaN(totalCantidad)) {
+                var txtPromo = $(this).closest("tr").find(".promo").val();
+                var esPromo = (txtPromo === 'True')
+                if (esPromo) {
+                    $(this).closest("tr").find(".venta").addClass("promoFactu");
+                }
+                else {
+                    $(this).closest("tr").find(".venta").removeClass("promoFactu");
+                }
+                var ganancia = GetDescuento($(this).val(), esPromo);
+                var cantidad = $(this).closest("tr").find(".cantidad").val();
+                $(this).closest("tr").find(".venta").val(formatCurrency(costo + ganancia));
+                $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
+                var total = (costo + ganancia) * cantidad;
+                $(this).closest("tr").find(".total").val(formatCurrency(total));
+            }
+
+            /*$('#DetalleFactuTb tbody tr').each(function () {
                 
                 var costo = parseFloat($(this).find(".costo").val().replace("$", "").replace(/\./g, ''));
                 if (!isNaN(costo) && !isNaN(totalCantidad)) {
@@ -246,8 +270,13 @@
                     var total = (costo + ganancia) * totalCantidad;
                     $(this).find(".total").val(formatCurrency(total));
                 }
-            });
+            });*/
         }
+
+        $(document).on('click', '.delete-row', function (event) {
+            event.preventDefault(); // Prevent the default link behavior
+            $(this).closest('tr').remove(); // Remove the closest <tr> element
+        });
 
         $(document).on("blur", ".cantidad", calculateTotal);
 
@@ -282,12 +311,22 @@
             newRow.removeClass("row-to-clone");
             newRow.find(".venta").removeClass("promoFactu");
             // Append the new row to the table body
-            $("#bodyFactura").append(newRow);
+            $("#bodyFactura tr:first").before(newRow);
             // Attach event listener for txtCant field in the new row
             newRow.find(".cantidad").on("blur", calculateTotal);
+
+            newRow.find(".codigoMedia").focus();
+            window.scrollTo(0, document.body.scrollHeight);
         });
 
-        $(document).on("blur", ".cantidad, .total", function () {
+        $(document).on("blur", ".venta", function () {
+            var venta =  $(this).closest("tr").find(".venta").val().replace("$", "").replace(/\./g, '');
+            var cantidad = $(this).closest("tr").find(".cantidad").val().replace("$", "").replace(/\./g, '');
+            var total = parseInt(venta) * parseInt(cantidad);
+            $(this).closest("tr").find(".total").val(formatCurrency(total));
+        });
+        
+        $(document).on("blur", ".cantidad, .total, .venta", function () {
             var totalSum = 0;
             $('.total').each(function () {
                 var val = parseFloat($(this).val().replace("$", "").replace(/\./g, ''));
@@ -298,6 +337,22 @@
 
             $("#TotalEnc").val(formatCurrency(totalSum));
         });
+
+        $(document).on("blur", ".venta", function () {
+            var txtId = this.id;
+            var values = txtId.split("_");
+
+            var cantidad = removeformatCurrency($("#txtCant_" + values[1]).val());
+
+            var venta = removeformatCurrency($("#txtVenta_" + values[1]).val());
+
+            var total = parseFloat(cantidad) * parseFloat(venta);
+
+            $("#txtTotal_" + values[1]).val(formatCurrency(total));
+
+        });
+
+
 
         $('#btnVerFactura').click(function () {
             var url = '@Url.Action("FactuPrint", "Facturacion")';
@@ -350,15 +405,17 @@
         $.ajax({
             url: '/Facturacion/GetCliente',
             type: 'GET',
-            data: { cedula: cedCliente },
+            data: { celular: cedCliente },
             success: function (data) {
                 //console.log('Success');
                 $("#hdnCliente").val(data.id);
                 $("#txtCleinteName").val(data.nombre);
+                $("#txtCleinteDir").val(data.direccion);
+
             },
             error: function (error) {
                 limpiarCliente();
-                $("#mdlCedula").val($("#txtCliente").val());
+                $("#mdlCelular").val($("#txtCliente").val());
                 $("#hdnCliente").val("");
                 $("#txtCleinteName").val("");
                 var modal = new bootstrap.Modal(document.getElementById('ClienteModal'), {})
@@ -379,6 +436,7 @@
                 formData.append('Nombre', $("#mdlNombre").val());
                 formData.append('Correo', $("#mdlCorreo").val());
                 formData.append('Celular', $("#mdlCelular").val());
+                formData.append('Direccion', $("#mdlDireccion").val());
 
                 $.ajax({
                     url: '/Facturacion/CrearCliente',
@@ -389,6 +447,7 @@
                     success: function (data) {
                         $("#hdnCliente").val(data.id);
                         $("#txtCleinteName").val(data.nombre);
+                        $("#txtCleinteDir").val(data.direccion);
                         limpiarCliente();
                         var myModalEl = document.getElementById('ClienteModal')
                         var modal = bootstrap.Modal.getInstance(myModalEl)
