@@ -25,15 +25,15 @@
             <div class="accordion-body">
                 @foreach(var tamano in categoria.Tamanos)
                 {
-                     @* @if (tamano.Medias.Count > 0)
-                     { *@  
+                        @if (tamano.CantidadTamano/*Medias.Count*/ > 0)
+                     {   
                             <div class="accordion-item">
-                                <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/", "-").Replace(" ", "-").Replace("(", "-").Replace(")", "-")" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
-                                        @tamano.Name : @tamano.Medias.Count
+                                <h2 class="accordion-header" id="panelsStayOpen-heading-@categoria.IdCategoria-@tamano.Id">
+                                    <button id="@categoria.IdCategoria-@tamano.Id" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/", "-").Replace(" ", "-").Replace("(", "-").Replace(")", "-")" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@categoria.IdCategoria-@tamano.Id" onclick="loadTab(this)">
+                                        @tamano.Name : @tamano.CantidadTamano
                                     </button>
                                 </h2>
-                                <div id="panelsStayOpen-collapse-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.Name-@tamano.Name.Replace("/","-").Replace(" ","-").Replace("(","-").Replace(")","-")">
+                                <div id="panelsStayOpen-collapse-@categoria.IdCategoria-@tamano.Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.IdCategoria-@tamano.Id">
                                     <div class="accordion-body-1">
                                         <div id="productGallery">
                                             @foreach (var product in tamano.Medias)
@@ -45,7 +45,10 @@
                                                     {
                                                         <span class="color-square" style="background-color: @color.Color.RgbColor" title="@color.Color.Name">&ensp;&ensp;</span>
                                                     }
-                                                    <img class="lazyload" src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
+                                                    <div class="image-container">
+                                                        <div class="spinner"></div>
+                                                        <img src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
+                                                    </div>
                                                     <button type="button" class="btn btn-dark" style="margin-top:5px">
                                                         Codigo: <span class="badge bg-secondary">@product.Id</span>
                                                     </button>
@@ -73,7 +76,7 @@
                             </div>
                         </div>
                         </div>
-                      @* }   *@
+                      }
                 }
             </div>
         </div>
@@ -83,29 +86,86 @@
 
 @section Scripts {
     <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = document.querySelectorAll('.image-container img');
+
+            images.forEach(function (img) {
+                img.addEventListener('load', function () {
+                    img.style.display = 'block';
+                    img.previousElementSibling.style.display = 'none';
+                });
+            });
+        });
+
         $(document).ready(function () {
+            
             const urlParams = new URLSearchParams(window.location.search);
             const selectedTab = urlParams.get('selectedTab');
             //alert(selectedTab);
             if (selectedTab !== null) {
-                var params = selectedTab.split('_');
-                const h2Element = document.querySelector('#panelsStayOpen-heading-' + params[0]);
-                const divElement = document.querySelector('#panelsStayOpen-collapse-' + params[0]);
+                var params = selectedTab.split('-');
 
-                const buttonElement = h2Element.querySelector('button');
+                
 
-                if (params[1] === "false") {
-                    buttonElement.classList.add('collapsed');
-                    buttonElement.setAttribute('aria-expanded', 'false');
+                if (params.length === 2) {
+                    const h2Element = document.querySelector('#panelsStayOpen-heading-' + params[0]);
+                    const divElement = document.querySelector('#panelsStayOpen-collapse-' + params[0]);
 
-                    divElement.classList.remove('show');
+                    const visible = params[1];
+
+                    var buttonElement = h2Element.querySelector('button');
+
+                    if (visible === "false") {
+                        buttonElement.classList.add('collapsed');
+                        buttonElement.setAttribute('aria-expanded', 'false');
+
+                        divElement.classList.remove('show');
+                    }
+                    else {
+                        buttonElement.classList.remove('collapsed');
+                        buttonElement.setAttribute('aria-expanded', 'true');
+
+                        divElement.classList.add('show');
+                    }
                 }
-                else {
-                    buttonElement.classList.remove('collapsed');
-                    buttonElement.setAttribute('aria-expanded', 'true');
+                else if (params.length === 3)
+                {
+                    const h2ElementParent = document.querySelector('#panelsStayOpen-heading-' + params[0]);
+                    const divElementParent = document.querySelector('#panelsStayOpen-collapse-' + params[0]);
 
-                    divElement.classList.add('show');
+                    const h2ElementChild = document.querySelector('#panelsStayOpen-heading-' + params[0] + '-' + params[1]);
+                    const divElementChild = document.querySelector('#panelsStayOpen-collapse-' + params[0] + '-' + params[1]);
+
+                    const visibleChild = params[2];
+
+                    var buttonElementChild = h2ElementChild.querySelector('button');
+
+                    if (visibleChild === "true") {
+                        buttonElementChild.classList.add('collapsed');
+                        buttonElementChild.setAttribute('aria-expanded', 'false');
+
+                        divElementChild.classList.remove('show');
+                    }
+                    else {
+                        buttonElementChild.classList.remove('collapsed');
+                        buttonElementChild.setAttribute('aria-expanded', 'true');
+
+                        divElementChild.classList.add('show');
+                    }
+
+                    var buttonElementParent = h2ElementParent.querySelector('button');
+
+                    buttonElementParent.classList.remove('collapsed');
+                    buttonElementParent.setAttribute('aria-expanded', 'true');
+
+                    divElementParent.classList.add('show');
                 }
+
+
+
+                
+
+                
 
                 
 
@@ -118,7 +178,7 @@
             
             const ariaExpandedValue = tabElement.getAttribute('aria-expanded');
 
-            window.location.href = '@Url.Action("Index", "Inventario")?selectedTab=' + tabElement.id + '_' + ariaExpandedValue;
+            window.location.href = '@Url.Action("Index", "Inventario")?selectedTab=' + tabElement.id + '-' + ariaExpandedValue;
 
             // if (ariaExpandedValue === 'true') {
             //     console.log('Aria-expanded is true');

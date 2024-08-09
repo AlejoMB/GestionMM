@@ -27,10 +27,19 @@ namespace Web.Controllers
         {
             //var catalogo = new List<CatalogoModel>();
             int categoria = 0;
+            int tamanoId = 0;
             if(!String.IsNullOrEmpty(selectedTab))
             {
-                var values = selectedTab.Split('_');
-                categoria = values[1].ToLower() == "false" ? 0 : int.Parse(values[0]);
+                var values = selectedTab.Split('-');
+                if (values.Count() == 3)
+                {
+                    categoria = int.Parse(values[0]);
+                    tamanoId = int.Parse(values[1]);
+                }
+                else
+                {
+                    categoria = values[1].ToLower() == "false" ? 0 : int.Parse(values[0]);
+                }
             }
 
             ViewBag.UlrHost = URLImages;
@@ -54,7 +63,12 @@ namespace Web.Controllers
                 {
                     tamano.Medias = new List<Media>();
                     var mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id).ToList();
-                    tamano.Medias.AddRange(mediasResult);
+                    tamano.CantidadTamano = mediasResult.Count;
+
+                    if (tamano.Id == tamanoId)
+                    {
+                        tamano.Medias.AddRange(mediasResult);
+                    }
                 }
 
             }

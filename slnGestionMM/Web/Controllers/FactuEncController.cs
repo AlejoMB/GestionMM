@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Domain.Entities.Facturacion;
+using Domain.Models.FactuEnc;
+using Domain.Models.Informes;
 
 namespace Web.Controllers
 {
@@ -22,7 +24,51 @@ namespace Web.Controllers
         // GET: FactuEnc
         public async Task<IActionResult> Index()
         {
-            return View(await _context.FacturaEnc.ToListAsync());
+            ConstruirAnos();
+
+            var model = new FactuEncModel();
+            model.Facutras = new List<FacturaEnc>();
+            //model.Facutras = await _context.FacturaEnc.ToListAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Index(FactuEncModel model)
+        {
+            ConstruirAnos();
+
+            model.Facutras = new List<FacturaEnc>();
+
+            if (!string.IsNullOrEmpty(model.Mes) && !string.IsNullOrEmpty(model.Ano))
+            {
+                var mes = int.Parse(model.Mes);
+                var ano = int.Parse(model.Ano);
+                IQueryable<FacturaEnc> query = _context.FacturaEnc.Where(f => f.FechaCreado.Month == mes && f.FechaCreado.Year == ano);
+
+                if(!string.IsNullOrEmpty(model.NoFactura))
+                {
+                    var noFactu = int.Parse(model.NoFactura);
+                    query = query.Where(f => f.Id == noFactu);
+                }
+                model.Facutras = query.ToList();
+            }
+
+            
+
+            return View(model);
+        }
+
+        private void ConstruirAnos()
+        {
+            var anoInicial = 2024;
+
+            var listaAnos = new List<SelectListItem>();
+            for (int year = anoInicial; year <= DateTime.Now.Year; year++)
+            {
+                listaAnos.Add(new SelectListItem { Value = $"{year}", Text = $"{year}" });
+            }
+            ViewBag.DropDownOptions = listaAnos;
         }
 
         // GET: FactuEnc/Details/5

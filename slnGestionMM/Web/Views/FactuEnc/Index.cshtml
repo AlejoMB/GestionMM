@@ -1,61 +1,84 @@
-﻿@model IEnumerable<Domain.Entities.Facturacion.FacturaEnc>
+﻿@using Domain.Models.FactuEnc
+@model FactuEncModel
 
 @{
     ViewData["Title"] = "Index";
 }
-
+<form asp-action="Index" method="post">
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<br />
+<label for="lblMes">Mes</label>
+<select id="ddlMes" name="Mes" asp-for="Mes">
+    <option value="1">Enero</option>
+    <option value="2">Febrero</option>
+    <option value="3">Marzo</option>
+    <option value="4">Abril</option>
+    <option value="5">Mayo</option>
+    <option value="6">Junio</option>
+    <option value="7">Julio</option>
+    <option value="8">Agosto</option>
+    <option value="9">Septiembre</option>
+    <option value="10">Octubre</option>
+    <option value="11">Noviembre</option>
+    <option value="12">Diciembre</option>
+</select>
+<label for="dropDown">Año</label>
+<select id="dropDown" name="Ano" asp-for="Ano">
+    @foreach (var item in ViewBag.DropDownOptions as List<SelectListItem>)
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+</select>
+<label for="lblFactura"># factura</label>
+<input type="text" id="idFactu"  name="NoFactura" />
+<button type="submit">Buscar</button>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Total)
+                # Factura
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NoGuia)
+                Total
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FechaPago)
+                Fecha Pago
             </th>
+            
             <th>
-                @Html.DisplayNameFor(model => model.CreadoPorUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaCreado)
+                Fecha Creado
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Facutras) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Total)
+                    @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NoGuia)
+                @Html.DisplayFor(modelItem => item.Total)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FechaPago)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreadoPorUser)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.FechaCreado)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
                 @* <a asp-action="Details" asp-route-id="@item.Id">Details</a> | *@
-                <a asp-action="Index" asp-controller="FactuDet" asp-route-id="@item.Id">Detalle Factu.</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Index" asp-controller="FactuDet" asp-route-id="@item.Id">Detalle Factu</a>
+                @* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
                 
             </td>
         </tr>
 }
     </tbody>
 </table>
+</form>

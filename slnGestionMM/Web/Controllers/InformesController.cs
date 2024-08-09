@@ -39,7 +39,7 @@ namespace Web.Controllers
                 int mes = int.Parse(model.txtMesValue);
                 int ano = int.Parse(model.txtAnoValue);
                 informes.Facturas = new List<InformeEncFactu>();
-                var facturas = _dbContext.FacturaEnc.Where(f => f.FechaCreado.Month == mes && f.FechaCreado.Year == ano).Include(f => f.FacturaDetalle).ThenInclude(fDetalle => fDetalle.Media).ToList();
+                var facturas = _dbContext.FacturaEnc.Where(f => f.FechaPago.Month == mes && f.FechaPago.Year == ano).Include(f => f.FacturaDetalle).ThenInclude(fDetalle => fDetalle.Media).ToList();
 
                 foreach (var factura in facturas)
                 {
