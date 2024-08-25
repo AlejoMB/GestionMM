@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "DHsyS/s44jnddjSPcb2XfDHxJoE5Xuyc/EYOi3Wrsoc=",
+  "Hash": "xlEVRCjsaXV1lF56hN7O6UmnPpd/xS3mhe+wUkkA8To=",
   "Source": "Web",
   "BasePath": "_content/Web",
   "Mode": "Default",
@@ -300,6 +300,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Imagenes\\rojo_negro_nike.png"
+    },
+    {
+      "Identity": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Imagenes\\ShopCart.png",
+      "SourceId": "Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\",
+      "BasePath": "_content/Web",
+      "RelativePath": "Imagenes/ShopCart.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Imagenes\\ShopCart.png"
     },
     {
       "Identity": "C:\\amb\\GestionMM\\slnGestionMM\\Web\\wwwroot\\Img\\Icons\\delete.png",

@@ -34,6 +34,19 @@ namespace Web.Controllers
             return View(await PaginatedList<Media>.CreateAsync(medias.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(string codigoMedia)
+        {
+            int idMedia = Int32.Parse(codigoMedia);
+            int pageSize = 30;
+            var medias = from m in _context.Medias
+                         where m.Id == idMedia
+                         select m;
+
+            //return View(await _context.Medias.ToListAsync());
+            return View(await PaginatedList<Media>.CreateAsync(medias.AsNoTracking(), 1, pageSize));
+        }
+
         // GET: Media/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -186,8 +186,21 @@ namespace Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var facturaEnc = await _context.FacturaEnc.FindAsync(id);
+            var detalles = _context.FacturaDetalle.Include(det => det.Media).Where(det => det.Encabezado.Id == id).ToList();
             if (facturaEnc != null)
             {
+                foreach(var detalle in detalles)
+                {
+                    var existencia = _context.Existencias.FirstOrDefault(e => e.MediaRef == detalle.Media.Id);
+                    if (existencia != null)
+                    {
+                        existencia.CantidadProducto += detalle.Cantidad;
+                        _context.Update(existencia);
+                    }
+                }
+
+                _context.FacturaDetalle.RemoveRange(detalles);
+
                 _context.FacturaEnc.Remove(facturaEnc);
             }
 

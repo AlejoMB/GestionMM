@@ -76,3 +76,108 @@
     width: 100%;
     height: auto;
 }
+
+.floating-cart-button {
+    position: fixed;
+    top: 56px; /* Adjust the distance from the top of the page */
+    right: 20px; /* Adjust the distance from the right side of the page */
+    width: 60px; /* Width of the button */
+    height: 60px; /* Height of the button */
+    background-color: #29d884; /* Button background color */
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it floats above other content */
+    transition: background-color 0.3s ease;
+}
+
+.floating-cart-button:hover {
+    background-color: darkgreen; /* Change color on hover */
+}
+
+.cart-image {
+    width: 70%; /* Adjust size of the cart image */
+    height: auto;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+    .button-row button,
+    .button-row .quantity-number {
+        margin: 2px;
+    }
+
+.quantity-container .quantity-number {
+    font-size: 16px;
+}
+
+.btn-increment, .btn-decrement {
+    background-color: #f8f9fa;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    padding: 3px 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.btn-increment:hover, .btn-decrement:hover {
+    background-color: #e2e6ea;
+}
+
+.btn-add {
+    background-color: #29d884 !important;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.btn-add:hover {
+    background-color: darkgreen;
+}
+
+@media (max-width: 768px) {
+    .product {
+        padding: 8px;
+    }
+
+    .btn-add {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+}
+
+.incr-left {
+    display: flex;
+    justify-content: left; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    text-align: center; /* Center text within the button */
+}
+
+.incr-right {
+    justify-content: right; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    text-align: center; /* Center text within the button */
+}
+
+.incr-center {
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    text-align: center; /* Center text within the button */
+}

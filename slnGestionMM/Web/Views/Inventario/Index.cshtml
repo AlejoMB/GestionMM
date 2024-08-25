@@ -12,6 +12,13 @@
 
 <h1>Catalogo</h1>
 
+<div class="floating-cart-button">
+    <img src="~/imagenes/shopcart.png" class="cart-image"/>
+    @* <img src="cart-icon.png" alt="Cart" class="cart-image"> *@
+</div>
+
+<input type="hidden" id="cartData" name="cartData" value="@ViewBag.CartData">
+
 <div class="accordion" id="accordionPanelsStayOpenExample">
 @foreach (var categoria in Model)
 {
@@ -70,6 +77,22 @@
                                                             <span class="badge bg-primary">Entrega en 3 días</span>
                                                         }
                                                     }
+
+                                                    @* <!-- New container for buttons and number -->
+                                                    <div class="row">
+                                                        <div class="col-5 incr-right">
+                                                            <button id="decr-@product.Id" type="button" class="btn-decrement">-</button>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <input class="form-control text-center" id="cant-@product.Id" type="text" value="6" class="quantity-number" />
+                                                        </div>
+                                                        <div class="col-5 incr-left">
+                                                            <button id="incr-@product.Id" type="button" class="btn-increment">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="button-row">
+                                                        <button id="add-@product.Id" type="button" class="btn-add">Agregar</button>
+                                                    </div> *@
                                                 </div>
                                             }
                                         </div>
@@ -98,10 +121,62 @@
         });
 
         $(document).ready(function () {
-            
+
+            // Check the existing value from the hidden input
+            var existingCartData = $('#cart-data').val();
+
+            // Initialize the cart array based on the existing value
+            var cart = existingCartData ? JSON.parse(existingCartData) : [];
+
+            // Function to add or update product in cart
+            function updateCart(productId, quantity) {
+                // Find the product in the cart by productId
+                var product = cart.find(item => item.id === productId);
+
+                if (product) {
+                    // If product exists in the cart, update the quantity
+                    product.quantity += quantity;
+                } else {
+                    // If product doesn't exist, add it to the cart
+                    cart.push({ id: productId, quantity: quantity });
+                }
+
+                // Update the hidden input with the serialized cart data
+                $('#cart-data').val(JSON.stringify(cart));
+            }
+
+            // Handle Agregar button click
+            $('.btn-add').on('click', function () {
+                // Get the product ID from the button's ID
+                var productId = $(this).attr('id').split('-')[1];
+                // Get the quantity from the input field
+                var quantity = parseInt($('#cant-' + productId).val());
+
+                // Update the cart with the productId and quantity
+                updateCart(productId, quantity);
+
+                //console.log(JSON.stringify({ cartData: cart }));
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Inventario/SetViewBag',
+                    data: JSON.stringify({ CartItem: cart }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+
+                    }
+                });
+
+                // Optionally, log the cart to the console (for debugging)
+                
+            });
+
+
+            //Funcionalidad para abrir y cerrar tabs automaticos
             const urlParams = new URLSearchParams(window.location.search);
             const selectedTab = urlParams.get('selectedTab');
-            //alert(selectedTab);
+            
             if (selectedTab !== null) {
                 var params = selectedTab.split('-');
 
@@ -177,41 +252,12 @@
         function loadTab(tabElement) {
             
             const ariaExpandedValue = tabElement.getAttribute('aria-expanded');
-
+            console.log($('#cart-data').val());
             window.location.href = '@Url.Action("Index", "Inventario")?selectedTab=' + tabElement.id + '-' + ariaExpandedValue;
-
-            // if (ariaExpandedValue === 'true') {
-            //     console.log('Aria-expanded is true');
-            // } else {
-            //     console.log('Aria-expanded is not true');
-            // }
         }
 
 
     </script>
 }
 
-@* @{
-    bool isFirst = true;
-}
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-@foreach (var categoria in Model)
-{
-        <li class="nav-item" role="presentation">
-            <button class="nav-link @(isFirst ? "active" : "")" id="@categoria.Name-tab" data-bs-toggle="tab" data-bs-target="#@categoria.Name" type="button" role="tab" aria-controls="@categoria.Name" aria-selected="@(isFirst ? "true" : "false")">@categoria.Name</button>
-        </li>
-        isFirst = false;
-}
-</ul>
-@{
-    isFirst = true;
-}
-<div class="tab-content" id="TabCatalogo">
-    @foreach (var categoria in Model)
-    {
-        <div class="tab-pane fade @(isFirst ? "show active" : "")" id="@categoria.Name" role="tabpanel" aria-labelledby="@categoria.Name-tab">
 
-        </div>
-        isFirst = false;
-    }
-</div> *@

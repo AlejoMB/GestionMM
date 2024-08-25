@@ -29,7 +29,7 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
-            var tiposEnvios = _dbContext.TipoEnvio.ToList();
+            var tiposEnvios = _dbContext.TipoEnvio.ToList().OrderBy(e => e.Name);
             var transportadora = _dbContext.Transportadora.ToList();
             var medioPago = _dbContext.MedioPago.ToList();
 

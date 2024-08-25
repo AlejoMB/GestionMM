@@ -23,7 +23,7 @@ namespace Web.Controllers
         }
 
         //[Authorize(Roles = "Administrador")] 
-        public IActionResult Index(string selectedTab)
+        public IActionResult Index(string selectedTab, string cartData)
         {
             //var catalogo = new List<CatalogoModel>();
             int categoria = 0;
@@ -53,6 +53,9 @@ namespace Web.Controllers
                          .Include(medias => medias.Diseno)
                          .Include(medias => medias.Segmento)
                          .Include(medias => medias.Existencias)
+                         .OrderBy(m => m.Marca.Name)
+                         .ThenBy(m => m.Tamano.Name)
+                         .ThenBy(m => m.Name)
                          .ToList();
 
             foreach (var item in tiposMedias)
@@ -61,8 +64,13 @@ namespace Web.Controllers
                 item.Tamanos = tamanos.Select(t => new TamanoModel { Id = t.Id, Name = t.Name }).ToList();
                 foreach (var tamano in item.Tamanos)
                 {
+                    List<Media> mediasResult = new List<Media>();
                     tamano.Medias = new List<Media>();
-                    var mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id).ToList();
+                    if (medias != null && medias.Any())
+                    {
+                        mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id).ToList();
+                    }
+
                     tamano.CantidadTamano = mediasResult.Count;
 
                     if (tamano.Id == tamanoId)
@@ -73,8 +81,25 @@ namespace Web.Controllers
 
             }
 
+            if (cartData != null)
+            {
+                ViewBag.CartData = cartData;
+            }
 
             return View(tiposMedias);
+        }
+
+        [HttpPost]
+        public ActionResult SetViewBag([FromBody] Dictionary<string, List<CartItem>> data)
+        {
+            //ViewBag.CartData = CartItem;
+
+            var cartData = data.FirstOrDefault().Value;
+            
+            ViewBag.CartData = cartData;
+            
+
+            return new EmptyResult();
         }
 
         [Authorize]

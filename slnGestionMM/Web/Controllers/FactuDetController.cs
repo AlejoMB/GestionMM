@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Domain.Entities.Facturacion;
+using Domain.Entities.Inventario;
 
 namespace Web.Controllers
 {
@@ -101,27 +102,66 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(facturaDetalle);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FacturaDetalleExists(facturaDetalle.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                facturaDetalle = UpdateTotalsDetalleEncabezado(id, facturaDetalle.PrecioUnitario, facturaDetalle.Cantidad);
+                //_context.Update(facturaDetalle);
+                //await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FacturaDetalleExists(facturaDetalle.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+                
+            
             return View(facturaDetalle);
+        }
+
+
+        public FacturaDetalle UpdateTotalsDetalleEncabezado(int id, int precioUnitario, int cantidad)
+        {
+            var facturaDetalle = _context.FacturaDetalle.Include(f => f.Encabezado).Include(f => f.Media).FirstOrDefault(f => f.Id == id);
+            int idEncabezado = facturaDetalle.Encabezado.Id;
+
+            int existencia = cantidad - facturaDetalle.Cantidad;
+
+            facturaDetalle.Cantidad = cantidad;
+            facturaDetalle.PrecioUnitario = precioUnitario;
+            facturaDetalle.Total = precioUnitario * cantidad;
+
+            var existenciaEntity = _context.Existencias.FirstOrDefault(e => e.MediaRef == facturaDetalle.Media.Id);
+            existenciaEntity.CantidadProducto += existencia;
+
+            _context.Update(existenciaEntity);
+
+            _context.Update(facturaDetalle);
+            _context.SaveChanges();
+            
+
+            var detalles = _context.FacturaDetalle.Where(f => f.Encabezado.Id == idEncabezado);
+            int totalEnc = 0;
+            foreach (var item in detalles)
+            {
+                totalEnc += item.Total;
+            }
+
+            var encabezado = _context.FacturaEnc.FirstOrDefault(f => f.Id == idEncabezado);
+            if (encabezado != null)
+            {
+                encabezado.Total = totalEnc;
+                _context.Update(encabezado);
+                _context.SaveChangesAsync();
+            }
+
+
+            return facturaDetalle;
         }
 
         // GET: FactuDet/Delete/5

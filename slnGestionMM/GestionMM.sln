@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web.csproj", "{1BC748F3-7605-4DF9-8BD1-260F306D1DC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CargarPrecios", "CargarPrecios\CargarPrecios.csproj", "{E2E4F83F-E540-4B5A-AF5D-89319A5A89A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1BC748F3-7605-4DF9-8BD1-260F306D1DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BC748F3-7605-4DF9-8BD1-260F306D1DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BC748F3-7605-4DF9-8BD1-260F306D1DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2E4F83F-E540-4B5A-AF5D-89319A5A89A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2E4F83F-E540-4B5A-AF5D-89319A5A89A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2E4F83F-E540-4B5A-AF5D-89319A5A89A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2E4F83F-E540-4B5A-AF5D-89319A5A89A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
