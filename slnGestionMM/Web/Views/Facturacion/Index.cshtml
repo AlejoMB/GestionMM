@@ -149,7 +149,7 @@
                                         <input id="txtCant_1" class="form-control cantidad fontSmall" type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtVenta_1" class="form-control currencyInput  venta fontSmall" type="text" aria-label=".form-control-sm example">
+                                        <input id="txtVenta_1" class="form-control currencyInput  venta fontSmall" disabled type="text" aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
                                         <input id="txtTotal_1" class="form-control total fontSmall text-center" style="padding-right: 0; padding-left: 0;" type="text" disabled aria-label=".form-control-sm example">
@@ -234,7 +234,7 @@
                 }
             });
 
-            var costo = parseInt($(this).closest("tr").find(".costo").val().replace("$", "").replace(".", ""));
+            /*var costo = parseInt($(this).closest("tr").find(".costo").val().replace("$", "").replace(".", ""));
             if (!isNaN(costo) && !isNaN(totalCantidad)) {
                 var txtPromo = $(this).closest("tr").find(".promo").val();
                 var esPromo = (txtPromo === 'True')
@@ -246,13 +246,16 @@
                 }
                 var ganancia = GetDescuento($(this).val(), esPromo);
                 var cantidad = $(this).closest("tr").find(".cantidad").val();
-                $(this).closest("tr").find(".venta").val(formatCurrency(costo + ganancia));
+
+                var porcentaje = 1 + (ganancia / 100);
+                $(this).closest("tr").find(".venta").val(formatCurrency(calcularValorFinal(costo, porcentaje)));
+                //$(this).closest("tr").find(".venta").val(formatCurrency(costo + ganancia));
                 $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
                 var total = (costo + ganancia) * cantidad;
                 $(this).closest("tr").find(".total").val(formatCurrency(total));
-            }
+            }*/
 
-            /*$('#DetalleFactuTb tbody tr').each(function () {
+            $('#DetalleFactuTb tbody tr').each(function () {
                 
                 var costo = parseFloat($(this).find(".costo").val().replace("$", "").replace(/\./g, ''));
                 if (!isNaN(costo) && !isNaN(totalCantidad)) {
@@ -265,12 +268,19 @@
                         $(this).find(".venta").removeClass("promoFactu");
                     }
                     var ganancia = parseFloat(GetDescuento(totalCantidad, esPromo));
-                    $(this).find(".venta").val(formatCurrency(costo + ganancia));
-                    $(this).find(".venta").prop("title", "Ganancia: " + ganancia)
-                    var total = (costo + ganancia) * totalCantidad;
+
+                    var porcentaje = 1 + (ganancia / 100);
+                    var valorRedondeado = calcularValorFinal(costo, porcentaje);
+                    var incremento = (valorRedondeado - costo);
+                    var cantidad = $(this).find(".cantidad").val();
+
+                    $(this).find(".venta").val(formatCurrency(valorRedondeado));
+
+                    $(this).find(".venta").prop("title", "Ganancia: " + incremento)
+                    var total = valorRedondeado * cantidad;
                     $(this).find(".total").val(formatCurrency(total));
                 }
-            });*/
+            });
         }
 
         $(document).on('click', '.delete-row', function (event) {

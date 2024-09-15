@@ -53,6 +53,7 @@ namespace Web.Controllers
                          .Include(medias => medias.Diseno)
                          .Include(medias => medias.Segmento)
                          .Include(medias => medias.Existencias)
+                         .Include(medias => medias.ComprasDetalle)
                          .OrderBy(m => m.Marca.Name)
                          .ThenBy(m => m.Tamano.Name)
                          .ThenBy(m => m.Name)

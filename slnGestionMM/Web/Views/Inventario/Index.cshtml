@@ -7,13 +7,15 @@
 }
 @model IEnumerable<CatalogoModel>
 
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="~/css/Inventario.css" />
 
 <h1>Catalogo</h1>
 
-<div class="floating-cart-button">
-    <img src="~/imagenes/shopcart.png" class="cart-image"/>
+<div class="floating-cart-button" hidden>
+   
+    <img src="~/imagenes/shopcart.png" class="cart-image" data-bs-toggle="modal" data-bs-target="#carritoModal" />
+    
     @* <img src="cart-icon.png" alt="Cart" class="cart-image"> *@
 </div>
 
@@ -54,45 +56,79 @@
                                                     }
                                                     <div class="image-container">
                                                         <div class="spinner"></div>
-                                                        <img src="@ViewBag.UlrHost@product.Imagen" title="@product.Name" />
+                                                        @* <img src="@ViewBag.UlrHost@product.Imagen" class="lazy-image" title="@product.Name" /> *@
+                                                        @* <picture>
+                                                            <source srcset="@ViewBag.UlrHost@product.Imagen" type="image/webp">
+                                                            <img src="@ViewBag.UlrHost@product.Imagen.Replace(".webp",".jpg")" alt="@product.Name">
+                                                        </picture> *@
+                                                        <img srcset="@ViewBag.UlrHost@product.Imagen.Replace(".webp",".jpg") 480w,
+                                                                    @ViewBag.UlrHost@product.Imagen 1024w"
+                                                             sizes="(max-width: 600px) 480px, (max-width: 1024px) 500px, 1024px"
+                                                             src="@ViewBag.UlrHost@product.Imagen"
+                                                             alt="@product.Name">
                                                     </div>
-                                                    <button type="button" class="btn btn-dark" style="margin-top:5px">
-                                                        Codigo: <span class="badge bg-secondary">@product.Id</span>
-                                                    </button>
-                                                    <br />
-                                                    @if (User.Identity.IsAuthenticated)
-                                                    {
-                                                        <button type="button" class="btn btn-primary">
-                                                            Existencia <span class="badge bg-secondary">@product?.Existencias?.CantidadProducto</span>
-                                                        </button>
-                                                    }
-                                                    else
-                                                    {
-                                                        if (@product?.Existencias?.CantidadProducto > 0)
-                                                        {
-                                                            <span class="badge bg-success">Entrega Inmediata</span>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span class="badge bg-primary">Entrega en 3 días</span>
-                                                        }
-                                                    }
+                                                    <div class="new-container">
+                                                        <div class="column">
+                                                            <button id="codigo" type="button" class="btn btn-dark" style="margin-top:5px">
+                                                                Codigo: <span class="badge bg-secondary">@product.Id</span>
+                                                            </button>
+                                                            <br />
+                                                            @if (User.Identity.IsAuthenticated)
+                                                            {
+                                                                <button type="button" class="btn btn-primary">
+                                                                    Existencia <span class="badge bg-secondary">@product?.Existencias?.CantidadProducto</span>
+                                                                </button>
+                                                            }
+                                                            else
+                                                            {
+                                                                if (@product.ComprasDetalle.Count == 0)
+                                                                {
+                                                                    <span class="badge bg-danger">No Disponible. Preguntar:</span>
+                                                                    <br />
+                                                                    <span class="badge bg-danger">Posible fecha de entrega</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (@product?.Existencias?.CantidadProducto > 0)
+                                                                    {
+                                                                        <span id="EntregaInm" class="badge bg-success">Entrega Inmediata</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge bg-primary">Entrega en 3 días</span>
+                                                                    }
+                                                                    <br />
+                                                                    <input type="hidden" id="@product.Id-hidden" class="valorHidden" name="cartData" value="@product?.ComprasDetalle?.FirstOrDefault()?.CostoUnitario">
+                                                                    <span class="badge bg-success">$ Precios:</span>
+                                                                    <br />
 
-                                                    @* <!-- New container for buttons and number -->
-                                                    <div class="row">
-                                                        <div class="col-5 incr-right">
-                                                            <button id="decr-@product.Id" type="button" class="btn-decrement">-</button>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-control text-center" id="cant-@product.Id" type="text" value="6" class="quantity-number" />
-                                                        </div>
-                                                        <div class="col-5 incr-left">
-                                                            <button id="incr-@product.Id" type="button" class="btn-increment">+</button>
+                                                                    <span id="@product.Id-desc1" class="badge bg-dark">$ Precios:</span> <span class="badge bg-success">6 a 29 Pares</span>
+                                                                    <br />
+
+                                                                    <span id="@product.Id-desc2" class="badge bg-dark">$ Precios:</span> <span class="badge bg-success">30 a 99 Pares</span>
+                                                                    <br />
+
+                                                                    <span id="@product.Id-desc3" class="badge bg-dark">$ Precios:</span> <span class="badge bg-success">+ 100 Pares</span>
+                                                                }
+                                                                
+                                                            }
+                                                            
                                                         </div>
                                                     </div>
-                                                    <div class="button-row">
-                                                        <button id="add-@product.Id" type="button" class="btn-add">Agregar</button>
-                                                    </div> *@
+
+                                                    @* <div class="d-flex justify-content-center align-items-center my-3" >
+                                                        <input id="@product.Id-cantidad" type="number" class="form-control" style="max-width: 80px; width: 100%; text-align: center;" placeholder="0" min="1" max="999">
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-center align-items-center my-3">
+                                                        <button id="@product.Id-agregar" type="button" class="btn bg-success text-white" onclick="agregarACarrito(this)">Agregar</button>
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-center align-items-center my-3">
+                                                        <button id="@product.Id-eliminar" type="button" class="btn bg-success text-white" hidden onclick="eliminarDeCarrito(this)">Eliminar</button>
+                                                    </div>
+                                                    
+                                                    <br /> *@
                                                 </div>
                                             }
                                         </div>
@@ -107,8 +143,78 @@
 }
 </div> 
 
+
+<!-- Modal Carrito Compras-->
+<div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Carrito de Compras</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover color-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Código</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="valign-centered">1012</td>
+                                <td class="valign-centered">
+                                    <span class="price-value">$4.800</span>
+                                </td>
+                                <!-- Input for quantity in its own td -->
+                                <td colspan="2" class="d-flex align-items-center justify-content-center valign-centered">
+                                    <input id="1012-cantidad" type="number" class="form-control" style="max-width: 80px; width: 100%; text-align: center;" placeholder="0" min="1" max="999">
+                                
+                                <!-- Agregar and Eliminar buttons in their own td, one under the other -->
+                                
+                                    <button id="1012-agregar" type="button" class="btn bg-success text-white btn-xs mb-2" onclick="agregarACarrito(this)">
+                                        <i class="bi bi-arrow-up"></i>
+                                    </button>
+                                    <button id="1012-eliminar" type="button" class="btn bg-success text-white btn-xs mb-2" onclick="eliminarDeCarrito(this)">
+                                        <i class="bi bi-arrow-down"></i>
+                                    </button>
+                                </td>
+                                <td class="d-flex align-items-center justify-content-center">
+                                    <span class="price-value">$4.800</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let images = document.querySelectorAll('img');
+            let observer = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        let img = entry.target;
+                        img.src = img.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(image => {
+                observer.observe(image);
+            });
+        });
+
         document.addEventListener("DOMContentLoaded", function () {
             const images = document.querySelectorAll('.image-container img');
 
@@ -121,9 +227,14 @@
         });
 
         $(document).ready(function () {
+            prices();
+
+
+            loadSessionCart();
+
 
             // Check the existing value from the hidden input
-            var existingCartData = $('#cart-data').val();
+            /*var existingCartData = $('#cart-data').val();
 
             // Initialize the cart array based on the existing value
             var cart = existingCartData ? JSON.parse(existingCartData) : [];
@@ -143,34 +254,7 @@
 
                 // Update the hidden input with the serialized cart data
                 $('#cart-data').val(JSON.stringify(cart));
-            }
-
-            // Handle Agregar button click
-            $('.btn-add').on('click', function () {
-                // Get the product ID from the button's ID
-                var productId = $(this).attr('id').split('-')[1];
-                // Get the quantity from the input field
-                var quantity = parseInt($('#cant-' + productId).val());
-
-                // Update the cart with the productId and quantity
-                updateCart(productId, quantity);
-
-                //console.log(JSON.stringify({ cartData: cart }));
-
-                $.ajax({
-                    type: "POST",
-                    url: '/Inventario/SetViewBag',
-                    data: JSON.stringify({ CartItem: cart }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (r) {
-
-                    }
-                });
-
-                // Optionally, log the cart to the console (for debugging)
-                
-            });
+            }*/
 
 
             //Funcionalidad para abrir y cerrar tabs automaticos
@@ -256,6 +340,110 @@
             window.location.href = '@Url.Action("Index", "Inventario")?selectedTab=' + tabElement.id + '-' + ariaExpandedValue;
         }
 
+        function loadSessionCart() {
+            // Retrieve sessionStorage data
+            const cartData = sessionStorage.getItem("cartData");
+            if (cartData) {
+                //console.log("Cart data:", JSON.parse(cartData));
+                var cartDataParsed = JSON.parse(cartData);
+                cartDataParsed.forEach(function (item) {
+                    console.log("Product ID: " + item.id + ", Quantity: " + item.quantity);
+                    $(`#${item.id}-eliminar`).attr("hidden", false);
+                    $(`#${item.id}-cantidad`).addClass("agregado");
+                    $(`#${item.id}-cantidad`).val(item.quantity);
+                });
+
+            } else {
+                console.log("No cart data available");
+            }
+
+            if (cartData != null && cartData.length > 0) {
+                $(".floating-cart-button").attr("hidden", false);
+            } else {
+                $(".floating-cart-button").attr("hidden", true);
+            }
+        }
+
+        function saveSessionCart()
+        {
+            var cart = [];
+            //const hiddenInputs = document.querySelectorAll('.agregado');
+            //se debe gestionar busqueda y actualizacion en la variable de sesison
+            hiddenInputs.forEach(input => {
+
+                const inputId = input.id;
+                // Substraer el sufijo del id antes del carácter "-"
+                const suffix = inputId.split('-')[0];
+
+                cart.push({ id: suffix, quantity: input.value });
+            });
+
+            if (cartData.length === 0) {
+                $(".floating-cart-button").attr("hidden", true);
+            } else {
+                $(".floating-cart-button").attr("hidden", false);
+            }
+
+            sessionStorage.setItem("cartData", JSON.stringify(cart));
+        }
+
+        function prices() {
+            // Obtener todos los elementos input con la clase valorHidden
+            const hiddenInputs = document.querySelectorAll('.valorHidden');
+            hiddenInputs.forEach(input => {
+                
+                if (input.value.trim() !== '') {
+                    
+                    const inputId = input.id;
+
+                    // Substraer el sufijo del id antes del carácter "-"
+                    const suffix = inputId.split('-')[0];
+
+                    // Referenciar el span con id=sufijo-desc2
+                    const desc1Span = document.getElementById(`${suffix}-desc1`);
+                    const desc2Span = document.getElementById(`${suffix}-desc2`);
+                    const desc3Span = document.getElementById(`${suffix}-desc3`);
+
+                    // Si el span existe, setearle el valor del input
+                    if (desc1Span) {
+                        desc1Span.textContent = formatCurrency(calcularValorFinal(input.value, 1.30));
+                    }
+
+                    if (desc2Span) {
+                        desc2Span.textContent = formatCurrency(calcularValorFinal(input.value, 1.15));
+                    }
+
+                    if (desc3Span) {
+                        desc3Span.textContent = formatCurrency(calcularValorFinal(input.value, 1.10));
+                    }
+                }
+            });
+        }
+
+        function agregarACarrito(btnAgregar)
+        {
+            const inputId = btnAgregar.id;
+            // Substraer el sufijo del id antes del carácter "-"
+            const suffix = inputId.split('-')[0];
+
+            $(`#${suffix}-eliminar`).attr("hidden", false);
+            $(`#${suffix}-cantidad`).addClass("agregado");
+            saveSessionCart();
+            
+        }
+
+        function eliminarDeCarrito(btnEliminar) 
+        {
+            const inputId = btnEliminar.id;
+            // Substraer el sufijo del id antes del carácter "-"
+            const suffix = inputId.split('-')[0];
+
+            $(`#${suffix}-cantidad`).removeClass("agregado");
+            $(`#${suffix}-cantidad`).val('0');
+            $(`#${suffix}-eliminar`).attr("hidden", true);
+            saveSessionCart();
+            
+        }
 
     </script>
 }

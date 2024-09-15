@@ -16,15 +16,16 @@ namespace CargarPrecios
             Console.WriteLine("Proceso de carga INICIADO!");
             Console.WriteLine("");
             Console.WriteLine("");
-            string filePath = @"C:\Datos\Inventario.xlsx";
-            ProcessSpreadsheet(filePath);
+            string filePath = @"C:\Datos\Book5.xlsx";
+            var _dbContext = new GestionDbContext("Data Source=SQL8006.site4now.net;Initial Catalog=db_aa9b9c_gestionmm;User Id=db_aa9b9c_gestionmm_admin;Password=Nacional1.");
+            ActualizarExistencias(filePath, _dbContext);
             Console.WriteLine("");
             Console.WriteLine("");
         }
 
-        public static void ProcessSpreadsheet(string filePath)
+        public static void CargarPrecios(string filePath, GestionDbContext _dbContext)
         {
-            var _dbContext = new GestionDbContext("Data Source=SQL8006.site4now.net;Initial Catalog=db_aa9b9c_gestionmm;User Id=db_aa9b9c_gestionmm_admin;Password=Nacional1.");
+            
             // Ensure the EPPlus license is set
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -131,6 +132,47 @@ namespace CargarPrecios
             Console.WriteLine("PROCESO FINALIZADO");
             Console.WriteLine("********************************************");
             Console.WriteLine("");
+        }
+
+        public static void ActualizarExistencias(string filePath, GestionDbContext _dbContext)
+        {
+            // Ensure the EPPlus license is set
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            // Open the Excel package
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+                int totalRows = worksheet.Dimension.Rows;
+
+                for (int row = 1; row <= totalRows; row++)
+                {
+                    if (row == 1)
+                    {
+                        continue;
+                    }
+
+                    string strCodigoMedia = worksheet.Cells[row, 1].Text;
+                    string strCantidad = worksheet.Cells[row, 3].Text;
+                    int cantidad = 0;
+
+                    bool esEntero = int.TryParse(strCantidad,out cantidad);
+                    int codigoMedia = int.Parse(strCodigoMedia);
+                    if(esEntero)
+                    {
+                        var existencia = _dbContext.Existencias.FirstOrDefault(m => m.MediaRef == codigoMedia);
+                        if(existencia != null && existencia.CantidadProducto != cantidad)
+                        {
+                            existencia.CantidadProducto = cantidad;
+                            _dbContext.Existencias.Update(existencia);
+                            Console.WriteLine($"Fila {row}: CodMedia={codigoMedia}, procesada, cantidad: {cantidad}");
+                        }
+                        
+                    }
+                }
+
+                _dbContext.SaveChanges();
+            }
         }
 
         public static void SetExcelMessage(ExcelWorksheet pestaña, int row, int column, string message)

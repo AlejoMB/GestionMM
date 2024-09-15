@@ -23,6 +23,7 @@ namespace Web.Controllers
         // GET: FactuDet
         public async Task<IActionResult> Index(string id)
         {
+            ejemploRedondeo();
             if (!string.IsNullOrEmpty(id))
             {
                 var idDetalle = int.Parse(id);
@@ -53,8 +54,10 @@ namespace Web.Controllers
         }
 
         // GET: FactuDet/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
+            ViewBag.EncabezadoId = id;
+
             return View();
         }
 
@@ -63,15 +66,42 @@ namespace Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PrecioUnitario,Cantidad,Total")] FacturaDetalle facturaDetalle)
+        public async Task<IActionResult> Create([Bind("Id,PrecioUnitario,Cantidad,Total,Media.Id")] FacturaDetalle facturaDetalle)
         {
-            if (ModelState.IsValid)
+            var idMedia = Int32.Parse(Request.Form["IdMedia"]);
+            var idEncabezado = facturaDetalle.Id;
+
+            var media = _context.Medias.Find(idMedia);
+            var facturaEnc = _context.FacturaEnc.FirstOrDefault(f => f.Id == facturaDetalle.Id);
+
+            //Detalle Nuevo
+            facturaDetalle.Media = media;
+            facturaDetalle.Encabezado = facturaEnc;
+            facturaDetalle.Total = facturaDetalle.Cantidad * facturaDetalle.PrecioUnitario;
+            facturaDetalle.Id = 0;
+            _context.Add(facturaDetalle);
+
+            //Actualizacion de Existencias
+            var existenciaEntity = _context.Existencias.FirstOrDefault(e => e.MediaRef == facturaDetalle.Media.Id);
+            existenciaEntity.CantidadProducto -= facturaDetalle.Cantidad;
+            _context.Update(existenciaEntity);
+
+            //Obtener totales de detalle
+            var totalFactuEnc = _context.FacturaDetalle.Where(d => d.Encabezado.Id == idEncabezado).Sum(d => d.Total);
+            facturaEnc.Total = totalFactuEnc + facturaDetalle.Total;
+
+            await _context.SaveChangesAsync();
+            ViewBag.IdMedia = media;
+
+            //return RedirectToRoute( ("FactuDet", new { id = idMedia });
+
+            return RedirectToRoute(new
             {
-                _context.Add(facturaDetalle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(facturaDetalle);
+                controller = "FactuDet",
+                action = "Index",
+                id = idEncabezado
+            });
+            //return View(facturaDetalle);
         }
 
         // GET: FactuDet/Edit/5
@@ -172,7 +202,7 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            var facturaDetalle = await _context.FacturaDetalle
+            var facturaDetalle = await _context.FacturaDetalle.Include(f => f.Encabezado)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (facturaDetalle == null)
             {
@@ -187,19 +217,62 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var facturaDetalle = await _context.FacturaDetalle.FindAsync(id);
+            var facturaDetalle = _context.FacturaDetalle.Include(f => f.Encabezado).Include(f => f.Media).FirstOrDefault(f => f.Id == id);
+            FacturaEnc facturaEnc = new FacturaEnc();
             if (facturaDetalle != null)
             {
+                
+
+                var existenciaEntity = _context.Existencias.FirstOrDefault(e => e.MediaRef == facturaDetalle.Media.Id);
+                existenciaEntity.CantidadProducto += facturaDetalle.Cantidad;
+                _context.Update(existenciaEntity);
+
+                facturaEnc = _context.FacturaEnc.FirstOrDefault(f => f.Id == facturaDetalle.Encabezado.Id);
+                facturaEnc.Total -= facturaDetalle.Total;
+                _context.Update(facturaEnc);
+
                 _context.FacturaDetalle.Remove(facturaDetalle);
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToRoute(new
+            {
+                controller = "FactuDet",
+                action = "Index",
+                id = facturaEnc.Id
+            });
         }
 
         private bool FacturaDetalleExists(int id)
         {
             return _context.FacturaDetalle.Any(e => e.Id == id);
+        }
+
+        public void ejemploRedondeo()
+        {
+            int valorOriginal = 4300; // Ejemplo de valor original
+            int valorFinal; // Variable para almacenar el valor final
+
+            // Sumarle el 20% y redondear en base a las decenas
+            int valorConIncremento = (int)Math.Round(valorOriginal * 1.30);
+            int decenas = valorConIncremento % 100;
+
+            if (decenas < 50)
+            {
+                valorFinal = valorConIncremento - decenas; // Redondear hacia abajo
+            }
+            else if (decenas == 50)
+            {
+                valorFinal = valorConIncremento; // Mantener igual si las decenas son 50
+            }
+            else
+            {
+                valorFinal = valorConIncremento + (100 - decenas); // Redondear hacia arriba
+            }
+
+            // Mostrar el valor final
+            Console.WriteLine($"Valor original: {valorOriginal}");
+            Console.WriteLine($"Valor final (con incremento y redondeo): {valorFinal}");
         }
     }
 }

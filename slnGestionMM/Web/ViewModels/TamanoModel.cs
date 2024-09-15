@@ -7,6 +7,7 @@ namespace Web.ViewModels
         public int Id { get; set; }
         public string Name { get; set; }
         public int CantidadTamano { get; set; }
+
         public List<Media> Medias { get; set; } = new List<Media>();
     }
 }

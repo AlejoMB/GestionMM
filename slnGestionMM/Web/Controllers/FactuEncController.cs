@@ -9,6 +9,7 @@ using Domain;
 using Domain.Entities.Facturacion;
 using Domain.Models.FactuEnc;
 using Domain.Models.Informes;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Web.Controllers
 {
@@ -22,13 +23,13 @@ namespace Web.Controllers
         }
 
         // GET: FactuEnc
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
             ConstruirAnos();
 
             var model = new FactuEncModel();
             model.Facutras = new List<FacturaEnc>();
-            //model.Facutras = await _context.FacturaEnc.ToListAsync();
+            model.Facutras = _context.FacturaEnc.Where(f => f.Id == id).ToList();
 
             return View(model);
         }
@@ -40,21 +41,24 @@ namespace Web.Controllers
 
             model.Facutras = new List<FacturaEnc>();
 
-            if (!string.IsNullOrEmpty(model.Mes) && !string.IsNullOrEmpty(model.Ano))
+
+            //IQueryable<FacturaEnc> query = _context.FacturaEnc.Where(f => f.FechaCreado.Month == mes && f.FechaCreado.Year == ano);
+            //query = query.Where(f => f.Id == noFactu);
+            if (!string.IsNullOrEmpty(model.NoFactura))
+            {
+                var noFactu = int.Parse(model.NoFactura);
+                model.Facutras = _context.FacturaEnc.Where(f => f.Id == noFactu).ToList();
+            }
+            else if (!string.IsNullOrEmpty(model.Mes) && !string.IsNullOrEmpty(model.Ano))
             {
                 var mes = int.Parse(model.Mes);
                 var ano = int.Parse(model.Ano);
-                IQueryable<FacturaEnc> query = _context.FacturaEnc.Where(f => f.FechaCreado.Month == mes && f.FechaCreado.Year == ano);
-
-                if(!string.IsNullOrEmpty(model.NoFactura))
-                {
-                    var noFactu = int.Parse(model.NoFactura);
-                    query = query.Where(f => f.Id == noFactu);
-                }
-                model.Facutras = query.ToList();
+                model.Facutras = _context.FacturaEnc.Where(f => f.FechaCreado.Month == mes && f.FechaCreado.Year == ano);
             }
 
-            
+
+
+
 
             return View(model);
         }
@@ -64,6 +68,7 @@ namespace Web.Controllers
             var anoInicial = 2024;
 
             var listaAnos = new List<SelectListItem>();
+            listaAnos.Add(new SelectListItem { Value = "", Text = "-año-" });
             for (int year = anoInicial; year <= DateTime.Now.Year; year++)
             {
                 listaAnos.Add(new SelectListItem { Value = $"{year}", Text = $"{year}" });

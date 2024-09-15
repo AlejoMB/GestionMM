@@ -35,3 +35,23 @@ function validateInput(inputName) {
         return true;
     }
 }
+
+function calcularValorFinal(valorOriginal, porcentaje) {
+    // Sumarle el 20% al valor original
+    let valorConIncremento = Math.round(valorOriginal * porcentaje/*1.20*/);
+
+    // Obtener las decenas
+    let decenas = valorConIncremento % 100;
+    let valorFinal;
+
+    // Redondear según las reglas
+    if (decenas < 50) {
+        valorFinal = valorConIncremento - decenas; // Redondear hacia abajo
+    } else if (decenas === 50) {
+        valorFinal = valorConIncremento; // Mantener igual si las decenas son 50
+    } else {
+        valorFinal = valorConIncremento + (100 - decenas); // Redondear hacia arriba
+    }
+
+    return valorFinal;
+}
