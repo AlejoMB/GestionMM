@@ -8,15 +8,14 @@
 @model IEnumerable<CatalogoModel>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <link rel="stylesheet" href="~/css/Inventario.css" />
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <h1>Catalogo</h1>
 
-<div class="floating-cart-button" hidden>
-   
-    <img src="~/imagenes/shopcart.png" class="cart-image" data-bs-toggle="modal" data-bs-target="#carritoModal" />
-    
-    @* <img src="cart-icon.png" alt="Cart" class="cart-image"> *@
+<div class="floating-cart-button">
+    <img src="/imagenes/shopcart.png" class="cart-image" data-bs-toggle="modal" data-bs-target="#carritoModal" onclick="loadCart()">
+    <span id="qantCart" class="cart-count"></span> <!-- This is where the number will appear -->
 </div>
 
 <input type="hidden" id="cartData" name="cartData" value="@ViewBag.CartData">
@@ -44,11 +43,40 @@
                                 </h2>
                                 <div id="panelsStayOpen-collapse-@categoria.IdCategoria-@tamano.Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@categoria.IdCategoria-@tamano.Id">
                                     <div class="accordion-body-1">
+                                        <br />
+                                        <nav aria-label="Page navigation Up">
+                                            <ul class="pagination justify-content-center">
+                                                @for (int i = 1; i <= tamano.PageNumbers; i++)
+                                                {
+                                                    if (i == tamano.Page)
+                                                    {
+                                                        <li class="page-item active" aria-current="page">
+                                                            <span class="page-link">@i</span>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="page-item" onclick="loadPagination(@i)"><a class="page-link">@i</a></li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </nav>
                                         <div id="productGallery">
                                             @foreach (var product in tamano.Medias)
                                             {
                                                 <div class="product">
-                                                    <h7>@product.TipoMedia?.Name @product.Tamano?.Name @product.Marca?.Name @product.Diseno?.Name @product.Segmento?.Name </h7>
+                                                    @if (User.Identity.IsAuthenticated)
+                                                    {
+                                                        <h7>Tipo Media: </h7> @product.TipoMedia?.Name<br />
+                                                        <h7>Tamaño: </h7> @product.Tamano?.Name<br />
+                                                        <h7>Marca: </h7> @product.Marca?.Name<br />
+                                                        <h7>Diseño: </h7> @product.Diseno?.Name<br />
+                                                        <h7>Segmento: </h7> @product.Segmento?.Name                                                        
+                                                    }
+                                                    else
+                                                    {
+                                                        <h7>@product.TipoMedia?.Name @product.Tamano?.Name @product.Marca?.Name @product.Diseno?.Name @product.Segmento?.Name </h7>
+                                                    }
                                                     <br />
                                                     @foreach (var color in product.MediaColores)
                                                     {
@@ -61,7 +89,7 @@
                                                             <source srcset="@ViewBag.UlrHost@product.Imagen" type="image/webp">
                                                             <img src="@ViewBag.UlrHost@product.Imagen.Replace(".webp",".jpg")" alt="@product.Name">
                                                         </picture> *@
-                                                        <img srcset="@ViewBag.UlrHost@product.Imagen.Replace(".webp",".jpg") 480w,
+                                                        <img id="@product.Id-imagen" srcset="@ViewBag.UlrHost@product.Imagen.Replace(".webp",".jpg") 480w,
                                                                     @ViewBag.UlrHost@product.Imagen 1024w"
                                                              sizes="(max-width: 600px) 480px, (max-width: 1024px) 500px, 1024px"
                                                              src="@ViewBag.UlrHost@product.Imagen"
@@ -98,7 +126,13 @@
                                                                         <span class="badge bg-primary">Entrega en 3 días</span>
                                                                     }
                                                                     <br />
-                                                                    <input type="hidden" id="@product.Id-hidden" class="valorHidden" name="cartData" value="@product?.ComprasDetalle?.FirstOrDefault()?.CostoUnitario">
+                                                                    {
+                                                                        var totalCost = product?.ComprasDetalle?.Sum(c => c.CostoUnitario) ?? 0;
+                                                                        var count = product?.ComprasDetalle?.Count ?? 1; // Ensure not to divide by 0
+                                                                        var averageCost = totalCost / count;
+
+                                                                        <input type="hidden" id="@product.Id-hidden" class="valorHidden" name="cartData" value="@averageCost">
+                                                                    }
                                                                     <span class="badge bg-success">$ Precios:</span>
                                                                     <br />
 
@@ -115,23 +149,37 @@
                                                             
                                                         </div>
                                                     </div>
-
-                                                    @* <div class="d-flex justify-content-center align-items-center my-3" >
+                                                    <div class="d-flex justify-content-center align-items-center my-3">
                                                         <input id="@product.Id-cantidad" type="number" class="form-control" style="max-width: 80px; width: 100%; text-align: center;" placeholder="0" min="1" max="999">
                                                     </div>
 
                                                     <div class="d-flex justify-content-center align-items-center my-3">
                                                         <button id="@product.Id-agregar" type="button" class="btn bg-success text-white" onclick="agregarACarrito(this)">Agregar</button>
                                                     </div>
+                                                                                                        
+                                                    <br />
 
-                                                    <div class="d-flex justify-content-center align-items-center my-3">
-                                                        <button id="@product.Id-eliminar" type="button" class="btn bg-success text-white" hidden onclick="eliminarDeCarrito(this)">Eliminar</button>
-                                                    </div>
-                                                    
-                                                    <br /> *@
                                                 </div>
                                             }
                                         </div>
+                                        <br />
+                                        <nav aria-label="Page navigation bottom">
+                                            <ul class="pagination justify-content-center">
+                                                @for (int i = 1; i <= tamano.PageNumbers; i++)
+                                                {
+                                                    if(i == tamano.Page)
+                                                    {
+                                                        <li class="page-item active" aria-current="page">
+                                                            <span class="page-link">@i</span>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="page-item" onclick="loadPagination(@i)"><a class="page-link">@i</a></li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </nav>
                             </div>
                         </div>
                         </div>
@@ -153,41 +201,58 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover color-table">
+                <div class="table-wrapper table-responsive">
+                    <div class="alert alert-success" role="alert">
+                        Puedes darle click al nombre de la Media para ver la Foto.
+                    </div>
+                    <table class="table table-custom">
                         <thead>
                             <tr>
-                                <th scope="col">Código</th>
+                                <th scope="col">Codigo</th>
+                                <th scope="col">Nombre</th>
                                 <th scope="col">Precio</th>
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Total</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="valign-centered">1012</td>
-                                <td class="valign-centered">
-                                    <span class="price-value">$4.800</span>
+                        <tbody id="tableCarrito">
+                            <tr class="row-to-clone" style="display:none">
+                                <td><label id="codigo_0" class="codigo">163</label></td>
+                                <td>
+                                    
+                                    <input type="text" id="imageUrl" class="imageUrl" value="" hidden>
+                                    <p id="lblImage_1" style="display:none"></p>
+                                    <!-- Anchor that triggers the popover -->
+                                    <a href="#" id="popoverTrigger" class="popoverTrigger">Click to Show Image</a>
                                 </td>
-                                <!-- Input for quantity in its own td -->
-                                <td colspan="2" class="d-flex align-items-center justify-content-center valign-centered">
-                                    <input id="1012-cantidad" type="number" class="form-control" style="max-width: 80px; width: 100%; text-align: center;" placeholder="0" min="1" max="999">
-                                
-                                <!-- Agregar and Eliminar buttons in their own td, one under the other -->
-                                
-                                    <button id="1012-agregar" type="button" class="btn bg-success text-white btn-xs mb-2" onclick="agregarACarrito(this)">
-                                        <i class="bi bi-arrow-up"></i>
-                                    </button>
-                                    <button id="1012-eliminar" type="button" class="btn bg-success text-white btn-xs mb-2" onclick="eliminarDeCarrito(this)">
-                                        <i class="bi bi-arrow-down"></i>
-                                    </button>
-                                </td>
-                                <td class="d-flex align-items-center justify-content-center">
-                                    <span class="price-value">$4.800</span>
+                                <td><label id="precio_1">$4.000</label></td>
+                                <td><input id="cant_1" type="text" style="width:35%" class="form-control" placeholder="0" value="10"></td>
+                                <td><label id="total_1">$40.000</label></td>
+                                <td>
+                                    <img src="~/Img/Icons/delete.png" width="30px" height="30px" class="delete-row" />
                                 </td>
                             </tr>
+                            @* <tr>
+                                <td><label for="codigo2">50</label></td>
+                                <td><label for="precio2">$5.000</label></td>
+                                <td><input type="text" style="width:20%" id="cantidad2" class="form-control" placeholder="0" value="10"></td>
+                                <td><label for="total2">$50.000</label></td>
+                            </tr> *@
+                            <!-- Add more rows as needed -->
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="text-end"><strong>Total Factrura:</strong></td>
+                                <td><strong><label id="totalFactu">$40.000</label></strong></td>
+                            </tr>
+                        </tfoot>
                     </table>
+                </div>
+                <div class="text-end mt-3">
+                    <a href="https://wa.me/?text=Tu%20mensaje%20aqui" class="btn btn-success" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Enviar
+                    </a>
                 </div>
             </div>
         </div>
@@ -198,7 +263,7 @@
 @section Scripts {
     <script type="text/javascript">
 
-        document.addEventListener("DOMContentLoaded", function () {
+        /*document.addEventListener("DOMContentLoaded", function () {
             let images = document.querySelectorAll('img');
             let observer = new IntersectionObserver(function (entries, observer) {
                 entries.forEach(entry => {
@@ -214,6 +279,7 @@
                 observer.observe(image);
             });
         });
+        */
 
         document.addEventListener("DOMContentLoaded", function () {
             const images = document.querySelectorAll('.image-container img');
@@ -228,35 +294,42 @@
 
         $(document).ready(function () {
             prices();
-
-
             loadSessionCart();
 
+            $('.page-item').hover(function () {
+                $(this).css('cursor', 'pointer');
+            });
 
-            // Check the existing value from the hidden input
-            /*var existingCartData = $('#cart-data').val();
+            // Initialize the tooltip
+            $('#richTooltip').tooltip();
 
-            // Initialize the cart array based on the existing value
-            var cart = existingCartData ? JSON.parse(existingCartData) : [];
-
-            // Function to add or update product in cart
-            function updateCart(productId, quantity) {
-                // Find the product in the cart by productId
-                var product = cart.find(item => item.id === productId);
-
-                if (product) {
-                    // If product exists in the cart, update the quantity
-                    product.quantity += quantity;
-                } else {
-                    // If product doesn't exist, add it to the cart
-                    cart.push({ id: productId, quantity: quantity });
+            // Show tooltip on click, toggle it
+            $('.popoverTrigger').popover({
+                trigger: 'click', // Show on click
+                placement: 'right', // Placement of the popover
+                html: true, // Allow HTML content in the popover
+                content: function () {
+                    // Get the image URL from the input field
+                    var imageUrl = $("#lblImage_" + this.id.split("_")[1]).text();
+                    return "<img src='" + imageUrl + "' alt='Example Image' class='img-fluid'>";
                 }
+            });
+            // Optional: Automatically hide other popovers when clicking outside
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.popoverTrigger').length) {
+                    $('.popoverTrigger').popover('hide');
+                }
+            });
 
-                // Update the hidden input with the serialized cart data
-                $('#cart-data').val(JSON.stringify(cart));
-            }*/
+            $(document).on('click', '.delete-row', function (event) {
+                event.preventDefault(); // Prevent the default link behavior
 
+                var codigoMedia = $(this).closest("tr").find(".codigo").text();
+                deleteItemFromCart(codigoMedia);
 
+                $(this).closest('tr').remove(); // Remove the closest <tr> element
+            });
+            
             //Funcionalidad para abrir y cerrar tabs automaticos
             const urlParams = new URLSearchParams(window.location.search);
             const selectedTab = urlParams.get('selectedTab');
@@ -287,7 +360,7 @@
                         divElement.classList.add('show');
                     }
                 }
-                else if (params.length === 3)
+                else if (params.length === 3 || params.length === 4)
                 {
                     const h2ElementParent = document.querySelector('#panelsStayOpen-heading-' + params[0]);
                     const divElementParent = document.querySelector('#panelsStayOpen-collapse-' + params[0]);
@@ -319,15 +392,6 @@
 
                     divElementParent.classList.add('show');
                 }
-
-
-
-                
-
-                
-
-                
-
                 
             }
         });
@@ -340,15 +404,29 @@
             window.location.href = '@Url.Action("Index", "Inventario")?selectedTab=' + tabElement.id + '-' + ariaExpandedValue;
         }
 
+        function loadPagination(page)
+        {
+            var queryString = window.location.search.split('-');
+            if (queryString.length === 4) 
+            {
+                window.location.href = '@Url.Action("Index", "Inventario")' + queryString[0] + '-' + queryString[1] + '-' + queryString[2] + '-' + page;
+            }
+            else
+            {
+                window.location.href = '@Url.Action("Index", "Inventario")' + window.location.search + '-' + page;
+            }
+
+            
+        }
+
         function loadSessionCart() {
             // Retrieve sessionStorage data
             const cartData = sessionStorage.getItem("cartData");
             if (cartData) {
                 //console.log("Cart data:", JSON.parse(cartData));
                 var cartDataParsed = JSON.parse(cartData);
+                console.log(cartDataParsed);
                 cartDataParsed.forEach(function (item) {
-                    console.log("Product ID: " + item.id + ", Quantity: " + item.quantity);
-                    $(`#${item.id}-eliminar`).attr("hidden", false);
                     $(`#${item.id}-cantidad`).addClass("agregado");
                     $(`#${item.id}-cantidad`).val(item.quantity);
                 });
@@ -359,32 +437,162 @@
 
             if (cartData != null && cartData.length > 0) {
                 $(".floating-cart-button").attr("hidden", false);
+                countCartIcon(cartDataParsed);
             } else {
                 $(".floating-cart-button").attr("hidden", true);
             }
         }
 
-        function saveSessionCart()
+        function saveSessionCart(idMedia, cantidad, precios, url, imagen)
         {
             var cart = [];
             //const hiddenInputs = document.querySelectorAll('.agregado');
             //se debe gestionar busqueda y actualizacion en la variable de sesison
-            hiddenInputs.forEach(input => {
 
-                const inputId = input.id;
-                // Substraer el sufijo del id antes del carácter "-"
-                const suffix = inputId.split('-')[0];
+            var cartData = sessionStorage.getItem("cartData");
+            var cart = JSON.parse(cartData);
 
-                cart.push({ id: suffix, quantity: input.value });
-            });
+            updateCart(idMedia, cantidad, cart, precios, url, imagen);
 
-            if (cartData.length === 0) {
+            if (cartData != null && cartData.length === 0) {
                 $(".floating-cart-button").attr("hidden", true);
             } else {
                 $(".floating-cart-button").attr("hidden", false);
             }
 
+            
+        }
+
+        // Function to add or update product in cart
+        function updateCart(productId, quantity, cart, precios, url, imagen) {
+            // Find the product in the cart by productId
+            if (cart === null) {
+                cart = [];
+            }
+
+            var product = cart.find(item => item.id === productId);
+
+            if (product) {
+                // If product exists in the cart, update the quantity
+                product.quantity = quantity;
+            } else {
+                // If product doesn't exist, add it to the cart
+                cart.push({ 
+                    id: productId, 
+                    quantity: quantity,
+                    precios: precios,
+                    urlImagen: url,
+                    nombreImg: imagen
+                });
+            }
+
+            countCartIcon(cart);
+            @* let totalQuantity = cart.reduce((sum, item) => sum + parseInt(item.quantity), 0);
+            const catCart = document.getElementById(`qantCart`);
+            catCart.textContent = totalQuantity *@
+
+            // Update the hidden input with the serialized cart data
             sessionStorage.setItem("cartData", JSON.stringify(cart));
+        }
+
+        function countCartIcon(cart) {
+            let totalQuantity = cart.reduce((sum, item) => sum + parseInt(item.quantity), 0);
+            const catCart = document.getElementById(`qantCart`);
+            catCart.textContent = totalQuantity
+        }
+
+        function loadCart() {
+
+            $('#tableCarrito').find('tr').not('.row-to-clone').remove();
+            const cartData = sessionStorage.getItem("cartData");
+            var cartDataParsed = JSON.parse(cartData);
+            var cantTotal = 0
+            cartDataParsed.forEach(function (item) {
+                cantTotal += parseInt(item.quantity);
+            });
+
+            var indicePrecio = 0;
+            if (cantTotal >= 6 && cantTotal <= 29) {
+                indicePrecio = 0;
+            }
+            else if (cantTotal >= 30 && cantTotal <= 99) {
+                indicePrecio = 1;
+            }
+            else if (cantTotal >= 100) {
+                indicePrecio = 2;
+            }
+
+
+            var rowCont = 1;
+            var totalFactu = 0;
+            cartDataParsed.forEach(function (item) {
+                
+                //var newRow = $(".row-to-clone");
+
+                //if (rowCont !== 1) {
+                var newRow = $(".row-to-clone").clone();
+                //}
+                newRow = $('.row-to-clone').clone().removeAttr('style').removeClass('row-to-clone');
+
+                // Reset the values of input fields in the cloned row
+                newRow.find('input[type="text"]').val('');
+                newRow.find('label').text('');
+
+                // Update IDs of the cloned row elements
+                newRow.find("[id]").each(function () {
+                    var oldId = $(this).attr("id");
+                    var newId = oldId.replace(/_\d+$/, "") + "_" + rowCont;
+                    $(this).attr("id", newId);
+                });
+
+                //if (rowCont !== 1) {
+                //    newRow.removeClass("row-to-clone");
+                //}
+                var arregloPrecio = item.precios.split('-');
+                var precioParced = 0;
+                newRow.find("#codigo_" + rowCont).text(item.id);
+
+                //newRow.find("#nombre_" + rowCont).text(item.nombreImg);
+                //$("#image_" + rowCont).attr("src", item.urlImagen);
+                newRow.find("#lblImage_" + rowCont).text(item.urlImagen);
+                //$("#imageName_" + rowCont).text(item.nombreImg)
+
+                if (arregloPrecio !== null) {
+                    precioParced = parseInt(removeformatCurrency(arregloPrecio[indicePrecio]));
+                    newRow.find("#precio_" + rowCont).text(arregloPrecio[indicePrecio]);
+                }
+                newRow.find("#cant_" + rowCont).val(item.quantity);
+
+                if (precioParced !== 0) {
+                    totalFactu += precioParced * parseInt(item.quantity)
+                    newRow.find("#total_" + rowCont).text(formatCurrency(precioParced * parseInt(item.quantity)));
+                }
+
+                var txtImagen = "";
+                txtImagen = item.nombreImg;
+                newRow.find('.popoverTrigger').text(txtImagen.substring(0, 12) + "...");
+                newRow.find('.popoverTrigger').prop("title", txtImagen);
+
+                newRow.find('.popoverTrigger').popover({
+                    trigger: 'click', // Show on click
+                    placement: 'right', // Placement of the popover
+                    html: true, // Allow HTML content in the popover
+                    content: function () {
+                        // Get the image URL from the input field
+                        var imageUrl = $("#lblImage_" + this.id.split("_")[1]).text();
+                        return "<img src='" + item.urlImagen + "' alt='Example Image' class='img-fluid'>";
+                    }
+                });
+
+                //if (rowCont !== 1) {
+                    $("#tableCarrito tr:first").after(newRow);
+                //}
+
+                rowCont++;
+            });
+
+            $("#totalFactu").text(formatCurrency(totalFactu));
+
         }
 
         function prices() {
@@ -426,9 +634,23 @@
             // Substraer el sufijo del id antes del carácter "-"
             const suffix = inputId.split('-')[0];
 
-            $(`#${suffix}-eliminar`).attr("hidden", false);
+            if (isNaN(parseInt($(`#${suffix}-cantidad`).val())) || parseInt($(`#${suffix}-cantidad`).val()) === 0) {
+                return;
+            }
+
             $(`#${suffix}-cantidad`).addClass("agregado");
-            saveSessionCart();
+
+            var precio1 = $(`#${suffix}-desc1`).text();
+            var precio2 = $(`#${suffix}-desc2`).text();
+            var precio3 = $(`#${suffix}-desc3`).text();
+
+            var precios = precio1 + "-" + precio2 + "-" + precio3;
+
+            var imagenUrl = $(`#${suffix}-imagen`).attr("src");
+            var nombreImagen = $(`#${suffix}-imagen`).attr("alt");
+
+
+            saveSessionCart(suffix, $(`#${suffix}-cantidad`).val(), precios, imagenUrl, nombreImagen);
             
         }
 
@@ -440,9 +662,27 @@
 
             $(`#${suffix}-cantidad`).removeClass("agregado");
             $(`#${suffix}-cantidad`).val('0');
-            $(`#${suffix}-eliminar`).attr("hidden", true);
-            saveSessionCart();
             
+            
+            deleteItemFromCart(suffix);
+        }
+
+        function deleteItemFromCart(productId) {
+            var cartData = sessionStorage.getItem("cartData");
+            var cart = JSON.parse(cartData);
+
+            const productIndex = cart.findIndex(item => item.id === productId);
+
+            if (productIndex !== -1) {
+                
+                cart.splice(productIndex, 1);
+
+                $(`#${productId}-cantidad`).removeClass("agregado");
+                $(`#${productId}-cantidad`).val('0');
+                // Update the hidden input with the serialized cart data
+                sessionStorage.setItem("cartData", JSON.stringify(cart));
+                countCartIcon(cart);
+            }
         }
 
     </script>

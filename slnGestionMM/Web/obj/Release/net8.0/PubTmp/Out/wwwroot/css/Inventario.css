@@ -229,3 +229,23 @@
 .valign-centered {
     vertical-align: middle;
 }
+
+.table-custom thead {
+    background-color: #198754; /* Set header background */
+    color: white; /* Set header text color */
+}
+
+.table-custom tfoot {
+    background-color: #198754; /* Set footer background */
+    color: white; /* Set footer text color */
+}
+
+.table-custom {
+    border-radius: 15px; /* Rounded corners */
+    overflow: hidden; /* Ensure rounded corners */
+}
+
+.table-wrapper {
+    border-radius: 15px; /* Rounded corners for the wrapper */
+    overflow: hidden; /* Ensure the table and footer stay rounded */
+}

@@ -28,13 +28,20 @@ namespace Web.Controllers
             //var catalogo = new List<CatalogoModel>();
             int categoria = 0;
             int tamanoId = 0;
-            if(!String.IsNullOrEmpty(selectedTab))
+            var page = 1;
+            if (!String.IsNullOrEmpty(selectedTab))
             {
                 var values = selectedTab.Split('-');
                 if (values.Count() == 3)
                 {
                     categoria = int.Parse(values[0]);
                     tamanoId = int.Parse(values[1]);
+                }
+                else if (values.Count() == 4)
+                {
+                    categoria = int.Parse(values[0]);
+                    tamanoId = int.Parse(values[1]);
+                    page = int.Parse(values[3]);
                 }
                 else
                 {
@@ -59,6 +66,10 @@ namespace Web.Controllers
                          .ThenBy(m => m.Name)
                          .ToList();
 
+            
+
+            var pageSize = 30;
+
             foreach (var item in tiposMedias)
             {
                 //item.Tamanos = tamanos;
@@ -69,10 +80,26 @@ namespace Web.Controllers
                     tamano.Medias = new List<Media>();
                     if (medias != null && medias.Any())
                     {
-                        mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id).ToList();
+
+                        tamano.CantidadTamano = medias.Count(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id);
+                        mediasResult = medias.Where(m => m.TipoMedia.Id == item.IdCategoria && m.Tamano?.Id == tamano.Id)
+                                             .Skip((page - 1) * pageSize)
+                                             .Take(pageSize)
+                                             .ToList();
                     }
 
-                    tamano.CantidadTamano = mediasResult.Count;
+                    
+                    if (tamano.CantidadTamano != 0)
+                    {
+                        tamano.PageNumbers = (tamano.CantidadTamano / pageSize) + 1;
+                    }
+
+                    if (tamano.PageNumbers == 0)
+                    {
+                        tamano.PageNumbers = 1;
+                    }
+
+                    tamano.Page = page;
 
                     if (tamano.Id == tamanoId)
                     {

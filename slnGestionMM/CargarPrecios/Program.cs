@@ -16,7 +16,7 @@ namespace CargarPrecios
             Console.WriteLine("Proceso de carga INICIADO!");
             Console.WriteLine("");
             Console.WriteLine("");
-            string filePath = @"C:\Datos\Book5.xlsx";
+            string filePath = @"C:\Datos\ExistenciasOctubre.xlsx";
             var _dbContext = new GestionDbContext("Data Source=SQL8006.site4now.net;Initial Catalog=db_aa9b9c_gestionmm;User Id=db_aa9b9c_gestionmm_admin;Password=Nacional1.");
             ActualizarExistencias(filePath, _dbContext);
             Console.WriteLine("");
@@ -166,6 +166,11 @@ namespace CargarPrecios
                             existencia.CantidadProducto = cantidad;
                             _dbContext.Existencias.Update(existencia);
                             Console.WriteLine($"Fila {row}: CodMedia={codigoMedia}, procesada, cantidad: {cantidad}");
+                        }
+
+                        if(existencia == null)
+                        {
+                            Console.WriteLine($"Fila {row}: CodMedia={codigoMedia}, Existencia no creada");
                         }
                         
                     }

@@ -1,10 +1,10 @@
-﻿@model Domain.Entities.Inventario.Media
+﻿@model MediaModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
 <h4>Media</h4>
 <hr />
@@ -13,6 +13,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ColoresToSave" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -23,9 +24,88 @@
                 <input asp-for="Imagen" class="form-control" disabled />
                 <span asp-validation-for="Imagen" class="text-danger"></span>
             </div>
+
+            @* DropDownLists *@
+            <div class="form-group">
+                <label asp-for="TipoMedia" class="control-label"></label>
+                <select asp-for="TipoMedia" class="form-control" asp-items="Model.TiposMedias">
+                    <option value="0">-- Tipo Media --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tamano" class="control-label"></label>
+                <select asp-for="Tamano" class="form-control" asp-items="Model.Tamanos">
+                    <option value="0">-- Tamaños --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Marca" class="control-label"></label>
+                <select asp-for="Marca" class="form-control" asp-items="Model.Marcas">
+                    <option value="0">-- Marcas --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Diseno" class="control-label"></label>
+                <select asp-for="Diseno" class="form-control" asp-items="Model.Disenos">
+                    <option value="0">-- Diseños --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Segmento" class="control-label"></label>
+                <select asp-for="Segmento" class="form-control" asp-items="Model.Segmentos">
+                    <option value="0">-- Segmentos --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <br />
+                <table class="color-table">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        @foreach (var colorRow in Model.Colores)
+                        {
+                            <tr>
+                                @foreach (var color in colorRow.Colores)
+                                {
+                                    <td>
+                                        <span class="color-square" style="background-color: @color.RgbColor;">&ensp;&ensp;</span>
+                                        <br /> @color.Name
+                                        @* @foreach(var idSelected in Model.ColoresSelected)
+                                        { *@
+                                        @if (Model.ColoresSelected.Any(c => c == color.Id))
+                                            {
+                                                <br /> <input id="@color.Id" type="checkbox" checked="checked" title="@color.Name">
+                                            }
+                                            else
+                                            {
+                                                <br /> <input id="@color.Id" type="checkbox" title="@color.Name">
+                                            }
+                                        @* } *@
+                                        
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @* 
+            
+            
+            
+            <div class="form-group">
+                <label asp-for="tipoGasto" class="control-label"></label>
+                <select asp-for="tipoGasto" class="form-control" asp-items="ViewBag.TipoGastoID">
+                    <option value="">-- Tipo Gasto --</option>
+                </select>
+            </div> *@
+            @* DropDownLists *@
+
+
             <div class="form-group form-check">
+                <br />
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EstaEnPromocion" /> @Html.DisplayNameFor(model => model.EstaEnPromocion)
+                    <input class="form-check-input" asp-for="EstaEnPromocion" checked="@Model.EstaEnPromocion" /> @Html.DisplayNameFor(model => model.EstaEnPromocion)
                 </label>
             </div>
             @*<div class="form-group">
@@ -49,3 +129,33 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Function to build the comma-separated string of selected checkbox IDs
+        function updateSelectedIds() {
+            var selectedIds = [];
+
+            // Iterate through each checked checkbox and get its ID
+            $('input[type="checkbox"]:checked').each(function () {
+                if ($(this).attr('id') !== "EstaEnPromocion") {
+                    selectedIds.push($(this).attr('id'));
+                }
+            });
+
+            // Create a string separated by commas
+            var resultString = selectedIds.join(',');
+
+            $('#ColoresToSave').val(resultString);
+            // Output the result (you can change this to do whatever you need with the string)
+            console.log(resultString);
+        }
+
+        // Attach change event listener to all checkboxes
+        $('input[type="checkbox"]').change(function () {
+            updateSelectedIds();
+        });
+
+        // Optionally, call it once on page load if you want to initialize the string with pre-checked boxes
+        //updateSelectedIds();
+    });
+</script>

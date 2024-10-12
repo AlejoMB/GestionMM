@@ -9,6 +9,9 @@ using Domain;
 using Domain.Entities.Inventario;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Web.Helpers;
+using Domain.Models;
+using System.Drawing;
+using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -95,12 +98,38 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            var media = await _context.Medias.FindAsync(id);
+            var media = _context.Medias
+                                .Include(m => m.TipoMedia)
+                                .Include(m => m.Tamano)
+                                .Include(m => m.Marca)
+                                .Include(m => m.Diseno)
+                                .Include(m => m.Segmento)
+                                .FirstOrDefault(m => m.Id == id);
             if (media == null)
             {
                 return NotFound();
             }
-            return View(media);
+            var model = new MediaModel
+            {
+                Id = media.Id,
+                Name = media.Name,
+                Imagen = media.Imagen,
+                EstaEnPromocion = media.EstaEnPromocion,
+                TiposMedias = new SelectList(_context.TipoMedias.ToList(), "Id", "Name"),
+                TipoMedia = media.TipoMedia == null ? 0 : media.TipoMedia.Id,
+                Tamanos = new SelectList(_context.Tamanos.ToList(), "Id", "Name"),
+                Tamano = media.Tamano == null ? 0 : media.Tamano.Id,
+                Marcas = new SelectList(_context.Marcas.ToList(), "Id", "Name"),
+                Marca = media.Marca == null ? 0 : media.Marca.Id,
+                Disenos = new SelectList(_context.Disenos.ToList(), "Id", "Name"),
+                Diseno = media.Diseno == null? 0 : media.Diseno.Id,
+                Segmentos = new SelectList(_context.Segmentos.ToList(), "Id", "Name"),
+                Segmento = media.Segmento == null ? 0 : media.Segmento.Id,
+                Colores = ViewHelpers.CrearTablaColores(_context.Colores.ToList()),
+                ColoresSelected = _context.MediaColores.Include(m => m.Media).Include(m => m.Color).Where(m => m.Media.Id == media.Id).Select(m => m.Color.Id).ToList(),
+            };
+
+            return View(model);
         }
 
         // POST: Media/Edit/5
@@ -108,9 +137,9 @@ namespace Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Imagen,EstaEnPromocion,CreadoPorUser,FechaCreado")] Media media)
+        public async Task<IActionResult> Edit(int id, [FromForm] MediaModel mediaModel/*int id, [Bind("Id,Name,Imagen,EstaEnPromocion,CreadoPorUser,FechaCreado")] Media media*/)
         {
-            if (id != media.Id)
+            if (id != mediaModel.Id)
             {
                 return NotFound();
             }
@@ -118,15 +147,44 @@ namespace Web.Controllers
             
             try
             {
-                var mediaSave = _context.Medias.Find(media.Id);
-                mediaSave.Name = media.Name;
-                mediaSave.EstaEnPromocion = media.EstaEnPromocion;
+                var mediaSave = _context.Medias.Find(mediaModel.Id);
+                mediaSave.Name = mediaModel.Name;
+                mediaSave.EstaEnPromocion = mediaModel.EstaEnPromocion;
+
+                mediaSave.TipoMedia = _context.TipoMedias.FirstOrDefault(m => m.Id == mediaModel.TipoMedia);
+                mediaSave.Tamano = _context.Tamanos.FirstOrDefault(m => m.Id == mediaModel.Tamano);
+                mediaSave.Marca = _context.Marcas.FirstOrDefault(m => m.Id == mediaModel.Marca);
+                mediaSave.Diseno = _context.Disenos.FirstOrDefault(m => m.Id == mediaModel.Diseno);
+                mediaSave.Segmento = _context.Segmentos.FirstOrDefault(m => m.Id == mediaModel.Segmento);
+
+                
+
+
+                if (mediaModel.ColoresToSave != null)
+                {
+                    var coloresToDelete = _context.MediaColores.Include(c => c.Color).Where(m => m.Media.Id == mediaModel.Id);
+                    _context.MediaColores.RemoveRange(coloresToDelete);
+
+                    foreach (var color in mediaModel.ColoresToSave.Split(","))
+                    {
+                        int idColor = int.Parse(color);
+
+                        var mediaColor = new MediaColores
+                        {
+                            Color = _context.Colores.FirstOrDefault(m => m.Id == idColor),
+                            Media = mediaSave
+                        };
+
+                        _context.MediaColores.Add(mediaColor);
+                    }
+                }
+
                 _context.Update(mediaSave);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MediaExists(media.Id))
+                if (!MediaExists(mediaModel.Id))
                 {
                     return NotFound();
                 }

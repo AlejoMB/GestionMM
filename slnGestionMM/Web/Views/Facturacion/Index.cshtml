@@ -137,10 +137,10 @@
                                         <input type="hidden" id="txtPromo_1" class="promo" />
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtName_1" class="form-control fontSmall" type="text" disabled aria-label=".form-control-sm example">
+                                        <input id="txtName_1" class="form-control fontSmall name" type="text" disabled aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
-                                        <input id="txtExist_1" class="form-control fontSmall" type="text" disabled aria-label=".form-control-sm example">
+                                        <input id="txtExist_1" class="form-control fontSmall exist" type="text" disabled aria-label=".form-control-sm example">
                                     </td>
                                     <td class="col-md-1">
                                         <input id="txtCosto_1" class="form-control currencyInput  costo fontSmall" disabled type="text" aria-label=".form-control-sm example">
@@ -166,6 +166,7 @@
                             </tbody>
                         </table>
                         <input id="btnGuardar" type="button" class="btn btn-success" value="Guardar" onclick="CrearFactura()">
+                        <input id"cargaFactu" type="button" class="btn btn-warning cargaFactu" value="Cargar Factura">
                         <input id="btnVerFactura" type="button" class="btn btn-info" value="Ver Factura" disabled>
 
                     </div>
@@ -221,67 +222,91 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        $(document).on("blur", "#txtCliente", buscarCliente);
+    var cart = [];
 
-        function calculateTotal() {
+    function calculateTotal() {
 
-            var totalCantidad = 0;
-            $('.cantidad').each(function () {
-                var val = parseFloat($(this).val().replace("$", "").replace(/\./g, ''));
-                if (!isNaN(val)) {
-                    totalCantidad += val;
-                }
-            });
+        var totalCantidad = 0;
+        $('.cantidad').each(function () {
+            var val = parseFloat($(this).val().replace("$", "").replace(/\./g, ''));
+            if (!isNaN(val)) {
+                totalCantidad += val;
+            }
+        });
 
-            /*var costo = parseInt($(this).closest("tr").find(".costo").val().replace("$", "").replace(".", ""));
+        /*var costo = parseInt($(this).closest("tr").find(".costo").val().replace("$", "").replace(".", ""));
+        if (!isNaN(costo) && !isNaN(totalCantidad)) {
+            var txtPromo = $(this).closest("tr").find(".promo").val();
+            var esPromo = (txtPromo === 'True')
+            if (esPromo) {
+                $(this).closest("tr").find(".venta").addClass("promoFactu");
+            }
+            else {
+                $(this).closest("tr").find(".venta").removeClass("promoFactu");
+            }
+            var ganancia = GetDescuento($(this).val(), esPromo);
+            var cantidad = $(this).closest("tr").find(".cantidad").val();
+
+            var porcentaje = 1 + (ganancia / 100);
+            $(this).closest("tr").find(".venta").val(formatCurrency(calcularValorFinal(costo, porcentaje)));
+            //$(this).closest("tr").find(".venta").val(formatCurrency(costo + ganancia));
+            $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
+            var total = (costo + ganancia) * cantidad;
+            $(this).closest("tr").find(".total").val(formatCurrency(total));
+        }*/
+        cart = [];
+        $('#DetalleFactuTb tbody tr').each(function () {
+
+            var idMedia = $(this).find(".codigoMedia").val();
+            var nombre = $(this).find(".name").val();
+            var exist = $(this).find(".exist").val();
+            var costo = parseFloat($(this).find(".costo").val().replace("$", "").replace(/\./g, ''));
+            
+
             if (!isNaN(costo) && !isNaN(totalCantidad)) {
-                var txtPromo = $(this).closest("tr").find(".promo").val();
-                var esPromo = (txtPromo === 'True')
+                var txtPromo = $(this).find(".promo").val();
+                var esPromo = (txtPromo === 'True');
                 if (esPromo) {
-                    $(this).closest("tr").find(".venta").addClass("promoFactu");
+                    $(this).find(".venta").addClass("promoFactu");
                 }
                 else {
-                    $(this).closest("tr").find(".venta").removeClass("promoFactu");
+                    $(this).find(".venta").removeClass("promoFactu");
                 }
-                var ganancia = GetDescuento($(this).val(), esPromo);
-                var cantidad = $(this).closest("tr").find(".cantidad").val();
+                var ganancia = parseFloat(GetDescuento(totalCantidad, esPromo));
 
                 var porcentaje = 1 + (ganancia / 100);
-                $(this).closest("tr").find(".venta").val(formatCurrency(calcularValorFinal(costo, porcentaje)));
-                //$(this).closest("tr").find(".venta").val(formatCurrency(costo + ganancia));
-                $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
-                var total = (costo + ganancia) * cantidad;
-                $(this).closest("tr").find(".total").val(formatCurrency(total));
-            }*/
+                var valorRedondeado = calcularValorFinal(costo, porcentaje);
+                var incremento = (valorRedondeado - costo);
+                var cantidad = $(this).find(".cantidad").val();
 
-            $('#DetalleFactuTb tbody tr').each(function () {
-                
-                var costo = parseFloat($(this).find(".costo").val().replace("$", "").replace(/\./g, ''));
-                if (!isNaN(costo) && !isNaN(totalCantidad)) {
-                    var txtPromo = $(this).find(".promo").val();
-                    var esPromo = (txtPromo === 'True');
-                    if (esPromo) {
-                        $(this).find(".venta").addClass("promoFactu");
-                    }
-                    else {
-                        $(this).find(".venta").removeClass("promoFactu");
-                    }
-                    var ganancia = parseFloat(GetDescuento(totalCantidad, esPromo));
+                $(this).find(".venta").val(formatCurrency(valorRedondeado));
 
-                    var porcentaje = 1 + (ganancia / 100);
-                    var valorRedondeado = calcularValorFinal(costo, porcentaje);
-                    var incremento = (valorRedondeado - costo);
-                    var cantidad = $(this).find(".cantidad").val();
+                $(this).find(".venta").prop("title", "Ganancia: " + incremento)
+                var total = valorRedondeado * cantidad;
+                $(this).find(".total").val(formatCurrency(total));
+                saveCart(idMedia, nombre, exist, formatCurrency(costo), cantidad, formatCurrency(valorRedondeado), formatCurrency(total));
+            }
+        });
 
-                    $(this).find(".venta").val(formatCurrency(valorRedondeado));
+        //console.log(cart);
+    }
 
-                    $(this).find(".venta").prop("title", "Ganancia: " + incremento)
-                    var total = valorRedondeado * cantidad;
-                    $(this).find(".total").val(formatCurrency(total));
-                }
-            });
+    $(document).ready(function () {
+
+        const cartData = sessionStorage.getItem("cartFactura");
+        var cartDataParsed = JSON.parse(cartData);
+        if (cartDataParsed === null) {
+            $("#cargaFactu").prop('disabled', true);
         }
+        else { 
+            $("#cargaFactu").prop('disabled', false);
+        }
+
+        
+
+        $(document).on("blur", "#txtCliente", buscarCliente);
+
+        
 
         $(document).on('click', '.delete-row', function (event) {
             event.preventDefault(); // Prevent the default link behavior
@@ -303,7 +328,8 @@
             // Check input( $( this ).val() ) for validity here
         });
 
-        $(document).on("click", ".add-row", function () {
+        function AddRow()
+        {
             // Clone the row
             var newRow = $(".row-to-clone").clone();
             // Reset the values of input fields in the cloned row
@@ -327,7 +353,9 @@
 
             newRow.find(".codigoMedia").focus();
             window.scrollTo(0, document.body.scrollHeight);
-        });
+        }
+
+        $(document).on("click", ".add-row", AddRow);
 
         $(document).on("blur", ".venta", function () {
             var venta =  $(this).closest("tr").find(".venta").val().replace("$", "").replace(/\./g, '');
@@ -336,7 +364,10 @@
             $(this).closest("tr").find(".total").val(formatCurrency(total));
         });
         
-        $(document).on("blur", ".cantidad, .total, .venta", function () {
+        $(document).on("blur", ".cantidad, .total, .venta", TotalEncabezado);
+
+        function TotalEncabezado()
+        {
             var totalSum = 0;
             $('.total').each(function () {
                 var val = parseFloat($(this).val().replace("$", "").replace(/\./g, ''));
@@ -346,7 +377,7 @@
             });
 
             $("#TotalEnc").val(formatCurrency(totalSum));
-        });
+        }
 
         $(document).on("blur", ".venta", function () {
             var txtId = this.id;
@@ -362,15 +393,54 @@
 
         });
 
-
-
         $('#btnVerFactura').click(function () {
             var url = '@Url.Action("FactuPrint", "Facturacion")';
             var textValue = $('#FactuId').val();
 
             window.location.href = url + '?id=' + textValue;
         });
+
+        function LoadCart() {
+
+            const cartData = sessionStorage.getItem("cartFactura");
+            var cartDataParsed = JSON.parse(cartData);
+            if (cartDataParsed !== null) {
+                //console.log(cartDataParsed);
+                var contValues = cartDataParsed.length;
+                for (let i = 1; i <= cartDataParsed.length; i++) {
+                    if (i !== 1) {
+                        AddRow();
+                    }
+                    LoadCartData(i, cartDataParsed[contValues - 1]);
+                    contValues--;
+                    $("#add_" + i).focus();
+                }
+
+                TotalEncabezado();
+            }
+        }
+
+        $(document).on("click", ".cargaFactu", LoadCart);
+
+        function LoadCartData(idRow,item) {
+            $("#txtCodigo_" + idRow).val(item.idMedia);
+            $("#txtName_" + idRow).val(item.name);
+            $("#txtExist_" + idRow).val(item.existencia);
+            $("#txtCosto_" + idRow).val(item.compra);
+            $("#txtCant_" + idRow).val(item.cantidad);
+            $("#txtVenta_" + idRow).val(item.venta);
+            $("#txtTotal_" + idRow).val(item.total);
+
+            
+        }
     });
+
+    function saveCart(media, nombre, exis, ccompra, cant, cventa, tot) {
+        cart.push({ idMedia: media, name: nombre, existencia: exis, compra: ccompra, cantidad: cant, venta: cventa, total: tot });
+        sessionStorage.setItem("cartFactura", JSON.stringify(cart));
+    }
+
+    
 
     function GetDescuento(cantidad, esPromo) 
     {
@@ -579,40 +649,47 @@
             data: { idMedia: lknResult[0] },
             success: function (data) {
 
-                if (data === 0) { 
-                    
+                if (data === 0) {
+
                     $("#txtName_" + result[1]).val("");
                     $("#txtName_" + result[1]).prop("title", "");
                     $("#txtExist_" + result[1]).val("");
                     $("#txtCosto_" + result[1]).val("");
                     alert("No Existen Compras para esta media");
                 }
-                else
-                {
+                else {
                     $("#txtCodigo_" + result[1]).val(lknResult[0]);
                     $("#txtName_" + result[1]).val(lknResult[1]);
                     $("#txtName_" + result[1]).prop("title", lknResult[1]);
                     $("#txtExist_" + result[1]).val(lknResult[2]);
                     $("#txtPromo_" + result[1]).val(lknResult[3]);
-                    $("#txtCosto_" + result[1]).val(formatCurrency(data));
-                }
-                
 
+                    var oldValue = parseInt(removeformatCurrency($("#txtCosto_" + result[1]).val()));
+                    var newValue = parseInt(data);
+
+                    if (oldValue !== newValue) 
+                    {
+                        $("#txtCosto_" + result[1]).val(formatCurrency(data));
+                        $("#txtCant_" + result[1]).val("");
+                        $("#txtVenta_" + result[1]).val("");
+                        $("#txtTotal_" + result[1]).val("");
+                    }
+
+                    
+                }
             },
             error: function (error) {
                 
             }
         });
-
-
-        
-        
         //getcostoProrateo
 
         var myModalEl = document.getElementById('mediasModal');
         var modal = bootstrap.Modal.getInstance(myModalEl);
 
-        modal.hide();
+        if (modal !== null) {
+            modal.hide();
+        }
     }
 
     function SetMediaName(inputCodigo) {
@@ -629,6 +706,7 @@
                 data: { codigoMedia: $(inputCodigo).val() },
                 success: function (data) {
                     SetImageId(data);
+                    calculateTotal();
                 },
                 error: function (error) {
                     $("#txtName_" + rowId).val("");
@@ -640,10 +718,10 @@
             $("#txtName_" + rowId).val("");
         }
 
-        $("#txtCant_" + rowId).val("");
-        $("#txtVenta_" + rowId).val("");
+
+        
         $("#txtVenta_" + rowId).removeClass("promoFactu");
-        $("#txtTotal_" + rowId).val("");
+        
     }
 
     function CrearFactura() { 
