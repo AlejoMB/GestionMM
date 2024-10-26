@@ -250,7 +250,7 @@
                     </table>
                 </div>
                 <div class="text-end mt-3">
-                    <a href="https://wa.me/?text=Tu%20mensaje%20aqui" class="btn btn-success" target="_blank">
+                    <a href="#" class="btn btn-success" target="_blank" onclick="EnviarWA();return false;">
                         <i class="fab fa-whatsapp"></i> Enviar
                     </a>
                 </div>
@@ -682,6 +682,32 @@
                 // Update the hidden input with the serialized cart data
                 sessionStorage.setItem("cartData", JSON.stringify(cart));
                 countCartIcon(cart);
+            }
+        }
+
+        function EnviarWA() {
+            const cartData = sessionStorage.getItem("cartData");
+            if (cartData) {
+                var cart = JSON.parse(cartData);
+                var telefono = "573183939997";
+                let infoDinamica = cart.map(item => `${item.id}|${item.quantity}`).join(';');
+                
+                var url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" + encodeURIComponent(infoDinamica);
+                
+                console.log("URL generada:", url);
+                
+
+                // Evitar duplicar el llamado a window.open
+                var win = window.open(url, '_blank');
+
+                if (win) {
+                    // Si la ventana se abre correctamente, evitar hacer nada más
+                    return;
+                    win.focus();
+                } else {
+                    // Si no se abre la ventana (bloqueada por el navegador), se puede hacer otra acción aquí
+                    alert("Permite las ventanas emergentes para abrir WhatsApp");
+                }
             }
         }
 

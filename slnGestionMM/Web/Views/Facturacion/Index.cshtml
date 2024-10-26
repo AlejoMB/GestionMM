@@ -167,6 +167,7 @@
                         </table>
                         <input id="btnGuardar" type="button" class="btn btn-success" value="Guardar" onclick="CrearFactura()">
                         <input id"cargaFactu" type="button" class="btn btn-warning cargaFactu" value="Cargar Factura">
+                        <input id="FactuWeb" type="button" class="btn btn-warning factuWeb" value="Factura Web" data-bs-toggle="modal" data-bs-target="#facturaWebModal">
                         <input id="btnVerFactura" type="button" class="btn btn-info" value="Ver Factura" disabled>
 
                     </div>
@@ -221,6 +222,24 @@
         </div>
     </div>
 </div>
+<!-- Modal Factura Web-->
+<div class="modal fade" id="facturaWebModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Carga Factura Web</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary">Cargar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var cart = [];
 
@@ -234,26 +253,7 @@
             }
         });
 
-        /*var costo = parseInt($(this).closest("tr").find(".costo").val().replace("$", "").replace(".", ""));
-        if (!isNaN(costo) && !isNaN(totalCantidad)) {
-            var txtPromo = $(this).closest("tr").find(".promo").val();
-            var esPromo = (txtPromo === 'True')
-            if (esPromo) {
-                $(this).closest("tr").find(".venta").addClass("promoFactu");
-            }
-            else {
-                $(this).closest("tr").find(".venta").removeClass("promoFactu");
-            }
-            var ganancia = GetDescuento($(this).val(), esPromo);
-            var cantidad = $(this).closest("tr").find(".cantidad").val();
-
-            var porcentaje = 1 + (ganancia / 100);
-            $(this).closest("tr").find(".venta").val(formatCurrency(calcularValorFinal(costo, porcentaje)));
-            //$(this).closest("tr").find(".venta").val(formatCurrency(costo + ganancia));
-            $(this).closest("tr").find(".venta").prop("title", "Ganancia: " + ganancia)
-            var total = (costo + ganancia) * cantidad;
-            $(this).closest("tr").find(".total").val(formatCurrency(total));
-        }*/
+        
         cart = [];
         $('#DetalleFactuTb tbody tr').each(function () {
 
@@ -405,7 +405,7 @@
             const cartData = sessionStorage.getItem("cartFactura");
             var cartDataParsed = JSON.parse(cartData);
             if (cartDataParsed !== null) {
-                //console.log(cartDataParsed);
+                console.log(cartDataParsed);
                 var contValues = cartDataParsed.length;
                 for (let i = 1; i <= cartDataParsed.length; i++) {
                     if (i !== 1) {
@@ -421,6 +421,12 @@
         }
 
         $(document).on("click", ".cargaFactu", LoadCart);
+        $(document).on("click", ".factuWeb", FactuWeb);
+
+        function FactuWeb()
+        {
+
+        }
 
         function LoadCartData(idRow,item) {
             $("#txtCodigo_" + idRow).val(item.idMedia);

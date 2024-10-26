@@ -73,9 +73,9 @@ C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.Gener
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.AssemblyInfoInputs.cache
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.AssemblyInfo.cs
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.csproj.CoreCompileInputs.cache
-C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.csproj.CopyComplete
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.dll
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\refint\CargarPrecios.dll
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.pdb
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPrecios.genruntimeconfig.cache
 C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\ref\CargarPrecios.dll
+C:\amb\GestionMM\slnGestionMM\CargarPrecios\obj\Debug\net8.0\CargarPr.592ADF7D.Up2Date

@@ -752,7 +752,10 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.4"
         },
         "runtime": {
-          "Domain.dll": {}
+          "Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
