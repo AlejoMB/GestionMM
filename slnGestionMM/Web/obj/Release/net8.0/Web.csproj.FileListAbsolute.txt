@@ -293,9 +293,13 @@ C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\staticwebassets.pack.json
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\scopedcss\bundle\Web.styles.css
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\scopedcss\projectbundle\Web.bundle.scp.css
-C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\Web.csproj.CopyComplete
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\Web.dll
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\refint\Web.dll
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\Web.pdb
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\Web.genruntimeconfig.cache
 C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\ref\Web.dll
+C:\amb\GestionMM\slnGestionMM\Web\bin\Release\net8.0\Web.staticwebassets.endpoints.json
+C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\staticwebassets.build.endpoints.json
+C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\staticwebassets\msbuild.Web.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\staticwebassets.upToDateCheck.txt
+C:\amb\GestionMM\slnGestionMM\Web\obj\Release\net8.0\Web.csproj.Up2Date

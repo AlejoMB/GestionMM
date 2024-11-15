@@ -1,0 +1,121 @@
+﻿@using Web.ViewModels
+@model ReporteVentasModel
+@{
+}
+
+<form asp-action="Ganancias" method="post">
+    <select id="ddlMes" name="Mes" asp-for="Mes">
+        <option value="">-Mes-</option>
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="4">Abril</option>
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option>
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+    </select>
+    <button type="submit">Buscar</button>
+    <div class="card">
+        <div class="card-header">
+            <h4>Ganancias / Ventas</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Factura</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Total Compra</th>
+                        <th scope="col">Total Venta</th>
+                        <th scope="col">
+                            Total Ganancia 
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRow" aria-expanded="false" aria-controls="collapseRow">
+                                +
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var venta in Model.Ventas)
+                    {
+                        <tr id="collapseRow" class="collapse show">
+                            <td scope="row">@venta.Key</td>
+                            <td>@venta.Sum(x => x.Cantidad)</td>
+                            <td>@venta.Sum(x => x.TotalCompra)</td>
+                            <td>@venta.Sum(x => x.TotalVenta)</td>
+                            <td>@venta.Sum(x => x.TotalGanancias)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><b>TotalCompra</b></td>
+                        <td><b>TotalVenta</b></td>
+                        <td><b>TotalGanancias</b></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><b>@Model.Ventas.SelectMany(group => group).Sum(x => x.TotalCompra).ToString("C0")</b></td>
+                        <td><b>@Model.Ventas.SelectMany(group => group).Sum(x => x.TotalVenta).ToString("C0")</b></td>
+                        <td><b>@Model.Ventas.SelectMany(group => group).Sum(x => x.TotalGanancias).ToString("C0")</b></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <br />
+    <div class="card">
+        <div class="card-header">
+            <h4>Gastos</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Gasto</th>
+                        <th scope="col">
+                            Valor
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRowGastos" aria-expanded="false" aria-controls="collapseRowGastos">
+                                +
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var gasto in Model.Gastos)
+                    {
+                        <tr id="collapseRowGastos" class="collapse show">
+                            <td>@gasto.TipoGasto.Name</td>
+                            <td>@gasto.Valor</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td><b></b></td>
+                        <td><b>TotalGastos</b></td>
+                    </tr>
+                    <tr>
+                        <td><b></b></td>
+                        <td><b>@Model.Gastos.Sum(g => g.Valor).ToString("C0")</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+    <div class="card">
+        <div class="card-header">
+            <h4>Inventario</h4>
+        </div>
+        <div class="card-body">
+            <p><b>Cantidad Medias:</b> @Model.Inventario.CantidadMedias</p>
+            <p><b>Valor Inventario:</b> @Model.Inventario.TotalValor.ToString("C0")</p>
+        </div>
+    </div>
+</form>

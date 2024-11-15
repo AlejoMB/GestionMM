@@ -1,0 +1,102 @@
+﻿@using System.Globalization
+@using Web.ViewModels
+@model ReporteCalendarModel
+@{
+    //var ventasPorDia = ViewBag.VentasPorDia as Dictionary<DateTime, List<FacturaEnc>>;
+
+    string stringVale = "5968d12a-0a88-4f32-a63b-9adab41488d5";
+    string stringJess = "0e1bf05a-2796-4726-833b-e6b05cea048f";
+}
+
+<form asp-action="Index" method="post">
+    <select id="ddlMes" name="Mes" asp-for="Mes">
+        <option value="">-Mes-</option>
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="4">Abril</option>
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option>
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+    </select>
+    <button type="submit">Buscar</button>
+    <h2>Calendario Ventas 
+        @{
+            if(Model.Calendario.Any())
+                @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Mes);
+        }
+    </h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Sábado</th>
+                <th>Domingo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var semana in Model.Calendario)
+            {
+                <tr>
+                    @foreach (var dia in semana)
+                    {
+                        <td>
+                            @if (dia.Month == Model.Mes)
+                            {
+                                <div>@dia.ToString("dd")</div>
+                                <div>
+                                    @if (Model.VentasPorDia != null && Model.VentasPorDia.ContainsKey(dia))
+                                    {
+                                        <ul>
+                                            @foreach (var venta in Model.VentasPorDia[dia])
+                                            {
+                                                <li>
+                                                <p>
+                                                <a asp-action="Index" asp-controller="FactuEnc" asp-route-id="@venta.Id">Detalle</a>
+                                                </p>
+                                                <b>Total:</b> @venta.Total.ToString("C0") <br />
+                                                <b>Creado por:</b>
+                                                @if (venta.CreadoPorUser == stringVale)
+                                                {
+                                                        <p>Valentina</p>
+                                                }
+                                                else if (venta.CreadoPorUser == stringJess)
+                                                {
+                                                        <p>Jessica</p>
+                                                }
+                                                else
+                                                {
+                                                        <p>Meli</p>
+                                                }
+                                            
+                                            
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span>No hay ventas</span>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-muted">@dia.ToString("dd")</div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

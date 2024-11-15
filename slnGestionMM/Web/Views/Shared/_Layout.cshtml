@@ -38,9 +38,15 @@
                                     <a class="dropdown-item" asp-area="" asp-controller="Gastos" asp-action="Index">Gastos</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Media" asp-action="Index">Medias</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="FactuEnc" asp-action="Index">Facturas</a>
-
-
-                                    <!-- Add more dropdown items as needed -->
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" id="reportesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Reportes
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="reportesDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Reportes" asp-action="Index">Calendario</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Reportes" asp-action="Ganancias">Balance</a>
                                 </div>
                             </li>
                         }

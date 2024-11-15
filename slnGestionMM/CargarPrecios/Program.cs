@@ -16,7 +16,7 @@ namespace CargarPrecios
             Console.WriteLine("Proceso de carga INICIADO!");
             Console.WriteLine("");
             Console.WriteLine("");
-            string filePath = @"C:\Datos\Correcciones_Octubre.xlsx";
+            string filePath = @"C:\Datos\Correcciones_Octubre2.xlsx";
             var _dbContext = new GestionDbContext("Data Source=SQL8006.site4now.net;Initial Catalog=db_aa9b9c_gestionmm;User Id=db_aa9b9c_gestionmm_admin;Password=Nacional1.");
             ActualizarExistencias(filePath, _dbContext);
             Console.WriteLine("");

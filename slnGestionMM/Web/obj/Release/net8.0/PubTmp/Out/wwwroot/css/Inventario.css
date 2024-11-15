@@ -104,6 +104,24 @@
     height: auto;
 }
 
+.cart-count {
+    position: absolute;
+    top: -10px; /* Adjust to move the number above the cart image */
+    right: 50%;
+    transform: translateX(50%); /* Center the count horizontally */
+    background-color: red;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000; /* Ensure it floats over the image */
+}
+
 .button-row {
     display: flex;
     justify-content: center;
@@ -248,4 +266,9 @@
 .table-wrapper {
     border-radius: 15px; /* Rounded corners for the wrapper */
     overflow: hidden; /* Ensure the table and footer stay rounded */
+}
+
+/*Tooltip*/
+.popover img {
+    width: 50%; /* Resize the image to 20% */
 }

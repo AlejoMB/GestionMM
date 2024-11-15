@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CargarPrecios")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c4f2a8a064a4918529a28f2bdf123631240b7c50")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8895aaf943f87d9582fc4695d2afa7efb1672696")]
 [assembly: System.Reflection.AssemblyProductAttribute("CargarPrecios")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CargarPrecios")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
